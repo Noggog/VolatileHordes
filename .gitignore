@@ -347,3 +347,9 @@ healthchecksdb
 
 # Backup folder for Package Reference Convert tool in Visual Studio 2017
 MigrationBackup/
+
+/7dtd-binaries/*.dll
+/packages
+/dmt
+
+.idea/
