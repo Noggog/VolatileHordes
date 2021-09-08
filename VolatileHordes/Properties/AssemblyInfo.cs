@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("MoreHordes.Tests")]
+[assembly: AssemblyTitle("VolatileHordes")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("MoreHordes.Tests")]
+[assembly: AssemblyProduct("VolatileHordes")]
 [assembly: AssemblyCopyright("Copyright ©  2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -19,7 +19,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("C3935972-826D-45C8-B0F4-722EA23C8B47")]
+[assembly: Guid("D071076B-34E2-48EC-9681-50EF8D8830C7")]
 
 // Version information for an assembly consists of the following four values:
 //

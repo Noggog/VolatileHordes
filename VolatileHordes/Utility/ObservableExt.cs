@@ -2,7 +2,7 @@
 using System.Reactive;
 using System.Reactive.Linq;
 
-namespace MoreHordes
+namespace VolatileHordes
 {
     public static class ObservableExt
     {

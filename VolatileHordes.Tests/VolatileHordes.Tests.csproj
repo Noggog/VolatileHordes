@@ -8,8 +8,8 @@
         <ProjectGuid>{C3935972-826D-45C8-B0F4-722EA23C8B47}</ProjectGuid>
         <OutputType>Library</OutputType>
         <AppDesignerFolder>Properties</AppDesignerFolder>
-        <RootNamespace>MoreHordes.Tests</RootNamespace>
-        <AssemblyName>MoreHordes.Tests</AssemblyName>
+        <RootNamespace>VolatileHordes.Tests</RootNamespace>
+        <AssemblyName>VolatileHordes.Tests</AssemblyName>
         <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
         <FileAlignment>512</FileAlignment>
         <LangVersion>default</LangVersion>
@@ -81,7 +81,7 @@
         </Reference>
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="Class1.cs" />
+        <Compile Include="RxTests.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>
     <ItemGroup>
@@ -91,9 +91,9 @@
       <Analyzer Include="..\packages\xunit.analyzers.0.10.0\analyzers\dotnet\cs\xunit.analyzers.dll" />
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\MoreHordes\MoreHordes.csproj">
+      <ProjectReference Include="..\VolatileHordes\VolatileHordes.csproj">
         <Project>{fcf1805a-114c-45df-8595-31d38a982f63}</Project>
-        <Name>MoreHordes</Name>
+        <Name>VolatileHordes</Name>
       </ProjectReference>
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

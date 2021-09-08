@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoreHordes", "MoreHordes\MoreHordes.csproj", "{FCF1805A-114C-45DF-8595-31D38A982F63}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VolatileHordes", "VolatileHordes\VolatileHordes.csproj", "{FCF1805A-114C-45DF-8595-31D38A982F63}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoreHordes.Tests", "MoreHordes.Tests\MoreHordes.Tests.csproj", "{C3935972-826D-45C8-B0F4-722EA23C8B47}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VolatileHordes.Tests", "VolatileHordes.Tests\VolatileHordes.Tests.csproj", "{C3935972-826D-45C8-B0F4-722EA23C8B47}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution

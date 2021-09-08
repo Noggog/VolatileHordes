@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace MoreHordes
+namespace VolatileHordes
 {
     public class ZoneManager<T>
         where T : PlayerZone

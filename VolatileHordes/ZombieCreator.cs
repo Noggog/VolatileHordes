@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace MoreHordes
+namespace VolatileHordes
 {
     public class ZombieCreator
     {

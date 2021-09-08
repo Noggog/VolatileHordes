@@ -4,7 +4,7 @@ using JetBrains.dotMemoryUnit;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace MoreHordes.Tests
+namespace VolatileHordes.Tests
 {
     public class RxTests
     {

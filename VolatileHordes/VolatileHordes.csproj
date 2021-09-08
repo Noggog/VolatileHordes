@@ -7,8 +7,8 @@
     <ProjectGuid>{FCF1805A-114C-45DF-8595-31D38A982F63}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MoreHordes</RootNamespace>
-    <AssemblyName>MoreHordes</AssemblyName>
+    <RootNamespace>VolatileHordes</RootNamespace>
+    <AssemblyName>VolatileHordes</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -21,7 +21,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\bin\Mods\MoreHordes\</OutputPath>
+    <OutputPath>..\bin\Mods\VolatileHordes\</OutputPath>
     <DefineConstants>TRACE;DEBUG;DEDICATED_BUILD</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -30,7 +30,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\bin\Mods\MoreHordes\</OutputPath>
+    <OutputPath>..\bin\Mods\VolatileHordes\</OutputPath>
     <DefineConstants>TRACE;DEDICATED_BUILD</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -40,12 +40,14 @@
   <ItemGroup>
     <Compile Include="BiomeData.cs" />
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="HordeManager.cs" />
     <Compile Include="IZone.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Players.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomSource.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="TimeManager.cs" />
     <Compile Include="Utility\ObservableExt.cs" />
     <Compile Include="ZombieCreator.cs" />

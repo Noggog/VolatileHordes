@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reactive.Linq;
 
-namespace MoreHordes
+namespace VolatileHordes
 {
     public class HordeManager
     {

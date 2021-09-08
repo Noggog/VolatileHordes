@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace MoreHordes
+namespace VolatileHordes
 {
     public class PlayerZone : IZone
     {

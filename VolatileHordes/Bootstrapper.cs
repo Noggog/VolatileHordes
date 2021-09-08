@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MoreHordes
+namespace VolatileHordes
 {
     public class Bootstrapper : IModApi
     {
