@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<xml>
+  <ModInfo>
+    <Name value="MoreHordes" />
+    <Description value="More ramping hordes and random spawns" />
+    <Author value="Noggog" />
+    <Version value="0.0.1" />
+    <Website value="" />
+  </ModInfo>
+</xml>
