@@ -1,13 +1,21 @@
 ﻿using UnityEngine;
+using VolatileHordes.Randomization;
+using VolatileHordes.Zones;
 
-namespace VolatileHordes
+namespace VolatileHordes.Spawning
 {
     public class ZombieCreator
     {
-        public static readonly ZombieCreator Instance = new();
+        private readonly RandomSource _randomSource;
+        public static readonly ZombieCreator Instance = new(RandomSource.Instance);
         
         private static readonly int MaxAliveZombies = GamePrefs.GetInt(EnumGamePrefs.MaxSpawnedZombies);
         private static readonly int MaxSpawnedZombies = (int)(MaxAliveZombies * 0.5);
+
+        public ZombieCreator(RandomSource randomSource)
+        {
+            _randomSource = randomSource;
+        }
 
         bool CanSpawnActiveZombie()
         {
@@ -48,18 +56,20 @@ namespace VolatileHordes
             return true;
         }
         
-        public bool CreateZombie(PlayerZone zone)
+        public bool CreateZombie(PlayerZone zone, Vector3? target)
         {
             if (!CanSpawnActiveZombie())
             {
+                Logger.Warning("Too many zombies already.");
                 return false;
             }
     
             var world = GameManager.Instance.World;
             
-            var randomLocation = zone.GetRandomZonePos();
+            var randomLocation = zone.GetRandomZonePos(_randomSource);
             if (randomLocation == null)
             {
+                Logger.Warning("Could not find random location.");
                 return false;
             }
             
@@ -98,17 +108,14 @@ namespace VolatileHordes
     
             // TODO: Figure out a better way to make them walk towards something.
             // Send zombie towards a random position in the zone.
-            // var targetPos = zone.GetRandomZonePos();
-            // if (targetPos == null)
-            // {
-            //     Logger.Error("Had to send zombie to center zone.");
-            //     targetPos = zone.center;
-            // }
-            //
-            // zombieEnt.SetInvestigatePosition(targetPos.Value, 6000, false);
+            if (target != null)
+            {
+                Logger.Debug("Sending zombie towards {0}", target.Value);
+                zombieEnt.SetInvestigatePosition(target.Value, 6000, false);
+            }
     
             zombieEnt.IsHordeZombie = false;
-            zombieEnt.IsBloodMoon = true; //_state.IsBloodMoon;
+            zombieEnt.IsBloodMoon = false;
     
             zombieEnt.SetSpawnerSource(EnumSpawnerSource.StaticSpawner);
     

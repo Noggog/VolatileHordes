@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
+using VolatileHordes.Randomization;
 
-namespace VolatileHordes
+namespace VolatileHordes.Zones
 {
     public interface IZone
     {

@@ -1,40 +1,38 @@
 ﻿using System;
 
-namespace VolatileHordes
+namespace VolatileHordes.Randomization
 {
     public class RandomSource
     {
 	    public static readonly RandomSource Instance = new();
 	    
-		private Random _rand = new Random();
-
-		public RandomSource()
-		{
-		}
+		public Random Random { get; } = new Random();
 
 		// min:0, max:int.MaxValue
 		public int Get()
 		{
-			return _rand.Next();
+			return Random.Next();
 		}
 
 		// min:0, max:exclusive
 		public int Get(int max)
 		{
-			return _rand.Next(max);
+			return Random.Next(max);
 		}
 
 		// min:inclusive, max:exclusive
 		public int Get(int min, int max)
 		{
-			return _rand.Next(min, max);
+			return Random.Next(min, max);
 		}
 
 		// min:inclusive, max:inclusive
 		public float Get(float min, float max)
 		{
-			return (float)(_rand.NextDouble() * (max - min) + min);
+			return (float)(Random.NextDouble() * (max - min) + min);
 		}
+
+		public bool NextBool() => Random.Next(0, 1) == 0;
 
 		public bool Chance(float c)
 		{

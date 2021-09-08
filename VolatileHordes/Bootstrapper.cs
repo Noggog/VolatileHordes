@@ -1,4 +1,5 @@
 ﻿using System;
+using VolatileHordes.Zones;
 
 namespace VolatileHordes
 {
@@ -16,6 +17,7 @@ namespace VolatileHordes
         static void GameStarted()
         {
             Logger.Info($"Game started");
+            Settings.Load();
             HordeManager.Instance.Init();
             BiomeData.Instance.Init();
         }
