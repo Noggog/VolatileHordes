@@ -54,6 +54,7 @@
     <Compile Include="Spawning\ZombieCreator.cs" />
     <Compile Include="TimeManager.cs" />
     <Compile Include="Utility\Constants.cs" />
+    <Compile Include="Utility\EnumerableExt.cs" />
     <Compile Include="Utility\FloatExt.cs" />
     <Compile Include="Utility\Logger.cs" />
     <Compile Include="Utility\ObservableExt.cs" />

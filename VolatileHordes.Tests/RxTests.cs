@@ -16,7 +16,7 @@ namespace VolatileHordes.Tests
             DotMemoryUnitTestOutput.SetOutputMethod(_output.WriteLine);
         }
         
-        [Fact]
+        [Fact(Skip = "Memory test")]
         [DotMemoryUnit(CollectAllocations=true)]
         public void GarbageTests()
         {
@@ -36,11 +36,10 @@ namespace VolatileHordes.Tests
                 Assert.Equal(0,
                     mem.GetDifference(checkpoint1)
                         .GetNewObjects().ObjectsCount);
-
             });
         }
         
-        [Fact]
+        [Fact(Skip = "Memory test")]
         [DotMemoryUnit(CollectAllocations=true)]
         public void GarbageTests2()
         {

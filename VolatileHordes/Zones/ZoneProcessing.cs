@@ -5,19 +5,9 @@ namespace VolatileHordes.Zones
 {
     public static class ZoneProcessing
     {
-        public static IEnumerable<RectangleF> FindOverlappingRects(RectangleF rect, IEnumerable<RectangleF> rects)
+        public static IEnumerable<PointF> EdgeCornersFromCluster(IReadOnlyList<RectangleF> rects)
         {
-            foreach (var rhs in rects)
-            {
-                if (rect.IntersectsWith(rhs))
-                {
-                    yield return rhs;
-                }
-            }
-        }
-
-        public static PointF? PickCornerFromCluster(IReadOnlyList<RectangleF> rects)
-        {
+            bool any = false;
             for (int i = 0; i < rects.Count; i++)
             {
                 var rectA = rects[i];
@@ -25,15 +15,22 @@ namespace VolatileHordes.Zones
                 {
                     if (!AnyContains(rects, corner, i))
                     {
-                        return corner;
+                        any = true;
+                        yield return corner;
                     }
                 }
             }
 
-            return null;
+            if (!any && rects.Count > 0)
+            {
+                foreach (var corner in rects[0].Corners())
+                {
+                    yield return corner;
+                }
+            }
         }
 
-        public static IEnumerable<PointF> Corners(RectangleF rect)
+        public static IEnumerable<PointF> Corners(this RectangleF rect)
         {
             yield return new PointF(rect.X, rect.Y);
             yield return new PointF(rect.X + rect.Width, rect.Y);
@@ -47,6 +44,7 @@ namespace VolatileHordes.Zones
             {
                 if (i == ignoreIndex) continue;
                 var rect = rects[i];
+                rect.Inflate(0.01f, 0.01f);
                 if (rect.Contains(pt)) return true;
             }
 
