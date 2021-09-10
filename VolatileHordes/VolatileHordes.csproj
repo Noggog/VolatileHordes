@@ -58,6 +58,7 @@
     <Compile Include="Utility\FloatExt.cs" />
     <Compile Include="Utility\Logger.cs" />
     <Compile Include="Utility\ObservableExt.cs" />
+    <Compile Include="Utility\ValueTuple.cs" />
     <Compile Include="Zones\IZone.cs" />
     <Compile Include="Zones\PlayerZoneManager.cs" />
     <Compile Include="Zones\PlayerZone.cs" />

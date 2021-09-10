@@ -22,14 +22,14 @@ namespace VolatileHordes
         {
             return UpdateTime
                 .Scan(
-                    new Tuple<DateTime, bool>(DateTime.Now, false),
+                    new ValueTuple<DateTime, bool>(DateTime.Now, false),
                     (accum, newItem) =>
                     {
                         if (newItem - accum.Item1 < timeSpan)
                         {
-                            return new Tuple<DateTime, bool>(accum.Item1, false);
+                            return new ValueTuple<DateTime, bool>(accum.Item1, false);
                         }
-                        return new Tuple<DateTime, bool>(newItem, true);
+                        return new ValueTuple<DateTime, bool>(newItem, true);
                     })
                 .Where(x => x.Item2)
                 .Unit();
