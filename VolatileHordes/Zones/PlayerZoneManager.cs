@@ -158,12 +158,5 @@ namespace VolatileHordes.Zones
         }
 
         public bool HasPlayers() => _zones.Count > 0;
-
-        public Vector3? GetRandomPlayerZoneEdge(RandomSource random)
-        {
-            var zone = GetRandom(random);
-            if (zone == null) return null;
-            return zone.GetRandomZonePos(random);
-        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using UnityEngine;
 using VolatileHordes.Randomization;
+using VolatileHordes.Spawning;
 
 namespace VolatileHordes.Zones
 {
@@ -26,7 +27,7 @@ namespace VolatileHordes.Zones
         // Returns the center of the center.
         public Vector3 GetCenter() => center;
 
-        public RectangleF GetSpawnRectangle => new(
+        public RectangleF SpawnRectangle => new(
             x: minsSpawnBlock.x,
             y: minsSpawnBlock.z,
             width: maxsSpawnBlock.x - minsSpawnBlock.x,
@@ -62,37 +63,6 @@ namespace VolatileHordes.Zones
         public bool InsideSpawnArea2D(Vector3 pos)
         {
             return IsInside2D(pos) && !InsideSpawnBlock2D(pos);
-        }
-        
-        public Vector3? GetRandomZonePos(RandomSource randomSource, int attemptCount = 10)
-        {
-            var world = GameManager.Instance.World;
-            for (int i = 0; i < 10; i++)
-            {
-                var pos = TryGetSingleRandomZonePos(randomSource);
-                if (world.CanMobsSpawnAtPos(pos))
-                {
-                    return pos;
-                }
-            }
-
-            return Vector3.zero;
-        }
-        
-        public Vector3 TryGetSingleRandomZonePos(RandomSource randomSource)
-        {
-            var world = GameManager.Instance.World;
-            Vector3 pos = new Vector3();
-            Vector3 spawnPos = new Vector3();
-            pos.x = randomSource.Get(minsSpawnBlock.x, maxsSpawnBlock.x);
-            pos.z = randomSource.Get(minsSpawnBlock.z, maxsSpawnBlock.z);
-
-            int height = world.GetTerrainHeight((int)pos.x, (int)pos.z);
-
-            spawnPos.x = pos.x;
-            spawnPos.y = height + 1.0f;
-            spawnPos.z = pos.z;
-            return spawnPos;
         }
     }
 }

@@ -48,6 +48,8 @@
     <Compile Include="Settings.cs" />
     <Compile Include="Spawning\GamestageCalculator.cs" />
     <Compile Include="Spawning\SingleTracker.cs" />
+    <Compile Include="Spawning\SpawningPositions.cs" />
+    <Compile Include="Spawning\SpawnTarget.cs" />
     <Compile Include="Spawning\WanderingHordes\WanderingHordeCalculator.cs" />
     <Compile Include="Spawning\WanderingHordes\WanderingHordeDirector.cs" />
     <Compile Include="Spawning\WanderingHordes\WanderingHordeSettings.cs" />
@@ -58,6 +60,7 @@
     <Compile Include="Utility\FloatExt.cs" />
     <Compile Include="Utility\Logger.cs" />
     <Compile Include="Utility\ObservableExt.cs" />
+    <Compile Include="Utility\RectangleExt.cs" />
     <Compile Include="Utility\ValueTuple.cs" />
     <Compile Include="Zones\IZone.cs" />
     <Compile Include="Zones\PlayerZoneManager.cs" />

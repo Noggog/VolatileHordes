@@ -66,7 +66,7 @@ namespace VolatileHordes.Spawning
     
             var world = GameManager.Instance.World;
             
-            var randomLocation = zone.GetRandomZonePos(_randomSource);
+            var randomLocation = SpawningPositions.Instance.GetRandomZonePos(zone);
             if (randomLocation == null)
             {
                 Logger.Warning("Could not find random location.");
