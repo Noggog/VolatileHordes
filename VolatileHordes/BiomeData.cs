@@ -3,11 +3,15 @@ using VolatileHordes.Randomization;
 
 namespace VolatileHordes
 {
-    class BiomeData
+    public class BiomeData
     {
-        public static readonly BiomeData Instance = new();
+	    private readonly RandomSource _randomSource;
+	    private DictionarySave<string, BiomeSpawnEntityGroupList> list = new();
 
-		private DictionarySave<string, BiomeSpawnEntityGroupList> list = new();
+		public BiomeData(RandomSource randomSource)
+		{
+			_randomSource = randomSource;
+		}
 
 		public void Init(bool clearOriginal = false)
 		{
@@ -37,8 +41,10 @@ namespace VolatileHordes
 			}
 		}
 
-		public int GetZombieClass(World world, Chunk chunk, int x, int y, RandomSource prng)
+		public int GetZombieClass(Chunk chunk, int x, int y)
 		{
+			var world = GameManager.Instance.World;
+			
 			ChunkAreaBiomeSpawnData spawnData = chunk.GetChunkBiomeSpawnData();
 			if (spawnData == null)
 			{
@@ -78,7 +84,7 @@ namespace VolatileHordes
 			var dayTime = world.IsDaytime() ? EDaytime.Day : EDaytime.Night;
 			for (int i = 0; i < 5; i++)
 			{
-				int pickIndex = prng.Get(0, numGroups);
+				int pickIndex = _randomSource.Get(0, numGroups);
 
 				var pick = biomeSpawnEntityGroupList.list[pickIndex];
 				if (pick.daytime == EDaytime.Any || pick.daytime == dayTime)

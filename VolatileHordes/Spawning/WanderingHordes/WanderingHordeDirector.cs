@@ -5,16 +5,20 @@ namespace VolatileHordes.Spawning.WanderingHordes
 {
     public class WanderingHordeDirector
     {
-        public static readonly WanderingHordeDirector Instance = new();
+        private readonly SingleTracker _singleTracker;
 
+        public WanderingHordeDirector(SingleTracker singleTracker)
+        {
+            _singleTracker = singleTracker;
+        }
+        
         public void SpawnHorde()
         {
-            ZombieCreator.Instance.PrintZombieStats();
             TimeManager.Instance.Interval(TimeSpan.FromSeconds(2))
                 .Take(10)
                 .Subscribe(_ =>
                 {
-                    SingleTracker.Instance.SpawnSingle();
+                    _singleTracker.SpawnSingle();
                 });
         }
     }

@@ -5,8 +5,6 @@ namespace VolatileHordes.Spawning
     public class GamestageCalculator
     {
         private readonly PlayerZoneManager _playerZoneManager;
-        
-        public static readonly GamestageCalculator Instance = new(PlayerZoneManager.Instance);
 
         public GamestageCalculator(PlayerZoneManager playerZoneManager)
         {

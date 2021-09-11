@@ -1,18 +1,23 @@
 ﻿using System.Drawing;
-using UnityEngine;
+using VolatileHordes.GameAbstractions;
 using VolatileHordes.Spawning;
 
 namespace VolatileHordes.Control
 {
     public class ZombieControl
     {
-        public static readonly ZombieControl Instance = new();
+        private readonly SpawningPositions _spawningPositions;
 
-        public void SendZombieTowards(EntityZombie zombie, PointF target)
+        public ZombieControl(SpawningPositions spawningPositions)
         {
-            var worldTarget = SpawningPositions.Instance.GetWorldVector(target);
+            _spawningPositions = spawningPositions;
+        }
+        
+        public void SendZombieTowards(IZombie zombie, PointF target)
+        {
+            var worldTarget = _spawningPositions.GetWorldVector(target);
             Logger.Debug("Sending zombie towards {0}", worldTarget);
-            zombie.SetInvestigatePosition(worldTarget, 6000, false);
+            zombie.SendTowards(worldTarget);
         }
     }
 }

@@ -41,8 +41,11 @@
     <Compile Include="BiomeData.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Commands.cs" />
+    <Compile Include="Container.cs" />
     <Compile Include="Control\ZombieControl.cs" />
-    <Compile Include="HordeManager.cs" />
+    <Compile Include="GameAbstractions\Zombie.cs" />
+    <Compile Include="GameAbstractions\Player.cs" />
+    <Compile Include="GameAbstractions\World.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Randomization\RandomExt.cs" />
     <Compile Include="Randomization\RandomSource.cs" />
@@ -66,7 +69,6 @@
     <Compile Include="Utility\VectorExt.cs" />
     <Compile Include="Zones\PlayerZoneManager.cs" />
     <Compile Include="Zones\PlayerZone.cs" />
-    <Compile Include="Zones\ZoneManager.cs" />
     <Compile Include="Zones\ZoneProcessing.cs" />
   </ItemGroup>
   <ItemGroup>

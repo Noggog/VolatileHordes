@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
-using VolatileHordes.Randomization;
 
 namespace VolatileHordes.Zones
 {
-    public class PlayerZoneManager : ZoneManager<PlayerZone>
+    public class PlayerZoneManager
     {
         static int ChunkViewDim = GamePrefs.GetInt(EnumGamePrefs.ServerMaxAllowedViewDistance);
 
@@ -12,9 +12,10 @@ namespace VolatileHordes.Zones
         static Vector3 VisibleBox = ChunkSize * ChunkViewDim;
         static Vector3 SpawnBlockBox = new(VisibleBox.x - 32, VisibleBox.y - 32, VisibleBox.z - 32);
 
-        public static readonly PlayerZoneManager Instance = new();
-        
-        private PlayerZoneManager()
+        protected readonly List<PlayerZone> _zones = new();
+        public IReadOnlyList<PlayerZone> Zones => _zones;
+
+        public PlayerZoneManager()
         {
             Logger.Info("Player Chunk View Dim: {0} - {1} - {2}", ChunkViewDim,
                 VisibleBox,
@@ -23,11 +24,11 @@ namespace VolatileHordes.Zones
                 .Subscribe(_ => Update());
         }
 
-        public void PlayerSpawnedInWorld(ClientInfo _cInfo, RespawnType _respawnReason, Vector3i _pos)
+        public void PlayerSpawnedInWorld(ClientInfo? _cInfo, RespawnType _respawnReason, Vector3i _pos)
         {
             try
             {
-                Logger.Debug("PlayerSpawnedInWorld \"{0}\", \"{1}\", \"{2}\"", _cInfo, _respawnReason, _pos);
+                Logger.Debug("PlayerSpawnedInWorld \"{0}\", \"{1}\", \"{2}\"", _cInfo?.ToString() ?? "null", _respawnReason, _pos);
                 int entityId = GetPlayerEntityId(_cInfo);
                 switch (_respawnReason)
                 {
@@ -45,11 +46,11 @@ namespace VolatileHordes.Zones
             }
         }
 
-        public void PlayerDisconnected(ClientInfo _cInfo, bool _bShutdown)
+        public void PlayerDisconnected(ClientInfo? _cInfo, bool _bShutdown)
         {
             try
             {
-                Logger.Debug("PlayerDisconnected \"{0}\", \"{1}\"", _cInfo, _bShutdown);
+                Logger.Debug("PlayerDisconnected \"{0}\", \"{1}\"", _cInfo?.ToString() ?? "null", _bShutdown);
                 int entityId = GetPlayerEntityId(_cInfo);
                 RemovePlayer(entityId);
             }
@@ -60,14 +61,13 @@ namespace VolatileHordes.Zones
         }
 
         // Helper function for single player games where _cInfo is null.
-        static int GetPlayerEntityId(ClientInfo _cInfo)
+        static int GetPlayerEntityId(ClientInfo? _cInfo)
         {
             if (_cInfo != null)
                 return _cInfo.entityId;
 
             // On a local host this is set to null, grab id from player list.
-            var world = GameManager.Instance.World;
-            var player = world.Players.list[0];
+            var player = GameManager.Instance.World.Players.list[0];
 
             return player.entityId;
         }

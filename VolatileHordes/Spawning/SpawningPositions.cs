@@ -1,5 +1,6 @@
 using System.Drawing;
 using UnityEngine;
+using VolatileHordes.GameAbstractions;
 using VolatileHordes.Randomization;
 using VolatileHordes.Zones;
 
@@ -7,16 +8,16 @@ namespace VolatileHordes.Spawning
 {
     public class SpawningPositions
     {
+        private readonly IWorld _world;
         private readonly PlayerZoneManager _playerZoneManager;
         private readonly RandomSource _randomSource;
-        public static readonly SpawningPositions Instance = new(
-            PlayerZoneManager.Instance,
-            RandomSource.Instance);
 
         public SpawningPositions(
+            IWorld world,
             PlayerZoneManager playerZoneManager,
             RandomSource randomSource)
         {
+            _world = world;
             _playerZoneManager = playerZoneManager;
             _randomSource = randomSource;
         }
@@ -32,17 +33,29 @@ namespace VolatileHordes.Spawning
 
         public PlayerZone? GetRandomZone()
         {
-            return _playerZoneManager.GetRandom(_randomSource);
+            if (_playerZoneManager.Zones.Count == 0)
+                return default;
+
+            for (int i = 0; i < 4; i++)
+            {
+                var idx = _randomSource.Get(0, _playerZoneManager.Zones.Count);
+                var zone = _playerZoneManager.Zones[idx];
+                if (zone.Valid)
+                {
+                    return zone;
+                }
+            }
+
+            return default;
         }
         
         public Vector3? GetRandomZoneVector(PlayerZone zone, int attemptCount = 10)
         {
-            var world = GameManager.Instance.World;
             for (int i = 0; i < attemptCount; i++)
             {
                 var pos = TryGetSingleRandomZonePos(zone);
                 var worldPos = GetWorldVector(pos);
-                if (world.CanMobsSpawnAtPos(worldPos))
+                if (_world.CanSpawnAt(worldPos))
                 {
                     return worldPos;
                 }
@@ -60,9 +73,8 @@ namespace VolatileHordes.Spawning
 
         public Vector3 GetWorldVector(PointF pt)
         {
-            var world = GameManager.Instance.World;
             Logger.Debug("Getting height at {0}", pt);
-            int height = world.GetTerrainHeight((int)pt.X, (int)pt.Y);
+            int height = _world.GetTerrainHeight(pt);
             Logger.Debug("Height was {0}", height);
             return pt.WithHeight(height + 1);
         }

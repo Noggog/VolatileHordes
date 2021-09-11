@@ -4,9 +4,7 @@ namespace VolatileHordes.Randomization
 {
     public class RandomSource
     {
-	    public static readonly RandomSource Instance = new();
-	    
-		public Random Random { get; } = new Random();
+		public Random Random { get; } = new();
 
 		// min:0, max:int.MaxValue
 		public int Get()
