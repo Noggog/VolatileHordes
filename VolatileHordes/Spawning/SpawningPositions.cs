@@ -53,8 +53,8 @@ namespace VolatileHordes.Spawning
         public PointF TryGetSingleRandomZonePos(PlayerZone zone)
         {
             return new PointF(
-                _randomSource.Get(zone.minsSpawnBlock.x, zone.maxsSpawnBlock.x),
-                _randomSource.Get(zone.minsSpawnBlock.z, zone.maxsSpawnBlock.z));
+                _randomSource.Get(zone.MinsSpawnBlock.x, zone.MaxsSpawnBlock.x),
+                _randomSource.Get(zone.MinsSpawnBlock.z, zone.MaxsSpawnBlock.z));
         }
 
         public Vector3 GetWorldVector(PointF pt)

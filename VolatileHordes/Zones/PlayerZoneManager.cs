@@ -78,14 +78,12 @@ namespace VolatileHordes.Zones
             // So we have to check if the player is already here.
             foreach (var zone in _zones)
             {
-                if (zone.entityId == entityId)
+                if (zone.EntityId == entityId)
                     return;
             }
-            PlayerZone area = new PlayerZone
-            {
-                index = _zones.Count,
-                entityId = entityId,
-            };
+
+            var area = new PlayerZone(entityId);
+            
             _zones.Add(UpdatePlayer(area, entityId));
 
             Logger.Info("Added player {0}", entityId);
@@ -96,7 +94,7 @@ namespace VolatileHordes.Zones
             for (int i = 0; i < _zones.Count; i++)
             {
                 var ply = _zones[i] as PlayerZone;
-                if (ply.entityId == entityId)
+                if (ply.EntityId == entityId)
                 {
                     Logger.Info("Removed player: {0}", entityId);
                     _zones.RemoveAt(i);
@@ -108,11 +106,11 @@ namespace VolatileHordes.Zones
         PlayerZone UpdatePlayer(PlayerZone ply, EntityPlayer ent)
         {
             var pos = ent.GetPosition();
-            ply.mins = pos - (VisibleBox * 0.5f);
-            ply.maxs = pos + (VisibleBox * 0.5f);
-            ply.minsSpawnBlock = pos - (SpawnBlockBox * 0.5f);
-            ply.maxsSpawnBlock = pos + (SpawnBlockBox * 0.5f);
-            ply.center = pos;
+            ply.Mins = pos - (VisibleBox * 0.5f);
+            ply.Maxs = pos + (VisibleBox * 0.5f);
+            ply.MinsSpawnBlock = pos - (SpawnBlockBox * 0.5f);
+            ply.MaxsSpawnBlock = pos + (SpawnBlockBox * 0.5f);
+            ply.Center = pos;
             return ply;
         }
 
@@ -138,18 +136,18 @@ namespace VolatileHordes.Zones
             {
                 var ply = _zones[i];
 
-                if (players.TryGetValue(ply.entityId, out var ent))
+                if (players.TryGetValue(ply.EntityId, out var ent))
                 {
                     _zones[i] = UpdatePlayer(ply, ent);
                 }
                 else
                 {
                     // Remove player.
-                    ply.valid = false;
+                    ply.Valid = false;
                     _zones.RemoveAt(i);
                     i--;
 
-                    Logger.Error("Player not in player list: {0}", ply.entityId);
+                    Logger.Error("Player not in player list: {0}", ply.EntityId);
                 }
 
                 if (_zones.Count == 0)

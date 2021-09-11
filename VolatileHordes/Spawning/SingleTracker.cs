@@ -15,7 +15,7 @@ namespace VolatileHordes.Spawning
                 Logger.Info("No player to spawn next to");
                 return;
             }
-            ZombieCreator.Instance.CreateZombie(playerZone, playerZone.center.ToPoint());
+            ZombieCreator.Instance.CreateZombie(playerZone, playerZone.Center.ToPoint());
         }
     }
 }
