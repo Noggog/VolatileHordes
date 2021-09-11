@@ -73,15 +73,15 @@ namespace VolatileHordes.Spawning
                 return false;
             }
             
-            Chunk? chunk = world.GetChunkSync(World.toChunkXZ(Mathf.FloorToInt(randomLocation.Value.x)), 0,
-                World.toChunkXZ(Mathf.FloorToInt(randomLocation.Value.z))) as Chunk;
+            Chunk? chunk = world.GetChunkSync(World.toChunkXZ(randomLocation.Value.x.Floor()), 0,
+                World.toChunkXZ(randomLocation.Value.z.Floor())) as Chunk;
             if (chunk == null)
             {
                 Logger.Debug("Chunk not loaded at {0} {1}", randomLocation, randomLocation.Value.z);
                 return false;
             }
     
-            int height = world.GetTerrainHeight(Mathf.FloorToInt(randomLocation.Value.x), Mathf.FloorToInt(randomLocation.Value.z));
+            int height = world.GetTerrainHeight(randomLocation.Value.x.Floor(), randomLocation.Value.z.Floor());
     
             Vector3 spawnPos = new Vector3(randomLocation.Value.x, height + 1.0f, randomLocation.Value.z);
             if (!CanZombieSpawnAt(spawnPos))
