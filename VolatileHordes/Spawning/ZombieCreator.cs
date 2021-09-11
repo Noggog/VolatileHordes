@@ -64,12 +64,12 @@ namespace VolatileHordes.Spawning
             return true;
         }
         
-        public bool CreateZombie(Vector3 spawnLocation, PointF? target)
+        public EntityZombie? CreateZombie(Vector3 spawnLocation, PointF? target)
         {
             if (!CanSpawnZombie())
             {
                 Logger.Warning("Too many zombies already.");
-                return false;
+                return null;
             }
             
             var world = GameManager.Instance.World;
@@ -78,13 +78,13 @@ namespace VolatileHordes.Spawning
             if (chunk == null)
             {
                 Logger.Debug("Chunk not loaded at {0} {1}", spawnLocation.x, spawnLocation.z);
-                return false;
+                return null;
             }
     
             if (!CanZombieSpawnAt(spawnLocation))
             {
                 Logger.Debug("Unable to spawn zombie at {0}, CanMobsSpawnAtPos failed", spawnLocation);
-                return false;
+                return null;
             }
     
             var classId = BiomeData.Instance.GetZombieClass(world, chunk, (int)spawnLocation.x, (int)spawnLocation.z, RandomSource.Instance);
@@ -98,28 +98,18 @@ namespace VolatileHordes.Spawning
             if (EntityFactory.CreateEntity(classId, spawnLocation) is not EntityZombie zombieEnt)
             {
                 Logger.Error("Unable to create zombie entity!, Entity Id: {0}, Pos: {1}", classId, spawnLocation);
-                return false;
+                return null;
             }
-    
-            Logger.Debug("Spawning zombie {0} at {1}", zombieEnt, spawnLocation);
     
             zombieEnt.bIsChunkObserver = true;
             zombieEnt.IsHordeZombie = true;
             zombieEnt.IsBloodMoon = false;
-    
-            // TODO: Figure out a better way to make them walk towards something.
-            // Send zombie towards a random position in the zone.
-            if (target != null)
-            {
-                var worldTarget = SpawningPositions.Instance.GetWorldVector(target.Value);
-                Logger.Debug("Sending zombie towards {0}", worldTarget);
-                zombieEnt.SetInvestigatePosition(worldTarget, 6000, false);
-            }
-    
             zombieEnt.SetSpawnerSource(EnumSpawnerSource.StaticSpawner);
             world.SpawnEntityInWorld(zombieEnt);
     
-            return true;
+            Logger.Debug("Spawned zombie {0} at {1}", zombieEnt, spawnLocation);
+    
+            return zombieEnt;
         }
     }
 }

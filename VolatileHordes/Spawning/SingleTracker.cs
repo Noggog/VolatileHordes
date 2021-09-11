@@ -1,25 +1,33 @@
-﻿namespace VolatileHordes.Spawning
+﻿using VolatileHordes.Control;
+
+namespace VolatileHordes.Spawning
 {
     public class SingleTracker
     {
         private readonly SpawningPositions _spawningPositions;
-        public static readonly SingleTracker Instance = new(SpawningPositions.Instance);
+        private readonly ZombieControl _control;
+
+        public static readonly SingleTracker Instance = new(
+            SpawningPositions.Instance,
+            ZombieControl.Instance);
 
         public SingleTracker(
-            SpawningPositions spawningPositions)
+            SpawningPositions spawningPositions,
+            ZombieControl control)
         {
             _spawningPositions = spawningPositions;
+            _control = control;
         }
 
         public void SpawnSingle()
         {
             var spawnTarget = _spawningPositions.GetRandomTarget();
-            if (spawnTarget == null)
-            { 
-                Logger.Info("No player to spawn next to");
-                return;
-            }
-            ZombieCreator.Instance.CreateZombie(spawnTarget.SpawnPoint, spawnTarget.TriggerOrigin);
+            if (spawnTarget == null) return;
+            
+            var zombie = ZombieCreator.Instance.CreateZombie(spawnTarget.SpawnPoint, spawnTarget.TriggerOrigin);
+            if (zombie == null) return;
+            
+            _control.SendZombieTowards(zombie, spawnTarget.TriggerOrigin);
         }
     }
 }
