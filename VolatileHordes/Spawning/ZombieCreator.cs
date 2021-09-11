@@ -64,7 +64,7 @@ namespace VolatileHordes.Spawning
             return true;
         }
         
-        public bool CreateZombie(PlayerZone zone, PointF? target)
+        public bool CreateZombie(Vector3 spawnLocation, PointF? target)
         {
             if (!CanSpawnZombie())
             {
@@ -72,28 +72,22 @@ namespace VolatileHordes.Spawning
                 return false;
             }
             
-            var spawnLocation = SpawningPositions.Instance.GetRandomZoneVector(zone);
-            if (spawnLocation == null)
-            {
-                Logger.Warning("Could not find random location.");
-                return false;
-            }
             var world = GameManager.Instance.World;
-            Chunk? chunk = world.GetChunkSync(World.toChunkXZ(spawnLocation.Value.x.Floor()), 0,
-                World.toChunkXZ(spawnLocation.Value.z.Floor())) as Chunk;
+            Chunk? chunk = world.GetChunkSync(World.toChunkXZ(spawnLocation.x.Floor()), 0,
+                World.toChunkXZ(spawnLocation.z.Floor())) as Chunk;
             if (chunk == null)
             {
-                Logger.Debug("Chunk not loaded at {0} {1}", spawnLocation.Value.x, spawnLocation.Value.z);
+                Logger.Debug("Chunk not loaded at {0} {1}", spawnLocation.x, spawnLocation.z);
                 return false;
             }
     
-            if (!CanZombieSpawnAt(spawnLocation.Value))
+            if (!CanZombieSpawnAt(spawnLocation))
             {
-                Logger.Debug("Unable to spawn zombie at {0}, CanMobsSpawnAtPos failed", spawnLocation.Value);
+                Logger.Debug("Unable to spawn zombie at {0}, CanMobsSpawnAtPos failed", spawnLocation);
                 return false;
             }
     
-            var classId = BiomeData.Instance.GetZombieClass(world, chunk, (int)spawnLocation.Value.x, (int)spawnLocation.Value.z, RandomSource.Instance);
+            var classId = BiomeData.Instance.GetZombieClass(world, chunk, (int)spawnLocation.x, (int)spawnLocation.z, RandomSource.Instance);
             if (classId == -1)
             {
                 int lastClassId = -1;
@@ -101,13 +95,13 @@ namespace VolatileHordes.Spawning
                 Logger.Debug("Used fallback for zombie class!");
             }
     
-            if (EntityFactory.CreateEntity(classId, spawnLocation.Value) is not EntityZombie zombieEnt)
+            if (EntityFactory.CreateEntity(classId, spawnLocation) is not EntityZombie zombieEnt)
             {
-                Logger.Error("Unable to create zombie entity!, Entity Id: {0}, Pos: {1}", classId, spawnLocation.Value);
+                Logger.Error("Unable to create zombie entity!, Entity Id: {0}, Pos: {1}", classId, spawnLocation);
                 return false;
             }
     
-            Logger.Debug("Spawning zombie {0} at {1}", zombieEnt, spawnLocation.Value);
+            Logger.Debug("Spawning zombie {0} at {1}", zombieEnt, spawnLocation);
     
             zombieEnt.bIsChunkObserver = true;
             zombieEnt.IsHordeZombie = true;

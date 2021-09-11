@@ -27,7 +27,7 @@ namespace VolatileHordes.Spawning
             if (zone == null) return null;
             var pos = GetRandomZoneVector(zone);
             if (pos == null) return null;
-            return new SpawnTarget(pos.Value, zone.SpawnRectangle);
+            return new SpawnTarget(pos.Value, zone.Center);
         }
 
         public PlayerZone? GetRandomZone()

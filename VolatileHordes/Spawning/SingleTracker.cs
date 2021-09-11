@@ -1,21 +1,25 @@
-﻿using VolatileHordes.Randomization;
-using VolatileHordes.Zones;
-
-namespace VolatileHordes.Spawning
+﻿namespace VolatileHordes.Spawning
 {
     public class SingleTracker
     {
-        public static readonly SingleTracker Instance = new();
+        private readonly SpawningPositions _spawningPositions;
+        public static readonly SingleTracker Instance = new(SpawningPositions.Instance);
+
+        public SingleTracker(
+            SpawningPositions spawningPositions)
+        {
+            _spawningPositions = spawningPositions;
+        }
 
         public void SpawnSingle()
         {
-            var playerZone = PlayerZoneManager.Instance.GetRandom(RandomSource.Instance);
-            if (playerZone == null)
+            var spawnTarget = _spawningPositions.GetRandomTarget();
+            if (spawnTarget == null)
             { 
                 Logger.Info("No player to spawn next to");
                 return;
             }
-            ZombieCreator.Instance.CreateZombie(playerZone, playerZone.Center);
+            ZombieCreator.Instance.CreateZombie(spawnTarget.SpawnPoint, spawnTarget.TriggerOrigin);
         }
     }
 }
