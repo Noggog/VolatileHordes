@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+using System;
+using UnityEngine;
 using VolatileHordes.Randomization;
 using VolatileHordes.Zones;
 
@@ -12,17 +13,25 @@ namespace VolatileHordes.Spawning
         private static readonly int MaxAliveZombies = GamePrefs.GetInt(EnumGamePrefs.MaxSpawnedZombies);
         private static readonly int MaxSpawnedZombies = (int)(MaxAliveZombies * 0.5);
 
+        public int CurrentlyActiveZombies => GameStats.GetInt(EnumGameStats.EnemyCount);
+
         public ZombieCreator(RandomSource randomSource)
         {
             _randomSource = randomSource;
         }
 
-        bool CanSpawnActiveZombie()
+        public bool CanSpawnZombie()
         {
-            int alive = GameStats.GetInt(EnumGameStats.EnemyCount);
-            if (alive + 1 >= MaxSpawnedZombies)
+            if (CurrentlyActiveZombies + 1 >= MaxSpawnedZombies)
                 return false;
             return true;
+        }
+
+        public void PrintZombieStats()
+        {
+#if DEBUG
+            Logger.Debug("Currently {0} zombies. {1}% of total. {2}% of allowed", CurrentlyActiveZombies, (100.0f * CurrentlyActiveZombies / MaxAliveZombies), (100.0f * CurrentlyActiveZombies / MaxSpawnedZombies));
+#endif
         }
         
         public static bool IsSpawnProtected(Vector3 pos)
@@ -58,7 +67,7 @@ namespace VolatileHordes.Spawning
         
         public bool CreateZombie(PlayerZone zone, Vector3? target)
         {
-            if (!CanSpawnActiveZombie())
+            if (!CanSpawnZombie())
             {
                 Logger.Warning("Too many zombies already.");
                 return false;

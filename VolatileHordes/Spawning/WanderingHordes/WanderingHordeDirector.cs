@@ -9,6 +9,7 @@ namespace VolatileHordes.Spawning.WanderingHordes
 
         public void SpawnHorde()
         {
+            ZombieCreator.Instance.PrintZombieStats();
             TimeManager.Instance.Interval(TimeSpan.FromSeconds(2))
                 .Take(10)
                 .Subscribe(_ =>

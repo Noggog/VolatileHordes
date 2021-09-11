@@ -23,6 +23,11 @@ namespace VolatileHordes
 
             switch (paramList[0].ToLower())
             {
+                case "stats":
+                {
+                    ZombieCreator.Instance.PrintZombieStats();
+                    break;
+                }
                 case "wandering":
                 {
                     Logger.Info("Artificially spawning a wandering horde");
