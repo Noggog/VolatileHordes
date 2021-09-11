@@ -6,10 +6,10 @@ namespace VolatileHordes.Spawning
 {
     public struct SpawnTarget : IEquatable<SpawnTarget>
     {
-        public readonly PointF SpawnPoint;
+        public readonly Vector3 SpawnPoint;
         public readonly RectangleF SpawnArea;
 
-        public SpawnTarget(PointF spawnPoint, RectangleF spawnArea)
+        public SpawnTarget(Vector3 spawnPoint, RectangleF spawnArea)
         {
             SpawnPoint = spawnPoint;
             SpawnArea = spawnArea;

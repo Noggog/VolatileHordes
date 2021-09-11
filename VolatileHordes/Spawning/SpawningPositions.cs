@@ -25,7 +25,7 @@ namespace VolatileHordes.Spawning
         {
             var zone = GetRandomZone();
             if (zone == null) return null;
-            var pos = GetRandomZonePos(zone);
+            var pos = GetRandomZoneVector(zone);
             if (pos == null) return null;
             return new SpawnTarget(pos.Value, zone.SpawnRectangle);
         }
@@ -35,16 +35,16 @@ namespace VolatileHordes.Spawning
             return _playerZoneManager.GetRandom(_randomSource);
         }
         
-        public PointF? GetRandomZonePos(PlayerZone zone, int attemptCount = 10)
+        public Vector3? GetRandomZoneVector(PlayerZone zone, int attemptCount = 10)
         {
             var world = GameManager.Instance.World;
             for (int i = 0; i < attemptCount; i++)
             {
                 var pos = TryGetSingleRandomZonePos(zone);
-                
-                if (world.CanMobsSpawnAtPos(GetWorldVector(pos)))
+                var worldPos = GetWorldVector(pos);
+                if (world.CanMobsSpawnAtPos(worldPos))
                 {
-                    return pos;
+                    return worldPos;
                 }
             }
 
