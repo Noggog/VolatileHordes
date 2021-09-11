@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using UnityEngine;
 using VolatileHordes.Randomization;
 using VolatileHordes.Zones;
@@ -65,7 +66,7 @@ namespace VolatileHordes.Spawning
             return true;
         }
         
-        public bool CreateZombie(PlayerZone zone, Vector3? target)
+        public bool CreateZombie(PlayerZone zone, PointF? target)
         {
             if (!CanSpawnZombie())
             {
@@ -82,17 +83,17 @@ namespace VolatileHordes.Spawning
                 return false;
             }
             
-            Chunk? chunk = world.GetChunkSync(World.toChunkXZ(randomLocation.Value.x.Floor()), 0,
-                World.toChunkXZ(randomLocation.Value.z.Floor())) as Chunk;
+            Chunk? chunk = world.GetChunkSync(World.toChunkXZ(randomLocation.Value.X.Floor()), 0,
+                World.toChunkXZ(randomLocation.Value.Y.Floor())) as Chunk;
             if (chunk == null)
             {
-                Logger.Debug("Chunk not loaded at {0} {1}", randomLocation, randomLocation.Value.z);
+                Logger.Debug("Chunk not loaded at {0} {1}", randomLocation, randomLocation.Value.Y);
                 return false;
             }
     
-            int height = world.GetTerrainHeight(randomLocation.Value.x.Floor(), randomLocation.Value.z.Floor());
+            int height = world.GetTerrainHeight(randomLocation.Value.X.Floor(), randomLocation.Value.Y.Floor());
     
-            Vector3 spawnPos = new Vector3(randomLocation.Value.x, height + 1.0f, randomLocation.Value.z);
+            Vector3 spawnPos = new Vector3(randomLocation.Value.X, height + 1.0f, randomLocation.Value.Y);
             if (!CanZombieSpawnAt(spawnPos))
             {
                 Logger.Debug("Unable to spawn zombie at {0}, CanMobsSpawnAtPos failed", spawnPos);
@@ -119,8 +120,9 @@ namespace VolatileHordes.Spawning
             // Send zombie towards a random position in the zone.
             if (target != null)
             {
-                Logger.Debug("Sending zombie towards {0}", target.Value);
-                zombieEnt.SetInvestigatePosition(target.Value, 6000, false);
+                var spawnTarget = SpawningPositions.Instance.GetWorldVector(target.Value);
+                Logger.Debug("Sending zombie towards {0}", spawnTarget);
+                zombieEnt.SetInvestigatePosition(spawnTarget, 6000, false);
             }
     
             zombieEnt.IsHordeZombie = false;

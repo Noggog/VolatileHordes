@@ -62,6 +62,7 @@
     <Compile Include="Utility\ObservableExt.cs" />
     <Compile Include="Utility\RectangleExt.cs" />
     <Compile Include="Utility\ValueTuple.cs" />
+    <Compile Include="Utility\VectorExt.cs" />
     <Compile Include="Zones\IZone.cs" />
     <Compile Include="Zones\PlayerZoneManager.cs" />
     <Compile Include="Zones\PlayerZone.cs" />

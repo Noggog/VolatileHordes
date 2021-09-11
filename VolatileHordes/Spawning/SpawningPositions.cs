@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+using System.Drawing;
+using UnityEngine;
 using VolatileHordes.Randomization;
 using VolatileHordes.Zones;
 
@@ -34,35 +35,35 @@ namespace VolatileHordes.Spawning
             return _playerZoneManager.GetRandom(_randomSource);
         }
         
-        public Vector3? GetRandomZonePos(PlayerZone zone, int attemptCount = 10)
+        public PointF? GetRandomZonePos(PlayerZone zone, int attemptCount = 10)
         {
             var world = GameManager.Instance.World;
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < attemptCount; i++)
             {
                 var pos = TryGetSingleRandomZonePos(zone);
-                if (world.CanMobsSpawnAtPos(pos))
+                if (world.CanMobsSpawnAtPos(GetWorldVector(pos)))
                 {
                     return pos;
                 }
             }
 
-            return Vector3.zero;
+            return null;
         }
         
-        public Vector3 TryGetSingleRandomZonePos(PlayerZone zone)
+        public PointF TryGetSingleRandomZonePos(PlayerZone zone)
+        {
+            return new PointF(
+                _randomSource.Get(zone.minsSpawnBlock.x, zone.maxsSpawnBlock.x),
+                _randomSource.Get(zone.minsSpawnBlock.z, zone.maxsSpawnBlock.z));
+        }
+
+        public Vector3 GetWorldVector(PointF pt)
         {
             var world = GameManager.Instance.World;
-            Vector3 pos = new Vector3();
-            Vector3 spawnPos = new Vector3();
-            pos.x = _randomSource.Get(zone.minsSpawnBlock.x, zone.maxsSpawnBlock.x);
-            pos.z = _randomSource.Get(zone.minsSpawnBlock.z, zone.maxsSpawnBlock.z);
-
-            int height = world.GetTerrainHeight((int)pos.x, (int)pos.z);
-
-            spawnPos.x = pos.x;
-            spawnPos.y = height + 1.0f;
-            spawnPos.z = pos.z;
-            return spawnPos;
+            Logger.Debug("Getting height at {0}", pt);
+            int height = world.GetTerrainHeight((int)pt.X, (int)pt.Y);
+            Logger.Debug("Height was {0}", height);
+            return pt.WithHeight(height + 1);
         }
     }
 }
