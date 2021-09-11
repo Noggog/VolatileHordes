@@ -41,6 +41,7 @@ namespace VolatileHordes.Spawning
             for (int i = 0; i < attemptCount; i++)
             {
                 var pos = TryGetSingleRandomZonePos(zone);
+                
                 if (world.CanMobsSpawnAtPos(GetWorldVector(pos)))
                 {
                     return pos;
@@ -53,8 +54,8 @@ namespace VolatileHordes.Spawning
         public PointF TryGetSingleRandomZonePos(PlayerZone zone)
         {
             return new PointF(
-                _randomSource.Get(zone.MinsSpawnBlock.x, zone.MaxsSpawnBlock.x),
-                _randomSource.Get(zone.MinsSpawnBlock.z, zone.MaxsSpawnBlock.z));
+                _randomSource.Get(zone.MinsSpawnBlock.X, zone.MaxsSpawnBlock.X),
+                _randomSource.Get(zone.MinsSpawnBlock.Y, zone.MaxsSpawnBlock.Y));
         }
 
         public Vector3 GetWorldVector(PointF pt)

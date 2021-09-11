@@ -106,11 +106,11 @@ namespace VolatileHordes.Zones
         PlayerZone UpdatePlayer(PlayerZone ply, EntityPlayer ent)
         {
             var pos = ent.GetPosition();
-            ply.Mins = pos - (VisibleBox * 0.5f);
-            ply.Maxs = pos + (VisibleBox * 0.5f);
-            ply.MinsSpawnBlock = pos - (SpawnBlockBox * 0.5f);
-            ply.MaxsSpawnBlock = pos + (SpawnBlockBox * 0.5f);
-            ply.Center = pos;
+            ply.Mins = (pos - (VisibleBox * 0.5f)).ToPoint();
+            ply.Maxs = (pos + (VisibleBox * 0.5f)).ToPoint();
+            ply.MinsSpawnBlock = (pos - (SpawnBlockBox * 0.5f)).ToPoint();
+            ply.MaxsSpawnBlock = (pos + (SpawnBlockBox * 0.5f)).ToPoint();
+            ply.Center = pos.ToPoint();
             return ply;
         }
 

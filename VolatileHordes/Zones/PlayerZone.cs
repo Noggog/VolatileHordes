@@ -8,19 +8,19 @@ namespace VolatileHordes.Zones
     public class PlayerZone
     {
         public bool Valid { get; set; } = true;
-        public Vector3 Mins { get; set; }  = Vector3.zero;
-        public Vector3 Maxs { get; set; } = Vector3.zero;
-        public Vector3 MinsSpawnBlock { get; set; }  = Vector3.zero;
-        public Vector3 MaxsSpawnBlock { get; set; }  = Vector3.zero;
+        public PointF Mins { get; set; } = PointF.Empty;
+        public PointF Maxs { get; set; } = PointF.Empty;
+        public PointF MinsSpawnBlock { get; set; } = PointF.Empty;
+        public PointF MaxsSpawnBlock { get; set; } = PointF.Empty;
         public int EntityId { get; } = -1;
 
-        public Vector3 Center { get; set; }
+        public PointF Center { get; set; }
 
         public RectangleF SpawnRectangle => new(
-            x: MinsSpawnBlock.x,
-            y: MinsSpawnBlock.z,
-            width: MaxsSpawnBlock.x - MinsSpawnBlock.x,
-            height: MaxsSpawnBlock.z - MinsSpawnBlock.z);
+            x: MinsSpawnBlock.X,
+            y: MinsSpawnBlock.Y,
+            width: MaxsSpawnBlock.X - MinsSpawnBlock.X,
+            height: MaxsSpawnBlock.Y - MinsSpawnBlock.Y);
 
         public PlayerZone(int entityId)
         {
