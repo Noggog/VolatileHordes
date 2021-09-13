@@ -4,20 +4,20 @@ using VolatileHordes.Spawning.WanderingHordes;
 
 namespace VolatileHordes
 {
-    public class Settings
+    public class UserSettings
     {
         public static string SettingsPath = Path.Combine(Directory.GetCurrentDirectory(), "Mods", Constants.ModName, $"{Constants.ModName}.json");
 
-        public static Settings Load()
+        public static UserSettings Load()
         {
             if (File.Exists(SettingsPath))
             {
-                var readIn = JsonConvert.DeserializeObject<Settings>(File.ReadAllText(SettingsPath));
+                var readIn = JsonConvert.DeserializeObject<UserSettings>(File.ReadAllText(SettingsPath));
                 return readIn ?? new();
             }
             else
             {
-                var instance = new Settings();
+                var instance = new UserSettings();
                 File.WriteAllText(SettingsPath, JsonConvert.SerializeObject(instance, Formatting.Indented));
                 return instance;
             }

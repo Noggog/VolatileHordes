@@ -14,5 +14,10 @@ namespace VolatileHordes.Spawning
             SpawnPoint = spawnPoint;
             TriggerOrigin = triggerOrigin;
         }
+
+        public override string ToString()
+        {
+            return $"{SpawnPoint.ToString()} => {TriggerOrigin}";
+        }
     }
 }

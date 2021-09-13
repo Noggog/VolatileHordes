@@ -15,12 +15,12 @@ namespace VolatileHordes.Zones
         protected readonly List<PlayerZone> _zones = new();
         public IReadOnlyList<PlayerZone> Zones => _zones;
 
-        public PlayerZoneManager()
+        public PlayerZoneManager(TimeManager time)
         {
             Logger.Info("Player Chunk View Dim: {0} - {1} - {2}", ChunkViewDim,
                 VisibleBox,
                 SpawnBlockBox);
-            TimeManager.Instance.UpdateTicks()
+            time.UpdateTicks()
                 .Subscribe(_ => Update());
         }
 

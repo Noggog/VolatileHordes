@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
-using UnityEngine;
 using VolatileHordes.Control;
+using VolatileHordes.GameAbstractions;
 
 namespace VolatileHordes.Spawning
 {
@@ -17,12 +17,15 @@ namespace VolatileHordes.Spawning
             _control = control;
         }
 
-        public void Spawn(PointF spawn, PointF target)
+        public IZombie? Spawn(PointF spawn, PointF target, ZombieGroup? group)
         {
             var zombie = _creator.CreateZombie(spawn);
-            if (zombie == null) return;
+            if (zombie == null) return null;
 
+            group?.Zombies.Add(zombie);
+            
             _control.SendZombieTowards(zombie, target);
+            return zombie;
         }
     }
 }
