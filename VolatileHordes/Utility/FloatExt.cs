@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 namespace VolatileHordes
 {
@@ -10,6 +11,11 @@ namespace VolatileHordes
             if (float.IsInfinity(a) && float.IsInfinity(b)) return true;
             if (float.IsNaN(a) && float.IsNaN(b)) return true;
             return false;
+        }
+
+        public static int Floor(this float f)
+        {
+            return Mathf.FloorToInt(f);
         }
     }
 }

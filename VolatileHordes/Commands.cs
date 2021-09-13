@@ -23,16 +23,29 @@ namespace VolatileHordes
 
             switch (paramList[0].ToLower())
             {
+                case "stats":
+                {
+                    Container.ZombieCreator.PrintZombieStats();
+                    break;
+                }
                 case "wandering":
                 {
                     Logger.Info("Artificially spawning a wandering horde");
-                    WanderingHordeDirector.Instance.SpawnHorde();
+                    if (paramList.Count > 1 && int.TryParse(paramList[1], out var size))
+                    {
+                        Container.WanderingHordeDirector.Spawn(size);
+                    }
+                    else
+                    {
+                        Container.WanderingHordeDirector.Spawn();
+                    }
+                    
                     break;
                 }
                 case "single-tracker":
                 {
                     Logger.Info("Artificially spawning a single tracking zombie");
-                    SingleTracker.Instance.SpawnSingle();
+                    Container.SingleTrackerDirector.SpawnSingle();
                     break;
                 }
                 default:

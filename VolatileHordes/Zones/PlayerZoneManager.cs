@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
-using VolatileHordes.Randomization;
 
 namespace VolatileHordes.Zones
 {
-    public class PlayerZoneManager : ZoneManager<PlayerZone>
+    public class PlayerZoneManager
     {
         static int ChunkViewDim = GamePrefs.GetInt(EnumGamePrefs.ServerMaxAllowedViewDistance);
 
@@ -12,9 +12,10 @@ namespace VolatileHordes.Zones
         static Vector3 VisibleBox = ChunkSize * ChunkViewDim;
         static Vector3 SpawnBlockBox = new(VisibleBox.x - 32, VisibleBox.y - 32, VisibleBox.z - 32);
 
-        public static readonly PlayerZoneManager Instance = new();
-        
-        private PlayerZoneManager()
+        protected readonly List<PlayerZone> _zones = new();
+        public IReadOnlyList<PlayerZone> Zones => _zones;
+
+        public PlayerZoneManager()
         {
             Logger.Info("Player Chunk View Dim: {0} - {1} - {2}", ChunkViewDim,
                 VisibleBox,
@@ -23,11 +24,11 @@ namespace VolatileHordes.Zones
                 .Subscribe(_ => Update());
         }
 
-        public void PlayerSpawnedInWorld(ClientInfo _cInfo, RespawnType _respawnReason, Vector3i _pos)
+        public void PlayerSpawnedInWorld(ClientInfo? _cInfo, RespawnType _respawnReason, Vector3i _pos)
         {
             try
             {
-                Logger.Debug("PlayerSpawnedInWorld \"{0}\", \"{1}\", \"{2}\"", _cInfo, _respawnReason, _pos);
+                Logger.Debug("PlayerSpawnedInWorld \"{0}\", \"{1}\", \"{2}\"", _cInfo?.ToString() ?? "null", _respawnReason, _pos);
                 int entityId = GetPlayerEntityId(_cInfo);
                 switch (_respawnReason)
                 {
@@ -45,11 +46,11 @@ namespace VolatileHordes.Zones
             }
         }
 
-        public void PlayerDisconnected(ClientInfo _cInfo, bool _bShutdown)
+        public void PlayerDisconnected(ClientInfo? _cInfo, bool _bShutdown)
         {
             try
             {
-                Logger.Debug("PlayerDisconnected \"{0}\", \"{1}\"", _cInfo, _bShutdown);
+                Logger.Debug("PlayerDisconnected \"{0}\", \"{1}\"", _cInfo?.ToString() ?? "null", _bShutdown);
                 int entityId = GetPlayerEntityId(_cInfo);
                 RemovePlayer(entityId);
             }
@@ -60,14 +61,13 @@ namespace VolatileHordes.Zones
         }
 
         // Helper function for single player games where _cInfo is null.
-        static int GetPlayerEntityId(ClientInfo _cInfo)
+        static int GetPlayerEntityId(ClientInfo? _cInfo)
         {
             if (_cInfo != null)
                 return _cInfo.entityId;
 
             // On a local host this is set to null, grab id from player list.
-            var world = GameManager.Instance.World;
-            var player = world.Players.list[0];
+            var player = GameManager.Instance.World.Players.list[0];
 
             return player.entityId;
         }
@@ -78,14 +78,12 @@ namespace VolatileHordes.Zones
             // So we have to check if the player is already here.
             foreach (var zone in _zones)
             {
-                if (zone.entityId == entityId)
+                if (zone.EntityId == entityId)
                     return;
             }
-            PlayerZone area = new PlayerZone
-            {
-                index = _zones.Count,
-                entityId = entityId,
-            };
+
+            var area = new PlayerZone(entityId);
+            
             _zones.Add(UpdatePlayer(area, entityId));
 
             Logger.Info("Added player {0}", entityId);
@@ -96,7 +94,7 @@ namespace VolatileHordes.Zones
             for (int i = 0; i < _zones.Count; i++)
             {
                 var ply = _zones[i] as PlayerZone;
-                if (ply.entityId == entityId)
+                if (ply.EntityId == entityId)
                 {
                     Logger.Info("Removed player: {0}", entityId);
                     _zones.RemoveAt(i);
@@ -108,11 +106,11 @@ namespace VolatileHordes.Zones
         PlayerZone UpdatePlayer(PlayerZone ply, EntityPlayer ent)
         {
             var pos = ent.GetPosition();
-            ply.mins = pos - (VisibleBox * 0.5f);
-            ply.maxs = pos + (VisibleBox * 0.5f);
-            ply.minsSpawnBlock = pos - (SpawnBlockBox * 0.5f);
-            ply.maxsSpawnBlock = pos + (SpawnBlockBox * 0.5f);
-            ply.center = pos;
+            ply.Mins = (pos - (VisibleBox * 0.5f)).ToPoint();
+            ply.Maxs = (pos + (VisibleBox * 0.5f)).ToPoint();
+            ply.MinsSpawnBlock = (pos - (SpawnBlockBox * 0.5f)).ToPoint();
+            ply.MaxsSpawnBlock = (pos + (SpawnBlockBox * 0.5f)).ToPoint();
+            ply.Center = pos.ToPoint();
             return ply;
         }
 
@@ -138,18 +136,18 @@ namespace VolatileHordes.Zones
             {
                 var ply = _zones[i];
 
-                if (players.TryGetValue(ply.entityId, out var ent))
+                if (players.TryGetValue(ply.EntityId, out var ent))
                 {
                     _zones[i] = UpdatePlayer(ply, ent);
                 }
                 else
                 {
                     // Remove player.
-                    ply.valid = false;
+                    ply.Valid = false;
                     _zones.RemoveAt(i);
                     i--;
 
-                    Logger.Error("Player not in player list: {0}", ply.entityId);
+                    Logger.Error("Player not in player list: {0}", ply.EntityId);
                 }
 
                 if (_zones.Count == 0)
@@ -158,12 +156,5 @@ namespace VolatileHordes.Zones
         }
 
         public bool HasPlayers() => _zones.Count > 0;
-
-        public Vector3? GetRandomPlayerZoneEdge(RandomSource random)
-        {
-            var zone = GetRandom(random);
-            if (zone == null) return null;
-            return zone.GetRandomZonePos(random);
-        }
     }
 }

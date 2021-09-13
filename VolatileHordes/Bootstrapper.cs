@@ -1,5 +1,4 @@
 ﻿using System;
-using VolatileHordes.Zones;
 
 namespace VolatileHordes
 {
@@ -10,16 +9,14 @@ namespace VolatileHordes
             ModEvents.GameStartDone.RegisterHandler(GameStarted);
             ModEvents.GameUpdate.RegisterHandler(GameUpdate);
             // ModEvents.GameShutdown.RegisterHandler(GameShutdown);
-            ModEvents.PlayerSpawnedInWorld.RegisterHandler(PlayerZoneManager.Instance.PlayerSpawnedInWorld);
-            ModEvents.PlayerDisconnected.RegisterHandler(PlayerZoneManager.Instance.PlayerDisconnected);
+            ModEvents.PlayerSpawnedInWorld.RegisterHandler(Container.PlayerZoneManager.PlayerSpawnedInWorld);
+            ModEvents.PlayerDisconnected.RegisterHandler(Container.PlayerZoneManager.PlayerDisconnected);
         }
 
         static void GameStarted()
         {
             Logger.Info($"Game started");
-            Settings.Load();
-            HordeManager.Instance.Init();
-            BiomeData.Instance.Init();
+            Container.Biome.Init();
         }
 
         static void GameUpdate()

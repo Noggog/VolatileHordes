@@ -8,19 +8,18 @@ namespace VolatileHordes
     {
         public static string SettingsPath = Path.Combine(Directory.GetCurrentDirectory(), "Mods", Constants.ModName, $"{Constants.ModName}.json");
 
-        public static Settings Instance { get; private set; } = null!;
-
-        public static void Load()
+        public static Settings Load()
         {
             if (File.Exists(SettingsPath))
             {
                 var readIn = JsonConvert.DeserializeObject<Settings>(File.ReadAllText(SettingsPath));
-                Instance = readIn ?? new();
+                return readIn ?? new();
             }
             else
             {
-                Instance = new();
-                File.WriteAllText(SettingsPath, JsonConvert.SerializeObject(Instance, Formatting.Indented));
+                var instance = new Settings();
+                File.WriteAllText(SettingsPath, JsonConvert.SerializeObject(instance, Formatting.Indented));
+                return instance;
             }
         }
 

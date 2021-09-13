@@ -5,6 +5,13 @@ namespace VolatileHordes.Spawning.WanderingHordes
 {
     public class WanderingHordeCalculator
     {
+        private readonly RandomSource _rand;
+
+        public WanderingHordeCalculator(RandomSource rand)
+        {
+            _rand = rand;
+        }
+        
         static double Interpolate(float min, float max, float prog)
         {
             var diff = max - min;
@@ -13,7 +20,6 @@ namespace VolatileHordes.Spawning.WanderingHordes
         
         public int GetHordeSize(
             IWanderingHordeSettingsGetter settings,
-            RandomSource rand,
             ref int noHordeCounter,
             int gamestage)
         {
@@ -21,7 +27,7 @@ namespace VolatileHordes.Spawning.WanderingHordes
             
             var percentLargeHorde = Interpolate(settings.PercentLargeHordeStart, settings.PercentLargeHordeEnd, percentThroughGeneration);
             percentLargeHorde += noHordeCounter * settings.PercentAddedWhenNoHorde;
-            var large = rand.Random.NextDouble() <= percentLargeHorde;
+            var large = _rand.Random.NextDouble() <= percentLargeHorde;
             int lower, upper;
             if (large)
             {
@@ -35,7 +41,7 @@ namespace VolatileHordes.Spawning.WanderingHordes
                 lower = settings.LowerTrickle;
                 upper = settings.UpperTrickle;
             }
-            var variation = settings.Variation * rand.Random.NextDouble() * (rand.Random.Next(2) == 1 ? 1 : -1);
+            var variation = settings.Variation * _rand.Random.NextDouble() * (_rand.Random.Next(2) == 1 ? 1 : -1);
             var dResult = Interpolate(lower, upper, percentThroughGeneration);
             dResult += dResult * variation;
             return (int)Math.Round(dResult);
