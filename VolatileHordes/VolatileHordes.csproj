@@ -51,11 +51,14 @@
     <Compile Include="Randomization\RandomSource.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Spawning\GamestageCalculator.cs" />
-    <Compile Include="Spawning\SingleTracker.cs" />
+    <Compile Include="Spawning\SingleTrackerDirector.cs" />
     <Compile Include="Spawning\SpawningPositions.cs" />
+    <Compile Include="Spawning\SpawnRowPerpendicular.cs" />
+    <Compile Include="Spawning\SingleTrackerSpawner.cs" />
     <Compile Include="Spawning\SpawnTarget.cs" />
     <Compile Include="Spawning\WanderingHordes\WanderingHordeCalculator.cs" />
     <Compile Include="Spawning\WanderingHordes\WanderingHordeDirector.cs" />
+    <Compile Include="Spawning\WanderingHordes\WanderingHordeSpawner.cs" />
     <Compile Include="Spawning\WanderingHordes\WanderingHordeSettings.cs" />
     <Compile Include="Spawning\ZombieCreator.cs" />
     <Compile Include="TimeManager.cs" />

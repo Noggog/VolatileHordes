@@ -16,7 +16,6 @@ namespace VolatileHordes
         static void GameStarted()
         {
             Logger.Info($"Game started");
-            Settings.Load();
             Container.Biome.Init();
         }
 

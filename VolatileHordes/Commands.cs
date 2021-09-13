@@ -31,13 +31,21 @@ namespace VolatileHordes
                 case "wandering":
                 {
                     Logger.Info("Artificially spawning a wandering horde");
-                    Container.WanderingHorde.SpawnHorde();
+                    if (paramList.Count > 1 && int.TryParse(paramList[1], out var size))
+                    {
+                        Container.WanderingHordeDirector.Spawn(size);
+                    }
+                    else
+                    {
+                        Container.WanderingHordeDirector.Spawn();
+                    }
+                    
                     break;
                 }
                 case "single-tracker":
                 {
                     Logger.Info("Artificially spawning a single tracking zombie");
-                    Container.SingleTracker.SpawnSingle();
+                    Container.SingleTrackerDirector.SpawnSingle();
                     break;
                 }
                 default:

@@ -73,9 +73,7 @@ namespace VolatileHordes.Spawning
 
         public Vector3 GetWorldVector(PointF pt)
         {
-            Logger.Debug("Getting height at {0}", pt);
             int height = _world.GetTerrainHeight(pt);
-            Logger.Debug("Height was {0}", height);
             return pt.WithHeight(height + 1);
         }
     }

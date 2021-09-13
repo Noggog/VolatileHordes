@@ -7,6 +7,7 @@ namespace VolatileHordes.Spawning
     public class ZombieCreator
     {
         private readonly IWorld _world;
+        private readonly SpawningPositions _spawningPositions;
         private readonly BiomeData _biomeData;
         private static readonly int MaxAliveZombies = GamePrefs.GetInt(EnumGamePrefs.MaxSpawnedZombies);
         private static readonly int MaxSpawnedZombies = (int)(MaxAliveZombies * 0.5);
@@ -15,9 +16,11 @@ namespace VolatileHordes.Spawning
 
         public ZombieCreator(
             IWorld world,
+            SpawningPositions spawningPositions,
             BiomeData biomeData)
         {
             _world = world;
+            _spawningPositions = spawningPositions;
             _biomeData = biomeData;
         }
 
@@ -64,7 +67,7 @@ namespace VolatileHordes.Spawning
             return true;
         }
         
-        public IZombie? CreateZombie(Vector3 spawnLocation, PointF? target)
+        public IZombie? CreateZombie(PointF spawnLocation)
         {
             if (!CanSpawnZombie())
             {
@@ -72,14 +75,16 @@ namespace VolatileHordes.Spawning
                 return null;
             }
 
-            Chunk? chunk = _world.GetChunkAt(spawnLocation.ToPoint());
+            Chunk? chunk = _world.GetChunkAt(spawnLocation);
             if (chunk == null)
             {
-                Logger.Debug("Chunk not loaded at {0} {1}", spawnLocation.x, spawnLocation.z);
+                Logger.Debug("Chunk not loaded at {0}", spawnLocation);
                 return null;
             }
+
+            var worldSpawn = _spawningPositions.GetWorldVector(spawnLocation);
     
-            if (!CanZombieSpawnAt(spawnLocation))
+            if (!CanZombieSpawnAt(worldSpawn))
             {
                 Logger.Debug("Unable to spawn zombie at {0}, CanMobsSpawnAtPos failed", spawnLocation);
                 return null;
@@ -87,8 +92,8 @@ namespace VolatileHordes.Spawning
     
             var classId = _biomeData.GetZombieClass(
                 chunk, 
-                (int)spawnLocation.x,
-                (int)spawnLocation.z);
+                (int)spawnLocation.X,
+                (int)spawnLocation.Y);
             if (classId == -1)
             {
                 int lastClassId = -1;
@@ -96,15 +101,15 @@ namespace VolatileHordes.Spawning
                 Logger.Debug("Used fallback for zombie class!");
             }
 
-            var zombie = _world.SpawnZombie(classId, spawnLocation);
+            var zombie = _world.SpawnZombie(classId, worldSpawn);
             
             if (zombie == null)
             {
-                Logger.Error("Unable to create zombie entity!, Entity Id: {0}, Pos: {1}", classId, spawnLocation);
+                Logger.Error("Unable to create zombie entity!, Entity Id: {0}, Pos: {1}", classId, worldSpawn);
                 return null;
             }
     
-            Logger.Debug("Spawned zombie {0} at {1}", zombie, spawnLocation);
+            Logger.Debug("Spawned zombie {0} at {1}", zombie, worldSpawn);
     
             return zombie;
         }
