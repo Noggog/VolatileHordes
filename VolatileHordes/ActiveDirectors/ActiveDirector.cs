@@ -24,9 +24,11 @@ namespace VolatileHordes.ActiveDirectors
                 .Subscribe(CleanGroups);
         }
 
-        public void TrackGroup(ZombieGroup zombieGroup)
+        public ZombieGroup NewGroup()
         {
+            var zombieGroup = new ZombieGroup();
             _groups.Add(zombieGroup);
+            return zombieGroup;
         }
 
         private void CleanGroups()

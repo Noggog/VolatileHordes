@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 
 namespace VolatileHordes.Spawning.WanderingHordes
 {
@@ -20,12 +21,12 @@ namespace VolatileHordes.Spawning.WanderingHordes
             _spawnRow = spawnRow;
         }
         
-        public void SpawnHorde(PointF pos, PointF target, int size, ZombieGroup? group)
+        public async Task SpawnHorde(PointF pos, PointF target, int size, ZombieGroup? group)
         {
             var rows = size / NumPerRow;
-            _time.Interval(TimeSpan.FromSeconds(SecondDelay))
+            await _time.Interval(TimeSpan.FromSeconds(SecondDelay))
                 .Take(rows)
-                .Subscribe(_ =>
+                .Do(_ =>
                 {
                     var numToSpawn = checked((byte)Math.Min(size, NumPerRow));
                     size -= numToSpawn;
