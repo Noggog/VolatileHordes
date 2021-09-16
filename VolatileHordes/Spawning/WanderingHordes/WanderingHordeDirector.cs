@@ -1,4 +1,6 @@
-﻿using VolatileHordes.ActiveDirectors;
+﻿using System.Threading.Tasks;
+using VolatileHordes.ActiveDirectors;
+using VolatileHordes.Control;
 
 namespace VolatileHordes.Spawning.WanderingHordes
 {
@@ -10,6 +12,7 @@ namespace VolatileHordes.Spawning.WanderingHordes
         private readonly WanderingHordeCalculator _hordeCalculator;
         private readonly SpawningPositions _spawningPositions;
         private readonly WanderingHordeSpawner _spawner;
+        private readonly ZombieControl _control;
 
         public WanderingHordeDirector(
             ActiveDirector director,
@@ -17,7 +20,8 @@ namespace VolatileHordes.Spawning.WanderingHordes
             GamestageCalculator gamestageCalculator,
             WanderingHordeCalculator hordeCalculator,
             SpawningPositions spawningPositions,
-            WanderingHordeSpawner spawner)
+            WanderingHordeSpawner spawner,
+            ZombieControl control)
         {
             _director = director;
             _settings = settings;
@@ -25,9 +29,10 @@ namespace VolatileHordes.Spawning.WanderingHordes
             _hordeCalculator = hordeCalculator;
             _spawningPositions = spawningPositions;
             _spawner = spawner;
+            _control = control;
         }
 
-        public void Spawn(int? size = null)
+        public async Task Spawn(int? size = null)
         {
             var spawnTarget = _spawningPositions.GetRandomTarget();
             if (spawnTarget == null) return;
@@ -38,9 +43,10 @@ namespace VolatileHordes.Spawning.WanderingHordes
             
             Logger.Info("Spawning horde of size {0} at {1}", size, spawnTarget);
 
-            var group = new ZombieGroup();
-            _spawner.SpawnHorde(spawnTarget.SpawnPoint.ToPoint(), spawnTarget.TriggerOrigin, size.Value, group);
-            _director.TrackGroup(group);
+            var group = _director.NewGroup();
+            await _spawner.SpawnHorde(spawnTarget.SpawnPoint.ToPoint(), spawnTarget.TriggerOrigin, size.Value, group);
+
+            _control.SendGroupTowards(group, spawnTarget.TriggerOrigin);
         }
     }
 }

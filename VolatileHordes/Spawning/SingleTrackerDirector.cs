@@ -26,7 +26,8 @@ namespace VolatileHordes.Spawning
             var zombie = _singleTrackerSpawner.Spawn(spawnTarget.SpawnPoint.ToPoint(), spawnTarget.TriggerOrigin, null);
             if (zombie != null)
             {
-                _director.TrackGroup(new ZombieGroup(zombie));
+                _director.NewGroup()
+                    .Zombies.Add(zombie);
             }
         }
     }

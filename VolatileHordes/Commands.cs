@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using VolatileHordes.Spawning;
 using VolatileHordes.Spawning.WanderingHordes;
 
@@ -18,6 +19,12 @@ namespace VolatileHordes
 
         public override void Execute(List<string> paramList, CommandSenderInfo _)
         {
+            ExecuteTask(paramList)
+                .FireAndForget(x => Log.Error("Error running command {0}", x));
+        }
+
+        private async Task ExecuteTask(List<string> paramList)
+        {
             if (paramList.Count < 1)
                 return;
 
@@ -33,11 +40,11 @@ namespace VolatileHordes
                     Logger.Info("Artificially spawning a wandering horde");
                     if (paramList.Count > 1 && int.TryParse(paramList[1], out var size))
                     {
-                        Container.WanderingHordeDirector.Spawn(size);
+                        await Container.WanderingHordeDirector.Spawn(size);
                     }
                     else
                     {
-                        Container.WanderingHordeDirector.Spawn();
+                        await Container.WanderingHordeDirector.Spawn();
                     }
                     
                     break;

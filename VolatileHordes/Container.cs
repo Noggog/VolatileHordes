@@ -27,6 +27,6 @@ namespace VolatileHordes
         public static readonly WanderingHordeCalculator WanderingHordeCalculator = new(Random);
         public static readonly GamestageCalculator GamestageCalculator = new(PlayerZoneManager);
         public static readonly UserSettings UserSettings = UserSettings.Load();
-        public static readonly WanderingHordeDirector WanderingHordeDirector = new(Director, UserSettings.WanderingHordeSettings, GamestageCalculator, WanderingHordeCalculator, Spawning, WanderingHordeSpawner);
+        public static readonly WanderingHordeDirector WanderingHordeDirector = new(Director, UserSettings.WanderingHordeSettings, GamestageCalculator, WanderingHordeCalculator, Spawning, WanderingHordeSpawner, ZombieControl);
     }
 }

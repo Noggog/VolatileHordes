@@ -51,9 +51,9 @@ namespace VolatileHordes
 
             foreach (var group in readIn.ZombieGroups)
             {
-                Container.Director.TrackGroup(
-                    new ZombieGroup(
-                        group.Zombies.Select<ZombieState, IZombie>(z => new Zombie(Container.World, z.EntityId)).ToArray()));
+                Container.Director.NewGroup()
+                    .Zombies.AddRange(
+                        group.Zombies.Select<ZombieState, IZombie>(z => new Zombie(Container.World, z.EntityId)).ToArray());
             }
         }
     }
