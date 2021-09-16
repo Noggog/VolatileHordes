@@ -2,7 +2,13 @@
 
 namespace VolatileHordes.Zones
 {
-    public class PlayerZone
+    public interface ISpawnTarget
+    {
+        RectangleF SpawnRectangle { get; }
+        int EntityId { get; }
+    }
+    
+    public class PlayerZone : ISpawnTarget
     {
         public bool Valid { get; set; } = true;
         public PointF Mins { get; set; } = PointF.Empty;

@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using UnityEngine;
+using VolatileHordes.GameAbstractions;
 
 namespace VolatileHordes.Spawning
 {
@@ -19,10 +21,11 @@ namespace VolatileHordes.Spawning
             return Vector3.Cross(lineToTarget, Vector3.up).normalized;
         }
         
-        public void Spawn(PointF spawnLocation, PointF target, byte number, float spacing)
+        public void Spawn(PointF spawnLocation, PointF target, byte number, float spacing, ZombieGroup? group)
         {
             if (number == 0) return;
-            _singleTrackerSpawner.Spawn(spawnLocation, target);
+
+            _singleTrackerSpawner.Spawn(spawnLocation, target, group);
 
             if (number == 1) return;
 
@@ -33,13 +36,13 @@ namespace VolatileHordes.Spawning
             var numToSpawn = Mathf.Ceil(numPerSide);
             for (int i = 1; i <= numToSpawn; i++)
             {
-                _singleTrackerSpawner.Spawn((spawnLocation.WithHeight(0) + perpendicular * spacing * i).ToPoint(), target);
+                _singleTrackerSpawner.Spawn((spawnLocation.WithHeight(0) + perpendicular * spacing * i).ToPoint(), target, group);
             }
             
             numToSpawn = Mathf.Floor(numPerSide);
             for (int i = 1; i <= numToSpawn; i++)
             {
-                _singleTrackerSpawner.Spawn((spawnLocation.WithHeight(0) + perpendicular * spacing * i * -1).ToPoint(), target);
+                _singleTrackerSpawner.Spawn((spawnLocation.WithHeight(0) + perpendicular * spacing * i * -1).ToPoint(), target, group);
             }
         }
     }

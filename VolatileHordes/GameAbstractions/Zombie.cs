@@ -4,26 +4,37 @@ namespace VolatileHordes.GameAbstractions
 {
     public interface IZombie
     {
-        void SendTowards(Vector3 vector3);
+        int Id { get; }
+        bool SendTowards(Vector3 vector3);
+        EntityZombie? GetEntity();
     }
 
     public class Zombie : IZombie
     {
-        private readonly EntityZombie _zombie;
+        private readonly IWorld _world;
+        public int Id { get; }
 
-        public Zombie(EntityZombie zombie)
+        public Zombie(
+            IWorld world,
+            int entityId)
         {
-            _zombie = zombie;
+            _world = world;
+            Id = entityId;
         }
 
-        public void SendTowards(Vector3 vector3)
+        public EntityZombie? GetEntity() => _world.GetEntity(Id) as EntityZombie;
+
+        public bool SendTowards(Vector3 vector3)
         {
-            _zombie.SetInvestigatePosition(vector3, 6000, false);
+            var entity = GetEntity();
+            if (entity == null) return false;
+            entity.SetInvestigatePosition(vector3, 6000, false);
+            return true;
         }
 
         public override string ToString()
         {
-            return _zombie.ToString();
+            return GetEntity()?.ToString() ?? Id.ToString();
         }
     }
 }

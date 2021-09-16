@@ -9,23 +9,27 @@ namespace VolatileHordes.Spawning.WanderingHordes
         private const byte NumPerRow = 5;
         private const double SecondDelay = 2;
         private const float Spacing = 2;
+        private readonly TimeManager _time;
         private readonly SpawnRowPerpendicular _spawnRow;
 
-        public WanderingHordeSpawner(SpawnRowPerpendicular spawnRow)
+        public WanderingHordeSpawner(
+            TimeManager time,
+            SpawnRowPerpendicular spawnRow)
         {
+            _time = time;
             _spawnRow = spawnRow;
         }
         
-        public void SpawnHorde(PointF pos, PointF target, int size)
+        public void SpawnHorde(PointF pos, PointF target, int size, ZombieGroup? group)
         {
             var rows = size / NumPerRow;
-            TimeManager.Instance.Interval(TimeSpan.FromSeconds(SecondDelay))
+            _time.Interval(TimeSpan.FromSeconds(SecondDelay))
                 .Take(rows)
                 .Subscribe(_ =>
                 {
                     var numToSpawn = checked((byte)Math.Min(size, NumPerRow));
                     size -= numToSpawn;
-                    _spawnRow.Spawn(pos, target, numToSpawn, Spacing);
+                    _spawnRow.Spawn(pos, target, numToSpawn, Spacing, group);
                 });
         }
     }

@@ -1,7 +1,10 @@
-﻿namespace VolatileHordes.Spawning.WanderingHordes
+﻿using VolatileHordes.ActiveDirectors;
+
+namespace VolatileHordes.Spawning.WanderingHordes
 {
     public class WanderingHordeDirector
     {
+        private readonly ActiveDirector _director;
         private readonly WanderingHordeSettings _settings;
         private readonly GamestageCalculator _gamestageCalculator;
         private readonly WanderingHordeCalculator _hordeCalculator;
@@ -9,12 +12,14 @@
         private readonly WanderingHordeSpawner _spawner;
 
         public WanderingHordeDirector(
+            ActiveDirector director,
             WanderingHordeSettings settings,
             GamestageCalculator gamestageCalculator,
             WanderingHordeCalculator hordeCalculator,
             SpawningPositions spawningPositions,
             WanderingHordeSpawner spawner)
         {
+            _director = director;
             _settings = settings;
             _gamestageCalculator = gamestageCalculator;
             _hordeCalculator = hordeCalculator;
@@ -32,8 +37,10 @@
                 _gamestageCalculator.GetEffectiveGamestage());
             
             Logger.Info("Spawning horde of size {0} at {1}", size, spawnTarget);
-            
-            _spawner.SpawnHorde(spawnTarget.SpawnPoint.ToPoint(), spawnTarget.TriggerOrigin, size.Value);
+
+            var group = new ZombieGroup();
+            _spawner.SpawnHorde(spawnTarget.SpawnPoint.ToPoint(), spawnTarget.TriggerOrigin, size.Value, group);
+            _director.TrackGroup(group);
         }
     }
 }

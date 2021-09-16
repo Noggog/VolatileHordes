@@ -7,8 +7,6 @@ namespace VolatileHordes
 {
     public class TimeManager
     {
-        public static readonly TimeManager Instance = new();
-
         private BehaviorSubject<DateTime> UpdateTime = new(DateTime.Now);
 
         public void Update()

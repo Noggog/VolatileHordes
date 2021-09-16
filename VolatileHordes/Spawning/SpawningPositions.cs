@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.Drawing;
+using UniLinq;
 using UnityEngine;
 using VolatileHordes.GameAbstractions;
 using VolatileHordes.Randomization;
@@ -26,7 +28,7 @@ namespace VolatileHordes.Spawning
         {
             var zone = GetRandomZone();
             if (zone == null) return null;
-            var pos = GetRandomZoneVector(zone);
+            var pos = GetRandomSafeCorner(zone);
             if (pos == null) return null;
             return new SpawnTarget(pos.Value, zone.Center);
         }
@@ -49,12 +51,31 @@ namespace VolatileHordes.Spawning
             return default;
         }
         
-        public Vector3? GetRandomZoneVector(PlayerZone zone, int attemptCount = 10)
+        public Vector3? GetRandomPosition(PlayerZone zone, int attemptCount = 10)
         {
             for (int i = 0; i < attemptCount; i++)
             {
                 var pos = TryGetSingleRandomZonePos(zone);
                 var worldPos = GetWorldVector(pos);
+                if (_world.CanSpawnAt(worldPos))
+                {
+                    return worldPos;
+                }
+            }
+
+            return null;
+        }
+
+        public Vector3? GetRandomSafeCorner(PlayerZone zone)
+        {
+            var corners = ZoneProcessing.EdgeCornersFromCluster(
+                ZoneProcessing.GetConnectedSpawnRects(zone, _playerZoneManager.Zones)
+                    .ToArray())
+                .ToArray();
+
+            foreach (var corner in corners.EnumerateFromRandomIndex(_randomSource))
+            {
+                var worldPos = GetWorldVector(corner);
                 if (_world.CanSpawnAt(worldPos))
                 {
                     return worldPos;

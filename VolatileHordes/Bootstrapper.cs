@@ -8,7 +8,7 @@ namespace VolatileHordes
         {
             ModEvents.GameStartDone.RegisterHandler(GameStarted);
             ModEvents.GameUpdate.RegisterHandler(GameUpdate);
-            // ModEvents.GameShutdown.RegisterHandler(GameShutdown);
+            ModEvents.GameShutdown.RegisterHandler(GameShutdown);
             ModEvents.PlayerSpawnedInWorld.RegisterHandler(Container.PlayerZoneManager.PlayerSpawnedInWorld);
             ModEvents.PlayerDisconnected.RegisterHandler(Container.PlayerZoneManager.PlayerDisconnected);
         }
@@ -16,6 +16,7 @@ namespace VolatileHordes
         static void GameStarted()
         {
             Logger.Info($"Game started");
+            WorldState.Load();
             Container.Biome.Init();
         }
 
@@ -23,12 +24,18 @@ namespace VolatileHordes
         {
             try
             {
-                TimeManager.Instance.Update();
+                Container.Time.Update();
             }
             catch (Exception e)
             {
                 Logger.Error($"Error in API.GameUpdate: {e.Message}:\n{e.StackTrace}");
             }
+        }
+
+        static void GameShutdown()
+        {
+            Logger.Info($"Game shutdown");
+            WorldState.Save();
         }
     }
 }

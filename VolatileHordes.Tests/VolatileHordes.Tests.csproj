@@ -82,8 +82,10 @@
         </Reference>
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="IsExternalInit.cs" />
         <Compile Include="RxTests.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
+        <Compile Include="Utility\ListExtTests.cs" />
         <Compile Include="Zones\ZoneProcessingTests.cs" />
     </ItemGroup>
     <ItemGroup>

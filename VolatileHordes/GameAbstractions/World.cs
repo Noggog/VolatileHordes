@@ -13,6 +13,7 @@ namespace VolatileHordes.GameAbstractions
         int GetTerrainHeight(PointF pt);
         IZombie? SpawnZombie(int classId, Vector3 pos);
         Chunk? GetChunkAt(PointF pt);
+        Entity? GetEntity(int id);
     }
 
     public class WorldWrapper : IWorld
@@ -36,7 +37,7 @@ namespace VolatileHordes.GameAbstractions
             
             World.SpawnEntityInWorld(zombieEnt);
             
-            return new Zombie(zombieEnt);
+            return new Zombie(this, zombieEnt.entityId);
         }
 
         public IEnumerable<IPlayer> Players => World.Players.list.Select<EntityPlayer, IPlayer>(p => new Player(p));
@@ -45,5 +46,7 @@ namespace VolatileHordes.GameAbstractions
         {
             return World.GetChunkSync(World.toChunkXZ(pt.X.Floor()), 0, World.toChunkXZ(pt.Y.Floor())) as Chunk;
         }
+
+        public Entity? GetEntity(int id) => World.GetEntity(id);
     }
 }
