@@ -18,7 +18,8 @@ namespace VolatileHordes
         public static readonly SpawningPositions Spawning = new(World, PlayerZoneManager, Random);
         public static readonly ZombieCreator ZombieCreator = new(World, Spawning, Biome);
         public static readonly ZombieControl ZombieControl = new(Spawning);
-        public static readonly SingleTrackerSpawner SingleTrackerSpawner = new(ZombieCreator, ZombieControl);
+        public static readonly SpawnSingle SpawnSingle = new(ZombieCreator);
+        public static readonly SingleTrackerSpawner SingleTrackerSpawner = new(SpawnSingle, ZombieControl);
         public static readonly ActiveDirector Director = new(Time, PlayerZoneManager);
         public static readonly SingleTrackerDirector SingleTrackerDirector = new(Director, Spawning, SingleTrackerSpawner);
         public static readonly SpawnRowPerpendicular SpawnRowPerpendicular = new(SingleTrackerSpawner);

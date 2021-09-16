@@ -47,6 +47,7 @@
     <Compile Include="GameAbstractions\Zombie.cs" />
     <Compile Include="GameAbstractions\Player.cs" />
     <Compile Include="GameAbstractions\World.cs" />
+    <Compile Include="Spawning\SpawnSingle.cs" />
     <Compile Include="Utility\ListExt.cs" />
     <Compile Include="ZombieGroup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
