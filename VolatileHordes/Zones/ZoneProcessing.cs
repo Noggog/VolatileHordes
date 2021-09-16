@@ -50,5 +50,27 @@ namespace VolatileHordes.Zones
 
             return false;
         }
+        
+        public static IEnumerable<RectangleF> GetConnectedSpawnRects(ISpawnTarget zone, IReadOnlyCollection<ISpawnTarget> zones)
+        {
+            return ZoneProcessing.GetConnectedSpawnRects(zone, zones, new HashSet<int>());
+        }
+        
+        private static IEnumerable<RectangleF> GetConnectedSpawnRects(ISpawnTarget zone, IReadOnlyCollection<ISpawnTarget> zones, HashSet<int> passedPlayers)
+        {
+            yield return zone.SpawnRectangle;
+            passedPlayers.Add(zone.EntityId);
+
+            foreach (var rhsZone in zones)
+            {
+                if (passedPlayers.Contains(rhsZone.EntityId)) continue;
+                if (!rhsZone.SpawnRectangle.IntersectsWith(zone.SpawnRectangle)) continue;
+                
+                foreach (var rhsRect in GetConnectedSpawnRects(rhsZone, zones, passedPlayers))
+                {
+                    yield return rhsRect;
+                }
+            }
+        }
     }
 }

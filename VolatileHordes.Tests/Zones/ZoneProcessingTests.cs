@@ -205,5 +205,68 @@ namespace VolatileHordes.Tests.Zones
                 Assert.Equal(expected.Length, result.Length);
             }
         }
+
+        public class GetConnectedSpawnRects
+        {
+            public record SpawnTarget(RectangleF SpawnRectangle, int EntityId) : ISpawnTarget;
+            
+            [Fact]
+            public void Empty()
+            {
+                var rect = new RectangleF(1, 1, 3, 3);
+                var conn = ZoneProcessing.GetConnectedSpawnRects(new SpawnTarget(rect, -3),
+                    new ISpawnTarget[0]);
+                Assert.Equal(
+                    conn.ToHashSet(),
+                    new []{ rect }.ToHashSet());
+            }
+            
+            [Fact]
+            public void Unconnected()
+            {
+                var rect = new RectangleF(1, 1, 3, 3);
+                var conn = ZoneProcessing.GetConnectedSpawnRects(new SpawnTarget(rect, 1),
+                    new ISpawnTarget[]
+                    {
+                        new SpawnTarget(
+                            new RectangleF(15, 15, 3, 3), 2)
+                    });
+                Assert.Equal(
+                    conn.ToHashSet(),
+                    new []{ rect }.ToHashSet());
+            }
+            
+            [Fact]
+            public void Overlap()
+            {
+                var rect = new RectangleF(1, 1, 3, 3);
+                var rect2 = new RectangleF(2, 2, 3, 3);
+                var conn = ZoneProcessing.GetConnectedSpawnRects(new SpawnTarget(rect, 1),
+                    new ISpawnTarget[]
+                    {
+                        new SpawnTarget(rect2, 2)
+                    });
+                Assert.Equal(
+                    conn.ToHashSet(),
+                    new []{ rect, rect2 }.ToHashSet());
+            }
+            
+            [Fact]
+            public void Chained()
+            {
+                var rect = new RectangleF(1, 1, 3, 3);
+                var rect2 = new RectangleF(2, 2, 3, 3);
+                var rect3 = new RectangleF(4, 4, 3, 3);
+                var conn = ZoneProcessing.GetConnectedSpawnRects(new SpawnTarget(rect, 1),
+                    new ISpawnTarget[]
+                    {
+                        new SpawnTarget(rect2, 2),
+                        new SpawnTarget(rect3, 3)
+                    });
+                Assert.Equal(
+                    conn.ToHashSet(),
+                    new []{ rect, rect2, rect3 }.ToHashSet());
+            }
+        }
     }
 }

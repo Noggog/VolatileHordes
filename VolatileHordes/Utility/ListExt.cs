@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using VolatileHordes.Randomization;
 
 namespace VolatileHordes
 {
@@ -8,6 +9,20 @@ namespace VolatileHordes
         {
             if (item == null) return;
             list.Add(item);
+        }
+
+        public static IEnumerable<T> EnumerateAllFromIndex<T>(this IReadOnlyList<T> list, int startIndex)
+        {
+            for (int i = 0; i < list.Count; i++)
+            {
+                var index = (startIndex + i) % list.Count;
+                yield return list[index];
+            }
+        }
+
+        public static IEnumerable<T> EnumerateFromRandomIndex<T>(this IReadOnlyList<T> list, RandomSource randomSource)
+        {
+            return EnumerateAllFromIndex(list, randomSource.Random.Next(list.Count - 1));
         }
     }
     
