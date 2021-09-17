@@ -1,4 +1,5 @@
 ﻿using VolatileHordes.ActiveDirectors;
+using VolatileHordes.ActiveDirectors.Roaming;
 using VolatileHordes.Control;
 using VolatileHordes.GameAbstractions;
 using VolatileHordes.Randomization;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using VolatileHordes.ActiveDirectors;
+using VolatileHordes.ActiveDirectors.Roaming;
 using VolatileHordes.Control;
 
 namespace VolatileHordes.Spawning.WanderingHordes

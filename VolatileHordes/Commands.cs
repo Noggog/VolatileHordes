@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using VolatileHordes.ActiveDirectors;
 using VolatileHordes.Spawning;
 using VolatileHordes.Spawning.WanderingHordes;
 
@@ -35,7 +36,7 @@ namespace VolatileHordes
                     Container.ZombieCreator.PrintZombieStats();
                     break;
                 }
-                case "wandering":
+                case "wander":
                 {
                     Logger.Info("Artificially spawning a wandering horde");
                     if (paramList.Count > 1 && int.TryParse(paramList[1], out var size))
@@ -47,6 +48,12 @@ namespace VolatileHordes
                         await Container.WanderingHordeDirector.Spawn();
                     }
                     
+                    break;
+                }
+                case "redirect":
+                {
+                    Logger.Info("Artificially redirecting");
+                    Container.RoamOccasionally.Redirect.Fire();
                     break;
                 }
                 case "single-tracker":

@@ -1,16 +1,17 @@
 ﻿using System;
-using System.Reactive;
 using System.Reactive.Linq;
 using VolatileHordes.Control;
 using VolatileHordes.Spawning;
 
-namespace VolatileHordes.ActiveDirectors
+namespace VolatileHordes.ActiveDirectors.Roaming
 {
     public class RoamOccasionally
     {
         private readonly TimeManager _timeManager;
         private readonly SpawningPositions _spawningPositions;
         private readonly ZombieControl _zombieControl;
+
+        public Signal Redirect { get; } = new();
 
         public RoamOccasionally(
             TimeManager timeManager, 
@@ -24,7 +25,7 @@ namespace VolatileHordes.ActiveDirectors
 
         public void ApplyTo(ZombieGroup group)
         {
-            ApplyTo(group, 80, new TimeRange(TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(10)));
+            ApplyTo(group, 20, new TimeRange(TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(2)));
         }
 
         public void ApplyTo(ZombieGroup group, byte range, TimeRange frequency)
@@ -34,6 +35,8 @@ namespace VolatileHordes.ActiveDirectors
                 _timeManager.IntervalWithVariance(
                         frequency, 
                         timeSpan => Logger.Info($"Will send {group} somewhere in {timeSpan}"))
+                    .Unit()
+                    .Merge(Redirect.Signalled)
                     .Subscribe(_ =>
                     {
                         if (group.Target == null)
