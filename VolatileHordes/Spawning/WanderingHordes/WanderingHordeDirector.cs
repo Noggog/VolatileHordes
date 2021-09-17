@@ -44,15 +44,16 @@ namespace VolatileHordes.Spawning.WanderingHordes
             int noHorde = 0;
             size ??= _hordeCalculator.GetHordeSize(_settings, ref noHorde,
                 _gamestageCalculator.GetEffectiveGamestage());
-            
-            Logger.Info("Spawning horde of size {0} at {1}", size, spawnTarget);
 
             var group = _director.NewGroup();
+            
+            Logger.Info("Spawning horde {0} of size {1} at {2}", group.Id, size, spawnTarget);
+            
             await _spawner.SpawnHorde(spawnTarget.SpawnPoint.ToPoint(), spawnTarget.TriggerOrigin, size.Value, group);
 
             _control.SendGroupTowards(group, spawnTarget.TriggerOrigin);
             
-            _roamOccasionally.ApplyTo(group, 100, TimeSpan.FromMinutes(1), 0);
+            _roamOccasionally.ApplyTo(group);
         }
     }
 }

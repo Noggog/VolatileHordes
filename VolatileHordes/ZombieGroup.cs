@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using VolatileHordes.GameAbstractions;
 
 namespace VolatileHordes
@@ -35,9 +36,14 @@ namespace VolatileHordes
             }
         }
 
+        public int NumAlive() => Zombies
+            .Select(z => z.GetEntity())
+            .NotNull()
+            .Count(e => !e.IsDead());
+
         public override string ToString()
         {
-            return $"{nameof(ZombieGroup)}-{Id} ({Zombies.Count}){(Target == null ? null : $" -> {Target}")}";
+            return $"{nameof(ZombieGroup)}-{Id} ({NumAlive()}/{Zombies.Count})";
         }
     }
 }

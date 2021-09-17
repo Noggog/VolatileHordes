@@ -39,13 +39,10 @@ namespace VolatileHordes.ActiveDirectors
             {
                 var g = _groups[i];
                 if (now - g.SpawnTime < StaleGroupTime) continue;
-                var count = g.Zombies
-                    .Select(z => z.GetEntity())
-                    .NotNull()
-                    .Count(e => !e.IsDead());
+                var count = g.NumAlive();
                 if (count <= 1)
                 {
-                    Logger.Info("Cleaning group of {0} zombies with only {1} active.", g.Zombies.Count, count);
+                    Logger.Info("Cleaning {0}.", g);
                     var group = _groups[i];
                     _groups.RemoveAt(i);
                     group.Dispose();

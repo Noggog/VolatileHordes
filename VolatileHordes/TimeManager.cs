@@ -48,22 +48,30 @@ namespace VolatileHordes
             return Interval(timeSpan)
                 .Take(1);
         }
-
-        public IObservable<Unit> IntervalWithVariance(TimeSpan timeSpan, double positivePercent)
+        
+        public IObservable<Unit> IntervalWithVariance(TimeRange timeRange)
         {
-            return Observable
-                .Create<IObservable<Unit>>(async (obs, cancel) =>
+            return Observable.Defer(() => Observable.Return(_randomSource.GetRandomTime(timeRange)))
+                .Select(timeSpan =>
                 {
-                    while (!cancel.IsCancellationRequested)
-                    {
-                        var deviationPct = _randomSource.Random.NextDouble() * positivePercent;
-                        var deviation = (int)(timeSpan.Ticks * deviationPct);
-                        var spanToUse = timeSpan.Add(TimeSpan.FromTicks(deviation));
-                        obs.OnNext(Timer(spanToUse));
-                    }
-                    return Disposable.Empty;
+                    return Timer(timeSpan);
                 })
-                .Switch();
+                .Concat()
+                .Take(1)
+                .Repeat();
+        }
+        
+        public IObservable<Unit> IntervalWithVariance(TimeRange timeRange, Action<TimeSpan> onNewInterval)
+        {
+            return Observable.Defer(() => Observable.Return(_randomSource.GetRandomTime(timeRange)))
+                .Select(timeSpan =>
+                {
+                    onNewInterval(timeSpan);
+                    return Timer(timeSpan);
+                })
+                .Concat()
+                .Take(1)
+                .Repeat();
         }
     }
 }

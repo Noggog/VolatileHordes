@@ -51,6 +51,8 @@
     <Compile Include="Spawning\SpawnSingle.cs" />
     <Compile Include="Utility\ListExt.cs" />
     <Compile Include="Utility\TaskExt.cs" />
+    <Compile Include="Utility\TimeRange.cs" />
+    <Compile Include="Utility\TimeSpanExt.cs" />
     <Compile Include="ZombieGroup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Randomization\RandomExt.cs" />
