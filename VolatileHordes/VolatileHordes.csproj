@@ -39,6 +39,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ActiveDirectors\ActiveDirector.cs" />
+    <Compile Include="ActiveDirectors\RoamOccasionally.cs" />
     <Compile Include="BiomeData.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Commands.cs" />

@@ -46,7 +46,9 @@ namespace VolatileHordes.ActiveDirectors
                 if (count <= 1)
                 {
                     Logger.Info("Cleaning group of {0} zombies with only {1} active.", g.Zombies.Count, count);
+                    var group = _groups[i];
                     _groups.RemoveAt(i);
+                    group.Dispose();
                 }
             }
         }

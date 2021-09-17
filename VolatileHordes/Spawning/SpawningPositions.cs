@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Drawing;
 using UniLinq;
 using UnityEngine;
@@ -28,6 +27,7 @@ namespace VolatileHordes.Spawning
         {
             var zone = GetRandomZone();
             if (zone == null) return null;
+            Logger.Info("Player rect is {0}", zone.SpawnRectangle);
             var pos = GetRandomSafeCorner(zone);
             if (pos == null) return null;
             return new SpawnTarget(pos.Value, zone.Center);
@@ -50,8 +50,18 @@ namespace VolatileHordes.Spawning
 
             return default;
         }
+
+        public Vector3? GetRandomPointNear(PointF pt, byte range, int attemptCount = 10)
+        {
+            var rect = new RectangleF(
+                x: pt.X - range,
+                y: pt.Y - range,
+                width: range * 2,
+                height: range * 2);
+            return GetRandomPosition(rect, attemptCount);
+        }
         
-        public Vector3? GetRandomPosition(PlayerZone zone, int attemptCount = 10)
+        public Vector3? GetRandomPosition(RectangleF zone, int attemptCount = 10)
         {
             for (int i = 0; i < attemptCount; i++)
             {
@@ -85,11 +95,11 @@ namespace VolatileHordes.Spawning
             return null;
         }
         
-        public PointF TryGetSingleRandomZonePos(PlayerZone zone)
+        public PointF TryGetSingleRandomZonePos(RectangleF zone)
         {
             return new PointF(
-                _randomSource.Get(zone.MinsSpawnBlock.X, zone.MaxsSpawnBlock.X),
-                _randomSource.Get(zone.MinsSpawnBlock.Y, zone.MaxsSpawnBlock.Y));
+                _randomSource.Get(zone.Left, zone.Right),
+                _randomSource.Get(zone.Bottom, zone.Top));
         }
 
         public Vector3 GetWorldVector(PointF pt)

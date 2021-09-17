@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using VolatileHordes.ActiveDirectors;
 using VolatileHordes.Control;
 
@@ -8,6 +9,7 @@ namespace VolatileHordes.Spawning.WanderingHordes
     {
         private readonly ActiveDirector _director;
         private readonly WanderingHordeSettings _settings;
+        private readonly RoamOccasionally _roamOccasionally;
         private readonly GamestageCalculator _gamestageCalculator;
         private readonly WanderingHordeCalculator _hordeCalculator;
         private readonly SpawningPositions _spawningPositions;
@@ -17,6 +19,7 @@ namespace VolatileHordes.Spawning.WanderingHordes
         public WanderingHordeDirector(
             ActiveDirector director,
             WanderingHordeSettings settings,
+            RoamOccasionally roamOccasionally,
             GamestageCalculator gamestageCalculator,
             WanderingHordeCalculator hordeCalculator,
             SpawningPositions spawningPositions,
@@ -25,6 +28,7 @@ namespace VolatileHordes.Spawning.WanderingHordes
         {
             _director = director;
             _settings = settings;
+            _roamOccasionally = roamOccasionally;
             _gamestageCalculator = gamestageCalculator;
             _hordeCalculator = hordeCalculator;
             _spawningPositions = spawningPositions;
@@ -47,6 +51,8 @@ namespace VolatileHordes.Spawning.WanderingHordes
             await _spawner.SpawnHorde(spawnTarget.SpawnPoint.ToPoint(), spawnTarget.TriggerOrigin, size.Value, group);
 
             _control.SendGroupTowards(group, spawnTarget.TriggerOrigin);
+            
+            _roamOccasionally.ApplyTo(group, 100, TimeSpan.FromMinutes(1), 0);
         }
     }
 }
