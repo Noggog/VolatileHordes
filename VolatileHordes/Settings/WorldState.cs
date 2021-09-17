@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
 using Newtonsoft.Json;
 using UniLinq;
@@ -11,15 +12,17 @@ namespace VolatileHordes
     {
         public int EntityId { get; set; }
     }
-    
+
     public class ZombieGroupState
     {
         public ZombieState[] Zombies { get; set; } = new ZombieState[0];
+        public PointF? Target { get; set; }
     }
-    
+
     public class WorldState
     {
-        public static readonly string StateFilePath = Path.Combine(GameUtils.GetSaveGameDir(), $"{Constants.ModName}State.json");
+        public static readonly string StateFilePath =
+            Path.Combine(GameUtils.GetSaveGameDir(), $"{Constants.ModName}State.json");
 
         public ZombieGroupState[] ZombieGroups { get; set; } = new ZombieGroupState[0];
 
@@ -36,12 +39,13 @@ namespace VolatileHordes
                         {
                             EntityId = z.Id
                         })
-                        .ToArray()
+                        .ToArray(),
+                    Target = g.Target,
                 })
                 .ToArray();
             File.WriteAllText(StateFilePath, JsonConvert.SerializeObject(state, Formatting.Indented));
         }
-        
+
         public static void Load()
         {
             Logger.Info("Loading state from {0}", StateFilePath);
@@ -49,11 +53,14 @@ namespace VolatileHordes
             var readIn = JsonConvert.DeserializeObject<WorldState>(File.ReadAllText(StateFilePath));
             if (readIn == null) return;
 
-            foreach (var group in readIn.ZombieGroups)
+            foreach (var groupSettings in readIn.ZombieGroups)
             {
-                Container.Director.NewGroup()
-                    .Zombies.AddRange(
-                        group.Zombies.Select<ZombieState, IZombie>(z => new Zombie(Container.World, z.EntityId)).ToArray());
+                var group = Container.Director.NewGroup();
+                group.Zombies.AddRange(
+                    groupSettings.Zombies
+                        .Select<ZombieState, IZombie>(z => new Zombie(Container.World, z.EntityId))
+                        .ToArray());
+                group.Target = groupSettings.Target;
             }
         }
     }
