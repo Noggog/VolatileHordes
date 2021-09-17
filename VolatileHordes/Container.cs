@@ -1,5 +1,4 @@
-﻿using VolatileHordes.ActiveDirectors;
-using VolatileHordes.ActiveDirectors.Roaming;
+﻿using VolatileHordes.Directives.Roaming;
 using VolatileHordes.Control;
 using VolatileHordes.GameAbstractions;
 using VolatileHordes.Randomization;
@@ -21,14 +20,14 @@ namespace VolatileHordes
         public static readonly ZombieControl ZombieControl = new(Spawning);
         public static readonly SpawnSingle SpawnSingle = new(ZombieCreator);
         public static readonly SingleTrackerSpawner SingleTrackerSpawner = new(SpawnSingle, ZombieControl);
-        public static readonly ActiveDirector Director = new(Time, PlayerZoneManager);
-        public static readonly SingleTrackerDirector SingleTrackerDirector = new(Director, Spawning, SingleTrackerSpawner);
+        public static readonly GroupManager GroupManager = new(Time, PlayerZoneManager);
+        public static readonly SingleTrackerDirector SingleTrackerDirector = new(GroupManager, Spawning, SingleTrackerSpawner);
         public static readonly SpawnRowPerpendicular SpawnRowPerpendicular = new(SingleTrackerSpawner);
         public static readonly WanderingHordeSpawner WanderingHordeSpawner = new(Time, SpawnRowPerpendicular);
         public static readonly WanderingHordeCalculator WanderingHordeCalculator = new(Random);
         public static readonly GamestageCalculator GamestageCalculator = new(PlayerZoneManager);
         public static readonly UserSettings UserSettings = UserSettings.Load();
         public static readonly RoamOccasionally RoamOccasionally = new(Time, Spawning, ZombieControl);
-        public static readonly WanderingHordeDirector WanderingHordeDirector = new(Director, UserSettings.WanderingHordeSettings, RoamOccasionally, GamestageCalculator, WanderingHordeCalculator, Spawning, WanderingHordeSpawner, ZombieControl);
+        public static readonly WanderingHordeDirector WanderingHordeDirector = new(GroupManager, UserSettings.WanderingHordeSettings, RoamOccasionally, GamestageCalculator, WanderingHordeCalculator, Spawning, WanderingHordeSpawner, ZombieControl);
     }
 }

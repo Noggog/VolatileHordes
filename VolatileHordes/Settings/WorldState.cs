@@ -3,7 +3,6 @@ using System.Drawing;
 using System.IO;
 using Newtonsoft.Json;
 using UniLinq;
-using VolatileHordes.ActiveDirectors;
 using VolatileHordes.GameAbstractions;
 
 namespace VolatileHordes
@@ -30,7 +29,7 @@ namespace VolatileHordes
         {
             Logger.Info("Saving state to {0}", StateFilePath);
             var state = new WorldState();
-            state.ZombieGroups = Container.Director.Groups
+            state.ZombieGroups = Container.GroupManager.Groups
                 .Where(g => g.Zombies.Count > 0)
                 .Select(g => new ZombieGroupState()
                 {
@@ -55,7 +54,7 @@ namespace VolatileHordes
 
             foreach (var groupSettings in readIn.ZombieGroups)
             {
-                var group = Container.Director.NewGroup();
+                var group = Container.GroupManager.NewGroup();
                 group.Zombies.AddRange(
                     groupSettings.Zombies
                         .Select<ZombieState, IZombie>(z => new Zombie(Container.World, z.EntityId))

@@ -1,8 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using VolatileHordes.ActiveDirectors;
-using VolatileHordes.Spawning;
-using VolatileHordes.Spawning.WanderingHordes;
 
 namespace VolatileHordes
 {

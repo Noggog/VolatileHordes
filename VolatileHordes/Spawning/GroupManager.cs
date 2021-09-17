@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using UniLinq;
 using VolatileHordes.Zones;
 
-namespace VolatileHordes.ActiveDirectors
+namespace VolatileHordes.Spawning
 {
-    public class ActiveDirector
+    public class GroupManager
     {
         private readonly PlayerZoneManager _playerZoneManager;
         private readonly List<ZombieGroup> _groups = new();
@@ -15,7 +14,7 @@ namespace VolatileHordes.ActiveDirectors
 
         public bool Paused => !_playerZoneManager.HasPlayers();
 
-        public ActiveDirector(
+        public GroupManager(
             TimeManager timeManager,
             PlayerZoneManager playerZoneManager)
         {

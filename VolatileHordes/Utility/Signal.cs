@@ -2,7 +2,7 @@
 using System.Reactive;
 using System.Reactive.Subjects;
 
-namespace VolatileHordes.ActiveDirectors
+namespace VolatileHordes.Utility
 {
     public class Signal
     {

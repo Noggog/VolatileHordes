@@ -2,8 +2,9 @@
 using System.Reactive.Linq;
 using VolatileHordes.Control;
 using VolatileHordes.Spawning;
+using VolatileHordes.Utility;
 
-namespace VolatileHordes.ActiveDirectors.Roaming
+namespace VolatileHordes.Directives.Roaming
 {
     public class RoamOccasionally
     {

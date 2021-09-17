@@ -1,14 +1,12 @@
-﻿using System;
-using System.Threading.Tasks;
-using VolatileHordes.ActiveDirectors;
-using VolatileHordes.ActiveDirectors.Roaming;
+﻿using System.Threading.Tasks;
+using VolatileHordes.Directives.Roaming;
 using VolatileHordes.Control;
 
 namespace VolatileHordes.Spawning.WanderingHordes
 {
     public class WanderingHordeDirector
     {
-        private readonly ActiveDirector _director;
+        private readonly GroupManager _groupManager;
         private readonly WanderingHordeSettings _settings;
         private readonly RoamOccasionally _roamOccasionally;
         private readonly GamestageCalculator _gamestageCalculator;
@@ -18,7 +16,7 @@ namespace VolatileHordes.Spawning.WanderingHordes
         private readonly ZombieControl _control;
 
         public WanderingHordeDirector(
-            ActiveDirector director,
+            GroupManager groupManager,
             WanderingHordeSettings settings,
             RoamOccasionally roamOccasionally,
             GamestageCalculator gamestageCalculator,
@@ -27,7 +25,7 @@ namespace VolatileHordes.Spawning.WanderingHordes
             WanderingHordeSpawner spawner,
             ZombieControl control)
         {
-            _director = director;
+            _groupManager = groupManager;
             _settings = settings;
             _roamOccasionally = roamOccasionally;
             _gamestageCalculator = gamestageCalculator;
@@ -46,7 +44,7 @@ namespace VolatileHordes.Spawning.WanderingHordes
             size ??= _hordeCalculator.GetHordeSize(_settings, ref noHorde,
                 _gamestageCalculator.GetEffectiveGamestage());
 
-            var group = _director.NewGroup();
+            var group = _groupManager.NewGroup();
             
             Logger.Info("Spawning horde {0} of size {1} at {2}", group.Id, size, spawnTarget);
             

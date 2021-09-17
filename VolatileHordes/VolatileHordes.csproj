@@ -38,19 +38,19 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="ActiveDirectors\ActiveDirector.cs" />
-    <Compile Include="ActiveDirectors\Roaming\RoamOccasionally.cs" />
-    <Compile Include="ActiveDirectors\Signal.cs" />
     <Compile Include="BiomeData.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Commands.cs" />
     <Compile Include="Container.cs" />
     <Compile Include="Control\ZombieControl.cs" />
+    <Compile Include="Directives\Roaming\RoamOccasionally.cs" />
     <Compile Include="GameAbstractions\Zombie.cs" />
     <Compile Include="GameAbstractions\Player.cs" />
     <Compile Include="GameAbstractions\World.cs" />
+    <Compile Include="Spawning\GroupManager.cs" />
     <Compile Include="Spawning\SpawnSingle.cs" />
     <Compile Include="Utility\ListExt.cs" />
+    <Compile Include="Utility\Signal.cs" />
     <Compile Include="Utility\TaskExt.cs" />
     <Compile Include="Utility\TimeRange.cs" />
     <Compile Include="Utility\TimeSpanExt.cs" />
