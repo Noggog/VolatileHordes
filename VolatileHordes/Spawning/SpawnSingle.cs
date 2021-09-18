@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using VolatileHordes.GameAbstractions;
+using VolatileHordes.Tracking;
 
 namespace VolatileHordes.Spawning
 {

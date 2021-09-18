@@ -1,4 +1,6 @@
-﻿namespace VolatileHordes.AiPackages
+﻿using VolatileHordes.Tracking;
+
+namespace VolatileHordes.AiPackages
 {
     public interface IAiPackage
     {

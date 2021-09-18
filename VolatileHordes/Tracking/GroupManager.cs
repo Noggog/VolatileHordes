@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using VolatileHordes.AiPackages;
+using VolatileHordes.Spawning;
 using VolatileHordes.Zones;
 
-namespace VolatileHordes.Spawning
+namespace VolatileHordes.Tracking
 {
     public class GroupManager
     {
@@ -52,6 +53,15 @@ namespace VolatileHordes.Spawning
                     _groups.RemoveAt(i);
                     group.Dispose();
                 }
+            }
+        }
+
+        public void DestroyAll()
+        {
+            foreach (var zombieGroup in _groups)
+            {
+                zombieGroup.Destroy();
+                zombieGroup.Dispose();
             }
         }
     }

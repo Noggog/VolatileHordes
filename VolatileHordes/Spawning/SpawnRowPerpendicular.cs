@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using UnityEngine;
 using VolatileHordes.GameAbstractions;
+using VolatileHordes.Tracking;
 
 namespace VolatileHordes.Spawning
 {

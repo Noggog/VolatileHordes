@@ -6,7 +6,7 @@ using VolatileHordes.AiPackages;
 using VolatileHordes.GameAbstractions;
 using VolatileHordes.Utility;
 
-namespace VolatileHordes
+namespace VolatileHordes.Tracking
 {
     public class ZombieGroup : IDisposable, IDisposableBucket
     {
@@ -49,6 +49,14 @@ namespace VolatileHordes
         public override string ToString()
         {
             return $"{nameof(ZombieGroup)}-{Id} ({NumAlive()}/{Zombies.Count})";
+        }
+
+        public void Destroy()
+        {
+            foreach (var zombie in Zombies)
+            {
+                zombie.Destroy();
+            }
         }
     }
 }

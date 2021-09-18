@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using VolatileHordes.Tracking;
 
 namespace VolatileHordes.Spawning.WanderingHordes
 {

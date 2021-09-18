@@ -12,6 +12,7 @@ namespace VolatileHordes.GameAbstractions
         bool CanSpawnAt(Vector3 pos);
         int GetTerrainHeight(PointF pt);
         IZombie? SpawnZombie(int classId, Vector3 pos);
+        void DestroyZombie(IZombie zombie);
         Chunk? GetChunkAt(PointF pt);
         Entity? GetEntity(int id);
     }
@@ -38,6 +39,11 @@ namespace VolatileHordes.GameAbstractions
             World.SpawnEntityInWorld(zombieEnt);
             
             return new Zombie(this, zombieEnt.entityId);
+        }
+
+        public void DestroyZombie(IZombie zombie)
+        {
+            World.RemoveEntity(zombie.Id, EnumRemoveEntityReason.Despawned);
         }
 
         public IEnumerable<IPlayer> Players => World.Players.list.Select<EntityPlayer, IPlayer>(p => new Player(p));

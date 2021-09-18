@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reactive.Linq;
 using VolatileHordes.Spawning;
+using VolatileHordes.Tracking;
 using VolatileHordes.Utility;
 
 namespace VolatileHordes.Control
