@@ -57,7 +57,8 @@ namespace VolatileHordes.Control
 
                     Logger.Info($"Sending group {group} to roam to {newTarget.Value}.");
                     _zombieControl.SendGroupTowards(group, newTarget.Value.ToPoint());
-                });
+                },
+                    e => Logger.Error("{0} had update error {1}", nameof(RoamControl), e));
         }
     }
 }

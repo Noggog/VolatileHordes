@@ -58,7 +58,8 @@ namespace VolatileHordes.Control
                     _zombieControl.SendGroupTowards(group, player.PlayerLocation);
                     
                     occurredSubj.OnNext(Unit.Default);
-                });
+                },
+                    e => Logger.Error("{0} had update error {1}", nameof(LuckyPlayerRetarget), e));
         }
     }
 }

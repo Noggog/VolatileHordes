@@ -22,7 +22,8 @@ namespace VolatileHordes.Tracking
         {
             _playerZoneManager = playerZoneManager;
             timeManager.Interval(TimeSpan.FromSeconds(30))
-                .Subscribe(CleanGroups);
+                .Subscribe(CleanGroups,
+                    onError: e => Logger.Error("{0} had update error {1}", nameof(GroupManager), e));
         }
 
         public ZombieGroupSpawn NewGroup(IAiPackage? package = null)

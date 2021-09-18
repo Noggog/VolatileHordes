@@ -11,9 +11,10 @@ namespace VolatileHordes
             return source.Select(_ => System.Reactive.Unit.Default);
         }
 
-        public static IDisposable Subscribe<T>(this IObservable<T> obs, Action sub)
+        public static IDisposable Subscribe<T>(this IObservable<T> obs, Action sub, Action<Exception>? onError = null)
         {
-            return obs.Subscribe(_ => sub());
+            return obs.Subscribe(_ => sub(),
+                onError: onError);
         }
     }
 }

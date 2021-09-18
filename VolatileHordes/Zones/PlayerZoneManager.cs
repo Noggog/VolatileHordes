@@ -6,6 +6,8 @@ namespace VolatileHordes.Zones
 {
     public class PlayerZoneManager
     {
+        private readonly TimeManager _time;
+        
         static int ChunkViewDim = GamePrefs.GetInt(EnumGamePrefs.ServerMaxAllowedViewDistance);
 
         static Vector3 ChunkSize = new(16, 256, 16);
@@ -17,11 +19,18 @@ namespace VolatileHordes.Zones
 
         public PlayerZoneManager(TimeManager time)
         {
+            _time = time;
+        }
+
+        public void Init()
+        {
             Logger.Info("Player Chunk View Dim: {0} - {1} - {2}", ChunkViewDim,
                 VisibleBox,
                 SpawnBlockBox);
-            time.UpdateTicks()
-                .Subscribe(_ => Update());
+            _time.UpdateTicks()
+                .Subscribe(_ => Update(),
+                    onError: (e) => Logger.Error("{0} update failed: {1}", nameof(PlayerZoneManager), e));
+
         }
 
         public void PlayerSpawnedInWorld(ClientInfo? _cInfo, RespawnType _respawnReason, Vector3i _pos)
