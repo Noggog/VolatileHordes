@@ -26,14 +26,14 @@ namespace VolatileHordes
         public static readonly SingleTrackerDirector SingleTrackerDirector = new(GroupManager, Spawning, SingleTrackerSpawner);
         public static readonly SpawnRowPerpendicular SpawnRowPerpendicular = new(SingleTrackerSpawner);
         public static readonly WanderingHordeSpawner WanderingHordeSpawner = new(Time, SpawnRowPerpendicular);
-        public static readonly WanderingHordeCalculator WanderingHordeCalculator = new(Random);
         public static readonly GamestageCalculator GamestageCalculator = new(PlayerZoneManager);
         public static readonly UserSettings UserSettings = UserSettings.Load();
+        public static readonly WanderingHordeCalculator WanderingHordeCalculator = new(UserSettings.WanderingHordeSettings, GamestageCalculator, Random);
         public static readonly RoamControl RoamControl = new(Time, Spawning, ZombieControl);
         public static readonly FidgetRoam FidgetRoam = new(UserSettings.Control.FidgetRoam, RoamControl);
         public static readonly RoamFarOccasionally RoamFarOccasionally = new(UserSettings.Control.FarRoam,RoamControl);
         public static readonly RoamAiPackage RoamAiPackage = new(FidgetRoam, RoamFarOccasionally);
-        public static readonly WanderingHordeDirector WanderingHordeDirector = new(GroupManager, UserSettings.WanderingHordeSettings, RoamAiPackage, GamestageCalculator, WanderingHordeCalculator, Spawning, WanderingHordeSpawner, ZombieControl);
+        public static readonly WanderingHordeDirector WanderingHordeDirector = new(GroupManager, RoamAiPackage, WanderingHordeCalculator, Spawning, WanderingHordeSpawner, ZombieControl);
         public static readonly AiPackageMapper AiPackageMapper = new();
     }
 }
