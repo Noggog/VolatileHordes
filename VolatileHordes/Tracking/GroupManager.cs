@@ -63,6 +63,7 @@ namespace VolatileHordes.Tracking
                 zombieGroup.Destroy();
                 zombieGroup.Dispose();
             }
+            _groups.Clear();
         }
     }
 }
