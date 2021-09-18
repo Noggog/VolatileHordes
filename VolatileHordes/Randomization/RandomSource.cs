@@ -1,4 +1,5 @@
 ﻿using System;
+using VolatileHordes.Utility;
 
 namespace VolatileHordes.Randomization
 {
@@ -41,6 +42,10 @@ namespace VolatileHordes.Randomization
 		}
 
 		public double NextDouble() => Random.NextDouble();
+
+		public double NextDouble(double max) => Random.NextDouble() * max;
+
+		public bool NextChance(Percent chance) => Random.NextDouble() <= chance.Value;
 
 		public double NextSignedDouble()
 		{

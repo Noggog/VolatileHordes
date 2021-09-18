@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reactive;
 using VolatileHordes.Settings.User.Control;
 using VolatileHordes.Tracking;
 
@@ -17,12 +18,13 @@ namespace VolatileHordes.Control
             _roamControl = roamControl;
         }
 
-        public IDisposable ApplyTo(ZombieGroup group)
+        public IDisposable ApplyTo(ZombieGroup group, IObservable<Unit>? interrupt = null)
         {
             return _roamControl.ApplyTo(
                 group,
                 _settings.Range,
-                new TimeRange(TimeSpan.FromSeconds(_settings.MinSeconds), TimeSpan.FromSeconds(_settings.MaxSeconds)));
+                new TimeRange(TimeSpan.FromSeconds(_settings.MinSeconds), TimeSpan.FromSeconds(_settings.MaxSeconds)),
+                interrupt);
         }
     }
 }

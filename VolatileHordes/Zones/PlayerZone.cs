@@ -19,6 +19,8 @@ namespace VolatileHordes.Zones
 
         public PointF Center { get; set; }
 
+        public PointF PlayerLocation => Center;
+
         public RectangleF SpawnRectangle => new(
             x: MinsSpawnBlock.X,
             y: MinsSpawnBlock.Y,

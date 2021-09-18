@@ -9,22 +9,27 @@ namespace VolatileHordes.AiPackages
     {
         private readonly FidgetRoam _fidget;
         private readonly RoamFarOccasionally _roamFarOccasionally;
+        private readonly LuckyPlayerRetarget _luckyPlayerRetarget;
 
         public RoamAiPackage(
             FidgetRoam fidget,
-            RoamFarOccasionally roamFarOccasionally)
+            RoamFarOccasionally roamFarOccasionally,
+            LuckyPlayerRetarget luckyPlayerRetarget)
         {
             _fidget = fidget;
             _roamFarOccasionally = roamFarOccasionally;
+            _luckyPlayerRetarget = luckyPlayerRetarget;
         }
 
         public AiPackageEnum TypeEnum => AiPackageEnum.Roaming;
 
         public void ApplyTo(ZombieGroup group)
         {
-            _fidget.ApplyTo(group)
+            _luckyPlayerRetarget.ApplyTo(group, out var luckyOccurred)
                 .DisposeWith(group);
-            _roamFarOccasionally.ApplyTo(group)
+            _fidget.ApplyTo(group, interrupt: luckyOccurred)
+                .DisposeWith(group);
+            _roamFarOccasionally.ApplyTo(group, interrupt: luckyOccurred)
                 .DisposeWith(group);
         }
     }
