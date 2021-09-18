@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reactive;
 using System.Reactive.Linq;
 using VolatileHordes.Spawning;
 using VolatileHordes.Tracking;
@@ -24,13 +25,20 @@ namespace VolatileHordes.Control
             _zombieControl = zombieControl;
         }
 
-        public IDisposable ApplyTo(ZombieGroup group, byte range, TimeRange frequency)
+        public IDisposable ApplyTo(ZombieGroup group, byte range, TimeRange frequency, IObservable<Unit>? interrupt = null)
         {
+            interrupt ??= Observable.Return(Unit.Default);
+            
             Logger.Info("Adding roam AI to {0} with a range of {1} at frequency {2}", group, range, frequency);
-            return _timeManager.IntervalWithVariance(
-                    frequency,
-                    timeSpan => Logger.Info($"Will send {group} somewhere in {timeSpan}"))
-                .Unit()
+            return interrupt
+                .Select(_ =>
+                {
+                    return _timeManager.IntervalWithVariance(
+                            frequency,
+                            timeSpan => Logger.Info($"Will send {group} {range} away in {timeSpan}"))
+                        .Unit();
+                })
+                .Switch()
                 .Merge(Redirect.Signalled)
                 .Subscribe(_ =>
                 {
@@ -49,7 +57,8 @@ namespace VolatileHordes.Control
 
                     Logger.Info($"Sending group {group} to roam to {newTarget.Value}.");
                     _zombieControl.SendGroupTowards(group, newTarget.Value.ToPoint());
-                });
+                },
+                    e => Logger.Error("{0} had update error {1}", nameof(RoamControl), e));
         }
     }
 }

@@ -19,11 +19,38 @@ namespace VolatileHordes.Zones
 
         public PointF Center { get; set; }
 
+        public PointF PlayerLocation => Center;
+
         public RectangleF SpawnRectangle => new(
             x: MinsSpawnBlock.X,
             y: MinsSpawnBlock.Y,
             width: MaxsSpawnBlock.X - MinsSpawnBlock.X,
             height: MaxsSpawnBlock.Y - MinsSpawnBlock.Y);
+
+        public bool TryGetPlayer(out EntityPlayer player)
+        {
+            var world = GameManager.Instance.World;
+            var players = world.Players.dict;
+
+            if (players.TryGetValue(EntityId, out var ent))
+            {
+                player = ent;
+                return true;
+            }
+
+            player = null!;
+            return false;
+        }
+
+        public EntityPlayer? GetPlayer()
+        {
+            if (TryGetPlayer(out var player))
+            {
+                return player;
+            }
+
+            return null;
+        }
 
         public PlayerZone(int entityId)
         {

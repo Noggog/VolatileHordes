@@ -1,8 +1,10 @@
+using System;
 using System.Drawing;
 using UniLinq;
 using UnityEngine;
 using VolatileHordes.GameAbstractions;
 using VolatileHordes.Randomization;
+using VolatileHordes.Utility;
 using VolatileHordes.Zones;
 
 namespace VolatileHordes.Spawning
@@ -27,10 +29,9 @@ namespace VolatileHordes.Spawning
         {
             var zone = GetRandomZone();
             if (zone == null) return null;
-            Logger.Info("Player rect is {0}", zone.SpawnRectangle);
             var pos = GetRandomSafeCorner(zone);
             if (pos == null) return null;
-            return new SpawnTarget(pos.Value, zone.Center);
+            return new SpawnTarget(pos.Value, zone.PlayerLocation);
         }
 
         public PlayerZone? GetRandomZone()
@@ -106,6 +107,13 @@ namespace VolatileHordes.Spawning
         {
             int height = _world.GetTerrainHeight(pt);
             return pt.WithHeight(height + 1);
+        }
+
+        public PlayerZone? GetNearestPlayer(PointF pt)
+        {
+            return _playerZoneManager.Zones
+                .OrderBy(x => pt.AbsDistance(x.PlayerLocation))
+                .FirstOrDefault();
         }
     }
 }

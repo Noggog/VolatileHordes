@@ -18,6 +18,7 @@ namespace VolatileHordes
             Logger.Info($"Game started");
             Settings.World.WorldState.Load();
             Container.Biome.Init();
+            Container.PlayerZoneManager.Init();
         }
 
         static void GameUpdate()

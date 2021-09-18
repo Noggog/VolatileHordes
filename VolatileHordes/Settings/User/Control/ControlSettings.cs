@@ -8,11 +8,14 @@
             MaxSeconds = 30,
             Range = 5
         };
+        
         public RoamControlSettings FarRoam { get; set; } = new()
         {
             MinSeconds = 60,
             MaxSeconds = 600,
             Range = 80
         };
+
+        public LuckyPlayerRetargetSettings LuckyPlayerRetarget { get; set; } = new();
     }
 }

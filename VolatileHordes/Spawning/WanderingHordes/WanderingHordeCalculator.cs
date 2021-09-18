@@ -5,10 +5,17 @@ namespace VolatileHordes.Spawning.WanderingHordes
 {
     public class WanderingHordeCalculator
     {
+        private readonly WanderingHordeSettings _settings;
+        private readonly GamestageCalculator _gamestageCalculator;
         private readonly RandomSource _rand;
 
-        public WanderingHordeCalculator(RandomSource rand)
+        public WanderingHordeCalculator(
+            WanderingHordeSettings settings,
+            GamestageCalculator gamestageCalculator,
+            RandomSource rand)
         {
+            _settings = settings;
+            _gamestageCalculator = gamestageCalculator;
             _rand = rand;
         }
         
@@ -18,30 +25,27 @@ namespace VolatileHordes.Spawning.WanderingHordes
             return min + (diff * prog);
         }
         
-        public int GetHordeSize(
-            IWanderingHordeSettingsGetter settings,
-            ref int noHordeCounter,
-            int gamestage)
+        public int GetHordeSize(ref int noHordeCounter)
         {
-            float percentThroughGeneration = 1.0f * gamestage / settings.UpperGamestage;
+            float percentThroughGeneration = 1.0f * _gamestageCalculator.GetEffectiveGamestage() / _settings.UpperGamestage;
             
-            var percentLargeHorde = Interpolate(settings.PercentLargeHordeStart, settings.PercentLargeHordeEnd, percentThroughGeneration);
-            percentLargeHorde += noHordeCounter * settings.PercentAddedWhenNoHorde;
+            var percentLargeHorde = Interpolate(_settings.PercentLargeHordeStart, _settings.PercentLargeHordeEnd, percentThroughGeneration);
+            percentLargeHorde += noHordeCounter * _settings.PercentAddedWhenNoHorde;
             var large = _rand.Random.NextDouble() <= percentLargeHorde;
             int lower, upper;
             if (large)
             {
                 noHordeCounter = 0;
-                lower = settings.LowerHorde;
-                upper = settings.UpperHorde;
+                lower = _settings.LowerHorde;
+                upper = _settings.UpperHorde;
             }
             else
             {
                 noHordeCounter++;
-                lower = settings.LowerTrickle;
-                upper = settings.UpperTrickle;
+                lower = _settings.LowerTrickle;
+                upper = _settings.UpperTrickle;
             }
-            var variation = settings.Variation * _rand.Random.NextDouble() * (_rand.Random.Next(2) == 1 ? 1 : -1);
+            var variation = _settings.Variation * _rand.Random.NextDouble() * (_rand.Random.Next(2) == 1 ? 1 : -1);
             var dResult = Interpolate(lower, upper, percentThroughGeneration);
             dResult += dResult * variation;
             return (int)Math.Round(dResult);

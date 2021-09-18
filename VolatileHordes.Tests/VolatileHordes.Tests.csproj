@@ -64,6 +64,9 @@
         </Reference>
         <Reference Include="System.Xml" />
         <Reference Include="System.Xml.Linq" />
+        <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <HintPath>..\7dtd-binaries\UnityEngine.CoreModule.dll</HintPath>
+        </Reference>
         <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c">
           <HintPath>..\packages\xunit.abstractions.2.0.3\lib\net35\xunit.abstractions.dll</HintPath>
           <Private>True</Private>
@@ -86,6 +89,7 @@
         <Compile Include="RxTests.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
         <Compile Include="Utility\ListExtTests.cs" />
+        <Compile Include="Utility\PointFExtTests.cs" />
         <Compile Include="Utility\TimeRangeTests.cs" />
         <Compile Include="Utility\TimeSpanTests.cs" />
         <Compile Include="Zones\ZoneProcessingTests.cs" />

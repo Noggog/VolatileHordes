@@ -6,6 +6,8 @@ namespace VolatileHordes.Zones
 {
     public class PlayerZoneManager
     {
+        private readonly TimeManager _time;
+        
         static int ChunkViewDim = GamePrefs.GetInt(EnumGamePrefs.ServerMaxAllowedViewDistance);
 
         static Vector3 ChunkSize = new(16, 256, 16);
@@ -17,11 +19,18 @@ namespace VolatileHordes.Zones
 
         public PlayerZoneManager(TimeManager time)
         {
+            _time = time;
+        }
+
+        public void Init()
+        {
             Logger.Info("Player Chunk View Dim: {0} - {1} - {2}", ChunkViewDim,
                 VisibleBox,
                 SpawnBlockBox);
-            time.UpdateTicks()
-                .Subscribe(_ => Update());
+            _time.UpdateTicks()
+                .Subscribe(_ => Update(),
+                    onError: (e) => Logger.Error("{0} update failed: {1}", nameof(PlayerZoneManager), e));
+
         }
 
         public void PlayerSpawnedInWorld(ClientInfo? _cInfo, RespawnType _respawnReason, Vector3i _pos)
@@ -84,7 +93,7 @@ namespace VolatileHordes.Zones
 
             var area = new PlayerZone(entityId);
             
-            _zones.Add(UpdatePlayer(area, entityId));
+            _zones.Add(UpdatePlayer(area));
 
             Logger.Info("Added player {0}", entityId);
         }
@@ -114,12 +123,9 @@ namespace VolatileHordes.Zones
             return ply;
         }
 
-        PlayerZone UpdatePlayer(PlayerZone ply, int entityId)
+        PlayerZone UpdatePlayer(PlayerZone ply)
         {
-            var world = GameManager.Instance.World;
-            var players = world.Players.dict;
-
-            if (players.TryGetValue(entityId, out var ent))
+            if (ply.TryGetPlayer(out var ent))
             {
                 ply = UpdatePlayer(ply, ent);
             }
@@ -132,7 +138,7 @@ namespace VolatileHordes.Zones
             var world = GameManager.Instance.World;
             var players = world.Players.dict;
 
-            for (int i = 0; i < _zones.Count; i++)
+            for (int i = _zones.Count - 1; i >= 0; i--)
             {
                 var ply = _zones[i];
 
@@ -149,12 +155,26 @@ namespace VolatileHordes.Zones
 
                     Logger.Error("Player not in player list: {0}", ply.EntityId);
                 }
-
-                if (_zones.Count == 0)
-                    break;
             }
         }
 
         public bool HasPlayers() => _zones.Count > 0;
+
+        public void Print()
+        {
+            foreach (var zone in _zones)
+            {
+                string playerPos;
+                if (zone.TryGetPlayer(out var player))
+                {
+                    playerPos = player.GetPosition().ToString();
+                }
+                else
+                {
+                    playerPos = "<MISSING>";
+                }
+                Logger.Info("Player zone center {0}.  Player currently at {1}", zone.Center, playerPos);
+            }
+        }
     }
 }
