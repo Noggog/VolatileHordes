@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using VolatileHordes.AiPackages;
 using VolatileHordes.Control;
+using VolatileHordes.Tracking;
 
 namespace VolatileHordes.Spawning.WanderingHordes
 {

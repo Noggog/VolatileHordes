@@ -2,6 +2,7 @@
 using System.Linq;
 using VolatileHordes.AiPackages;
 using VolatileHordes.GameAbstractions;
+using VolatileHordes.Tracking;
 
 namespace VolatileHordes.Settings.World.Zombies
 {

@@ -1,4 +1,6 @@
-﻿namespace VolatileHordes.Spawning
+﻿using VolatileHordes.Tracking;
+
+namespace VolatileHordes.Spawning
 {
     public class SingleTrackerDirector
     {

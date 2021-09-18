@@ -5,6 +5,7 @@ using VolatileHordes.Randomization;
 using VolatileHordes.Settings.User;
 using VolatileHordes.Spawning;
 using VolatileHordes.Spawning.WanderingHordes;
+using VolatileHordes.Tracking;
 using VolatileHordes.Zones;
 
 namespace VolatileHordes

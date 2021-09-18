@@ -59,6 +59,12 @@ namespace VolatileHordes
                     Container.SingleTrackerDirector.SpawnSingle();
                     break;
                 }
+                case "wipe":
+                {
+                    Logger.Info("Wiping all tracked zombies");
+                    Container.GroupManager.DestroyAll();
+                    break;
+                }
                 default:
                     break;
             }

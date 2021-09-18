@@ -1,5 +1,6 @@
 ﻿using System;
 using VolatileHordes.Settings.User.Control;
+using VolatileHordes.Tracking;
 
 namespace VolatileHordes.Control
 {

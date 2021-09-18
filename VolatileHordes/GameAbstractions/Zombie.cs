@@ -7,6 +7,7 @@ namespace VolatileHordes.GameAbstractions
         int Id { get; }
         bool SendTowards(Vector3 vector3);
         EntityZombie? GetEntity();
+        public void Destroy();
     }
 
     public class Zombie : IZombie
@@ -23,6 +24,13 @@ namespace VolatileHordes.GameAbstractions
         }
 
         public EntityZombie? GetEntity() => _world.GetEntity(Id) as EntityZombie;
+        
+        public void Destroy()
+        {
+            var entity = GetEntity();
+            if (entity == null) return;
+            _world.DestroyZombie(this);
+        }
 
         public bool SendTowards(Vector3 vector3)
         {
