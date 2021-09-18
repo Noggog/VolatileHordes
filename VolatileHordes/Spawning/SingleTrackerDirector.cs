@@ -1,19 +1,17 @@
-﻿using VolatileHordes.ActiveDirectors;
-
-namespace VolatileHordes.Spawning
+﻿namespace VolatileHordes.Spawning
 {
     public class SingleTrackerDirector
     {
-        private readonly ActiveDirector _director;
+        private readonly GroupManager _groupManager;
         private readonly SpawningPositions _spawningPositions;
         private readonly SingleTrackerSpawner _singleTrackerSpawner;
 
         public SingleTrackerDirector(
-            ActiveDirector director,
+            GroupManager groupManager,
             SpawningPositions spawningPositions,
             SingleTrackerSpawner singleTrackerSpawner)
         {
-            _director = director;
+            _groupManager = groupManager;
             _spawningPositions = spawningPositions;
             _singleTrackerSpawner = singleTrackerSpawner;
         }
@@ -26,8 +24,8 @@ namespace VolatileHordes.Spawning
             var zombie = _singleTrackerSpawner.Spawn(spawnTarget.SpawnPoint.ToPoint(), spawnTarget.TriggerOrigin, null);
             if (zombie != null)
             {
-                _director.NewGroup()
-                    .Zombies.Add(zombie);
+                using var groupSpawn = _groupManager.NewGroup();
+                groupSpawn.Group.Zombies.Add(zombie);
             }
         }
     }

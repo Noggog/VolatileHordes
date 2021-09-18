@@ -16,7 +16,7 @@ namespace VolatileHordes
         static void GameStarted()
         {
             Logger.Info($"Game started");
-            WorldState.Load();
+            Settings.World.WorldState.Load();
             Container.Biome.Init();
         }
 
@@ -35,7 +35,7 @@ namespace VolatileHordes
         static void GameShutdown()
         {
             Logger.Info($"Game shutdown");
-            WorldState.Save();
+            Settings.World.WorldState.Save();
         }
     }
 }

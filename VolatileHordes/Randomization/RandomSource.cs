@@ -39,5 +39,25 @@ namespace VolatileHordes.Randomization
 
 			return Get(0.0f, 1.0f) <= c;
 		}
+
+		public double NextDouble() => Random.NextDouble();
+
+		public double NextSignedDouble()
+		{
+			var rand = NextDouble();
+			if (NextBool())
+			{
+				return rand * -1;
+			}
+
+			return rand;
+		}
+
+		public TimeSpan GetRandomTime(TimeRange range)
+		{
+			var rand = NextDouble();
+			var deviation = (long)(rand * range.Diff.Ticks);
+			return range.From.AddTicks(deviation);
+		}
     }
 }

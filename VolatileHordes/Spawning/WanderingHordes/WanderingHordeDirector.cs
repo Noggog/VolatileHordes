@@ -1,13 +1,14 @@
 ﻿using System.Threading.Tasks;
-using VolatileHordes.ActiveDirectors;
+using VolatileHordes.AiPackages;
 using VolatileHordes.Control;
 
 namespace VolatileHordes.Spawning.WanderingHordes
 {
     public class WanderingHordeDirector
     {
-        private readonly ActiveDirector _director;
+        private readonly GroupManager _groupManager;
         private readonly WanderingHordeSettings _settings;
+        private readonly RoamAiPackage _roamAiPackage;
         private readonly GamestageCalculator _gamestageCalculator;
         private readonly WanderingHordeCalculator _hordeCalculator;
         private readonly SpawningPositions _spawningPositions;
@@ -15,16 +16,18 @@ namespace VolatileHordes.Spawning.WanderingHordes
         private readonly ZombieControl _control;
 
         public WanderingHordeDirector(
-            ActiveDirector director,
+            GroupManager groupManager,
             WanderingHordeSettings settings,
+            RoamAiPackage roamAiPackage,
             GamestageCalculator gamestageCalculator,
             WanderingHordeCalculator hordeCalculator,
             SpawningPositions spawningPositions,
             WanderingHordeSpawner spawner,
             ZombieControl control)
         {
-            _director = director;
+            _groupManager = groupManager;
             _settings = settings;
+            _roamAiPackage = roamAiPackage;
             _gamestageCalculator = gamestageCalculator;
             _hordeCalculator = hordeCalculator;
             _spawningPositions = spawningPositions;
@@ -40,13 +43,14 @@ namespace VolatileHordes.Spawning.WanderingHordes
             int noHorde = 0;
             size ??= _hordeCalculator.GetHordeSize(_settings, ref noHorde,
                 _gamestageCalculator.GetEffectiveGamestage());
+
+            using var groupSpawn = _groupManager.NewGroup(_roamAiPackage);
             
-            Logger.Info("Spawning horde of size {0} at {1}", size, spawnTarget);
+            Logger.Info("Spawning horde {0} of size {1} at {2}", groupSpawn.Group, size, spawnTarget);
+            
+            await _spawner.SpawnHorde(spawnTarget.SpawnPoint.ToPoint(), spawnTarget.TriggerOrigin, size.Value, groupSpawn.Group);
 
-            var group = _director.NewGroup();
-            await _spawner.SpawnHorde(spawnTarget.SpawnPoint.ToPoint(), spawnTarget.TriggerOrigin, size.Value, group);
-
-            _control.SendGroupTowards(group, spawnTarget.TriggerOrigin);
+            _control.SendGroupTowards(groupSpawn.Group, spawnTarget.TriggerOrigin);
         }
     }
 }

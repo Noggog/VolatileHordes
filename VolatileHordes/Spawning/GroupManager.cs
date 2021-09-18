@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using UniLinq;
+using VolatileHordes.AiPackages;
 using VolatileHordes.Zones;
 
-namespace VolatileHordes.ActiveDirectors
+namespace VolatileHordes.Spawning
 {
-    public class ActiveDirector
+    public class GroupManager
     {
         private readonly PlayerZoneManager _playerZoneManager;
         private readonly List<ZombieGroup> _groups = new();
@@ -15,7 +15,7 @@ namespace VolatileHordes.ActiveDirectors
 
         public bool Paused => !_playerZoneManager.HasPlayers();
 
-        public ActiveDirector(
+        public GroupManager(
             TimeManager timeManager,
             PlayerZoneManager playerZoneManager)
         {
@@ -24,11 +24,16 @@ namespace VolatileHordes.ActiveDirectors
                 .Subscribe(CleanGroups);
         }
 
-        public ZombieGroup NewGroup()
+        public ZombieGroupSpawn NewGroup(IAiPackage? package = null)
         {
-            var zombieGroup = new ZombieGroup();
+            var zombieGroup = new ZombieGroup(package);
+
+            if (package != null)
+            {
+                Logger.Info("Applying AI {0} to group {1}", package.GetType().Name, zombieGroup.Id);
+            }
             _groups.Add(zombieGroup);
-            return zombieGroup;
+            return new ZombieGroupSpawn(zombieGroup);
         }
 
         private void CleanGroups()
@@ -39,14 +44,13 @@ namespace VolatileHordes.ActiveDirectors
             {
                 var g = _groups[i];
                 if (now - g.SpawnTime < StaleGroupTime) continue;
-                var count = g.Zombies
-                    .Select(z => z.GetEntity())
-                    .NotNull()
-                    .Count(e => !e.IsDead());
+                var count = g.NumAlive();
                 if (count <= 1)
                 {
-                    Logger.Info("Cleaning group of {0} zombies with only {1} active.", g.Zombies.Count, count);
+                    Logger.Info("Cleaning {0}.", g);
+                    var group = _groups[i];
                     _groups.RemoveAt(i);
+                    group.Dispose();
                 }
             }
         }
