@@ -27,6 +27,31 @@ namespace VolatileHordes.Zones
             width: MaxsSpawnBlock.X - MinsSpawnBlock.X,
             height: MaxsSpawnBlock.Y - MinsSpawnBlock.Y);
 
+        public bool TryGetPlayer(out EntityPlayer player)
+        {
+            var world = GameManager.Instance.World;
+            var players = world.Players.dict;
+
+            if (players.TryGetValue(EntityId, out var ent))
+            {
+                player = ent;
+                return true;
+            }
+
+            player = null!;
+            return false;
+        }
+
+        public EntityPlayer? GetPlayer()
+        {
+            if (TryGetPlayer(out var player))
+            {
+                return player;
+            }
+
+            return null;
+        }
+
         public PlayerZone(int entityId)
         {
             EntityId = entityId;

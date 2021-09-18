@@ -84,7 +84,7 @@ namespace VolatileHordes.Zones
 
             var area = new PlayerZone(entityId);
             
-            _zones.Add(UpdatePlayer(area, entityId));
+            _zones.Add(UpdatePlayer(area));
 
             Logger.Info("Added player {0}", entityId);
         }
@@ -114,12 +114,9 @@ namespace VolatileHordes.Zones
             return ply;
         }
 
-        PlayerZone UpdatePlayer(PlayerZone ply, int entityId)
+        PlayerZone UpdatePlayer(PlayerZone ply)
         {
-            var world = GameManager.Instance.World;
-            var players = world.Players.dict;
-
-            if (players.TryGetValue(entityId, out var ent))
+            if (ply.TryGetPlayer(out var ent))
             {
                 ply = UpdatePlayer(ply, ent);
             }
@@ -156,5 +153,22 @@ namespace VolatileHordes.Zones
         }
 
         public bool HasPlayers() => _zones.Count > 0;
+
+        public void Print()
+        {
+            foreach (var zone in _zones)
+            {
+                string playerPos;
+                if (zone.TryGetPlayer(out var player))
+                {
+                    playerPos = player.GetPosition().ToString();
+                }
+                else
+                {
+                    playerPos = "<MISSING>";
+                }
+                Logger.Info("Player zone center {0}.  Player currently at {1}", zone.Center, playerPos);
+            }
+        }
     }
 }

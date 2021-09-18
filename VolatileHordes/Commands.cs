@@ -65,6 +65,11 @@ namespace VolatileHordes
                     Container.GroupManager.DestroyAll();
                     break;
                 }
+                case "players":
+                {
+                    Container.PlayerZoneManager.Print();
+                    break;
+                }
                 default:
                     break;
             }
