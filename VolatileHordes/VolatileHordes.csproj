@@ -67,6 +67,7 @@
     <Compile Include="Tracking\ZombieGroup.cs" />
     <Compile Include="Utility\DisposableExt.cs" />
     <Compile Include="Utility\IDisposableBucket.cs" />
+    <Compile Include="Utility\INowProvider.cs" />
     <Compile Include="Utility\ListExt.cs" />
     <Compile Include="Utility\Percent.cs" />
     <Compile Include="Utility\PointFExt.cs" />

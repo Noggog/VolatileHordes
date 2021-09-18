@@ -7,6 +7,7 @@ using VolatileHordes.Settings.User;
 using VolatileHordes.Spawning;
 using VolatileHordes.Spawning.WanderingHordes;
 using VolatileHordes.Tracking;
+using VolatileHordes.Utility;
 using VolatileHordes.Zones;
 
 namespace VolatileHordes
@@ -17,7 +18,7 @@ namespace VolatileHordes
         public static readonly BiomeData Biome = new(Random);
         public static readonly IWorld World = new WorldWrapper();
         public static readonly PlayerZoneManager PlayerZoneManager = new();
-        public static readonly TimeManager Time = new(Random);
+        public static readonly TimeManager Time = new(new NowProvider(), Random);
         public static readonly PlayerLocationUpdater PlayerLocationUpdater = new(PlayerZoneManager, Time);
         public static readonly SpawningPositions Spawning = new(World, PlayerZoneManager, Random);
         public static readonly ZombieCreator ZombieCreator = new(World, Spawning, Biome);
