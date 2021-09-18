@@ -129,7 +129,7 @@ namespace VolatileHordes.Zones
             var world = GameManager.Instance.World;
             var players = world.Players.dict;
 
-            for (int i = 0; i < _zones.Count; i++)
+            for (int i = _zones.Count - 1; i >= 0; i--)
             {
                 var ply = _zones[i];
 
@@ -146,9 +146,6 @@ namespace VolatileHordes.Zones
 
                     Logger.Error("Player not in player list: {0}", ply.EntityId);
                 }
-
-                if (_zones.Count == 0)
-                    break;
             }
         }
 
