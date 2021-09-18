@@ -33,6 +33,7 @@ namespace VolatileHordes.Control
         
         public IDisposable ApplyTo(ZombieGroup group, out IObservable<Unit> occurred)
         {
+            Logger.Info("Adding lucky player retarget AI to {0} at frequency per minute of {1}", group, _percent);
             var occurredSubj = new Subject<Unit>();
             occurred = occurredSubj;
             return _timeManager.Interval(TimeSpan.FromMinutes(1))

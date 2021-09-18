@@ -35,7 +35,7 @@ namespace VolatileHordes.Control
                 {
                     return _timeManager.IntervalWithVariance(
                             frequency,
-                            timeSpan => Logger.Info($"Will send {group} somewhere in {timeSpan}"))
+                            timeSpan => Logger.Info($"Will send {group} {range} away in {timeSpan}"))
                         .Unit();
                 })
                 .Switch()

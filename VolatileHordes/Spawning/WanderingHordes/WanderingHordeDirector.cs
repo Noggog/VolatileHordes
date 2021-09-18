@@ -40,7 +40,7 @@ namespace VolatileHordes.Spawning.WanderingHordes
 
             using var groupSpawn = _groupManager.NewGroup(_roamAiPackage);
             
-            Logger.Info("Spawning horde {0} of size {1} at {2}", groupSpawn.Group, size, spawnTarget);
+            Logger.Info("Spawning horde {0} of size {1} at {2}", groupSpawn.Group.Id, size, spawnTarget);
             
             await _spawner.SpawnHorde(spawnTarget.SpawnPoint.ToPoint(), spawnTarget.TriggerOrigin, size.Value, groupSpawn.Group);
 
