@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using VolatileHordes.AiPackages;
 using VolatileHordes.Zones;
 
 namespace VolatileHordes.Spawning
@@ -23,11 +24,16 @@ namespace VolatileHordes.Spawning
                 .Subscribe(CleanGroups);
         }
 
-        public ZombieGroup NewGroup()
+        public ZombieGroupSpawn NewGroup(IAiPackage? package = null)
         {
-            var zombieGroup = new ZombieGroup();
+            var zombieGroup = new ZombieGroup(package);
+
+            if (package != null)
+            {
+                Logger.Info("Applying AI {0} to group {1}", package.GetType().Name, zombieGroup.Id);
+            }
             _groups.Add(zombieGroup);
-            return zombieGroup;
+            return new ZombieGroupSpawn(zombieGroup);
         }
 
         private void CleanGroups()

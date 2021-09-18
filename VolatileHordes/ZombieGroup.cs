@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using VolatileHordes.AiPackages;
 using VolatileHordes.GameAbstractions;
+using VolatileHordes.Utility;
 
 namespace VolatileHordes
 {
-    public class ZombieGroup : IDisposable
+    public class ZombieGroup : IDisposable, IDisposableBucket
     {
         private static int _nextId;
         public int Id { get; }
@@ -18,9 +20,12 @@ namespace VolatileHordes
         
         public PointF? Target { get; set; }
         
-        public ZombieGroup()
+        public IAiPackage? AiPackage { get;}
+        
+        public ZombieGroup(IAiPackage? package)
         {
             Id = _nextId++;
+            AiPackage = package;
         }
 
         public void AddForDisposal(IDisposable disposable)

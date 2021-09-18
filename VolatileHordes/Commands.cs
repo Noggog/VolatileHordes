@@ -50,7 +50,7 @@ namespace VolatileHordes
                 case "redirect":
                 {
                     Logger.Info("Artificially redirecting");
-                    Container.RoamOccasionally.Redirect.Fire();
+                    Container.RoamControl.Redirect.Fire();
                     break;
                 }
                 case "single-tracker":

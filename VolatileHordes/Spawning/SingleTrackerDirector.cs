@@ -24,8 +24,8 @@
             var zombie = _singleTrackerSpawner.Spawn(spawnTarget.SpawnPoint.ToPoint(), spawnTarget.TriggerOrigin, null);
             if (zombie != null)
             {
-                _groupManager.NewGroup()
-                    .Zombies.Add(zombie);
+                using var groupSpawn = _groupManager.NewGroup();
+                groupSpawn.Group.Zombies.Add(zombie);
             }
         }
     }
