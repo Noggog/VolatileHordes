@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Reactive;
+using System.Reactive.Subjects;
 
 namespace VolatileHordes
 {
@@ -6,19 +8,22 @@ namespace VolatileHordes
     {
         public void InitMod()
         {
-            ModEvents.GameStartDone.RegisterHandler(GameStarted);
+            ModEvents.GameStartDone.RegisterHandler(StartGame);
             ModEvents.GameUpdate.RegisterHandler(GameUpdate);
             ModEvents.GameShutdown.RegisterHandler(GameShutdown);
             ModEvents.PlayerSpawnedInWorld.RegisterHandler(Container.PlayerZoneManager.PlayerSpawnedInWorld);
             ModEvents.PlayerDisconnected.RegisterHandler(Container.PlayerZoneManager.PlayerDisconnected);
         }
 
-        static void GameStarted()
+        private static ReplaySubject<Unit> _gameStarted = new();
+        public static IObservable<Unit> GameStarted => _gameStarted;
+
+        static void StartGame()
         {
             Logger.Info($"Game started");
             Settings.World.WorldState.Load();
             Container.Biome.Init();
-            Container.PlayerZoneManager.Init();
+            _gameStarted.OnNext(Unit.Default);
         }
 
         static void GameUpdate()

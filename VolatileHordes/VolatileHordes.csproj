@@ -67,6 +67,7 @@
     <Compile Include="Tracking\ZombieGroup.cs" />
     <Compile Include="Utility\DisposableExt.cs" />
     <Compile Include="Utility\IDisposableBucket.cs" />
+    <Compile Include="Utility\INowProvider.cs" />
     <Compile Include="Utility\ListExt.cs" />
     <Compile Include="Utility\Percent.cs" />
     <Compile Include="Utility\PointFExt.cs" />
@@ -97,6 +98,7 @@
     <Compile Include="Utility\RectangleExt.cs" />
     <Compile Include="Utility\ValueTuple.cs" />
     <Compile Include="Utility\VectorExt.cs" />
+    <Compile Include="Zones\PlayerLocationUpdater.cs" />
     <Compile Include="Zones\PlayerZoneManager.cs" />
     <Compile Include="Zones\PlayerZone.cs" />
     <Compile Include="Zones\ZoneProcessing.cs" />

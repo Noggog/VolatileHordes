@@ -16,5 +16,16 @@ namespace VolatileHordes
             return obs.Subscribe(_ => sub(),
                 onError: onError);
         }
+
+        public static IObservable<ValueTuple<T?, T>> Pairwise<T>(this IObservable<T> source)
+        {
+            T? prevStorage = default;
+            return source.Select(i =>
+            {
+                var prev = prevStorage;
+                prevStorage = i;
+                return new ValueTuple<T?, T>(prev, i);
+            });
+        }
     }
 }
