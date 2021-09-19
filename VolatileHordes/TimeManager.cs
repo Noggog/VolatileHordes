@@ -12,34 +12,44 @@ namespace VolatileHordes
         private readonly INowProvider _nowProvider;
         private readonly RandomSource _randomSource;
 
-        private BehaviorSubject<DateTime> UpdateTime;
+        private readonly BehaviorSubject<DateTime> _updateTime;
+
+        private readonly IObservable<TimeSpan> _updateDeltas;
 
         public TimeManager(INowProvider nowProvider, RandomSource randomSource)
         {
             _nowProvider = nowProvider;
             _randomSource = randomSource;
-            UpdateTime = new BehaviorSubject<DateTime>(_nowProvider.Now);
+            _updateTime = new BehaviorSubject<DateTime>(_nowProvider.Now);
+            _updateDeltas = _updateTime
+                .StartWith(DateTime.Now)
+                .Pairwise()
+                .Skip(1)
+                .Select(x => x.Item2 - x.Item1)
+                .Publish()
+                .RefCount();
         }
 
         public void Update()
         {
-            UpdateTime.OnNext(_nowProvider.Now);
+            _updateTime.OnNext(_nowProvider.Now);
         }
 
-        public IObservable<Unit> UpdateTicks() => UpdateTime.Unit();
+        public IObservable<Unit> UpdateTicks() => _updateTime.Unit();
 
         public IObservable<Unit> Interval(TimeSpan timeSpan)
         {
-            return UpdateTime
+            return _updateDeltas
                 .Scan(
-                    new ValueTuple<DateTime, bool>(_nowProvider.Now, false),
-                    (accum, newItem) =>
+                    new ValueTuple<TimeSpan, bool>(new TimeSpan(), false),
+                    (accum, delta) =>
                     {
-                        if (newItem - accum.Item1 < timeSpan)
+                        var totalTimePassed = accum.Item1 + delta;
+                        if (totalTimePassed < timeSpan)
                         {
-                            return new ValueTuple<DateTime, bool>(accum.Item1, false);
+                            return new ValueTuple<TimeSpan, bool>(totalTimePassed, false);
                         }
-                        return new ValueTuple<DateTime, bool>(newItem, true);
+                        return new ValueTuple<TimeSpan, bool>(new TimeSpan() + totalTimePassed - timeSpan, true);
                     })
                 .Where(x => x.Item2)
                 .Unit();
