@@ -4,21 +4,27 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using VolatileHordes.Randomization;
 using VolatileHordes.Utility;
+using VolatileHordes.Zones;
 
 namespace VolatileHordes
 {
     public class TimeManager
     {
         private readonly INowProvider _nowProvider;
+        private readonly PlayerZoneManager _playerZoneManager;
         private readonly RandomSource _randomSource;
 
         private readonly BehaviorSubject<DateTime> _updateTime;
 
         private readonly IObservable<TimeSpan> _updateDeltas;
 
-        public TimeManager(INowProvider nowProvider, RandomSource randomSource)
+        public TimeManager(
+            INowProvider nowProvider, 
+            PlayerZoneManager playerZoneManager,
+            RandomSource randomSource)
         {
             _nowProvider = nowProvider;
+            _playerZoneManager = playerZoneManager;
             _randomSource = randomSource;
             _updateTime = new BehaviorSubject<DateTime>(_nowProvider.Now);
             _updateDeltas = _updateTime
@@ -28,6 +34,12 @@ namespace VolatileHordes
                 .Select(x => x.Item2 - x.Item1)
                 .Publish()
                 .RefCount();
+
+            Interval(TimeSpan.FromSeconds(5))
+                .Subscribe(x =>
+                {
+                    Logger.Info("Hello");
+                });
         }
 
         public void Update()
@@ -37,9 +49,19 @@ namespace VolatileHordes
 
         public IObservable<Unit> UpdateTicks() => _updateTime.Unit();
 
-        public IObservable<Unit> Interval(TimeSpan timeSpan)
+        public IObservable<Unit> Interval(TimeSpan timeSpan, bool pauseIfNoPlayers = true)
         {
-            return _updateDeltas
+            var source = _updateDeltas;
+            if (pauseIfNoPlayers)
+            {
+                source = source
+                    .WithLatestFrom(
+                        _playerZoneManager.PlayerCountObservable,
+                        (delta, numPlayers) => numPlayers > 0 ? delta : new TimeSpan())
+                    .Where(x => x.Ticks > 0);
+            }
+            
+            return source
                 .Scan(
                     new ValueTuple<TimeSpan, bool>(new TimeSpan(), false),
                     (accum, delta) =>
@@ -55,28 +77,28 @@ namespace VolatileHordes
                 .Unit();
         }
 
-        public IObservable<Unit> Timer(TimeSpan timeSpan)
+        public IObservable<Unit> Timer(TimeSpan timeSpan, bool pauseIfNoPlayers = true)
         {
-            return Interval(timeSpan)
+            return Interval(timeSpan, pauseIfNoPlayers)
                 .Take(1);
         }
         
-        public IObservable<Unit> IntervalWithVariance(TimeRange timeRange)
+        public IObservable<Unit> IntervalWithVariance(TimeRange timeRange, bool pauseIfNoPlayers = true)
         {
             return Observable.Defer(() => Observable.Return(_randomSource.GetRandomTime(timeRange)))
-                .Select(Timer)
+                .Select(x => Timer(x, pauseIfNoPlayers))
                 .Concat()
                 .Take(1)
                 .Repeat();
         }
         
-        public IObservable<Unit> IntervalWithVariance(TimeRange timeRange, Action<TimeSpan> onNewInterval)
+        public IObservable<Unit> IntervalWithVariance(TimeRange timeRange, Action<TimeSpan> onNewInterval, bool pauseIfNoPlayers = true)
         {
             return Observable.Defer(() => Observable.Return(_randomSource.GetRandomTime(timeRange)))
                 .Select(timeSpan =>
                 {
                     onNewInterval(timeSpan);
-                    return Timer(timeSpan);
+                    return Timer(timeSpan, pauseIfNoPlayers);
                 })
                 .Concat()
                 .Take(1)
