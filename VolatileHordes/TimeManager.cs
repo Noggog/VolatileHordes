@@ -34,12 +34,6 @@ namespace VolatileHordes
                 .Select(x => x.Item2 - x.Item1)
                 .Publish()
                 .RefCount();
-
-            Interval(TimeSpan.FromSeconds(5))
-                .Subscribe(x =>
-                {
-                    Logger.Info("Hello");
-                });
         }
 
         public void Update()

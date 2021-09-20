@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using UnityEngine;
 using VolatileHordes.GameAbstractions;
+using VolatileHordes.Tracking;
 
 namespace VolatileHordes.Spawning
 {
@@ -67,7 +68,7 @@ namespace VolatileHordes.Spawning
             return true;
         }
         
-        public IZombie? CreateZombie(PointF spawnLocation)
+        public IZombie? CreateZombie(PointF spawnLocation, ZombieGroup? group)
         {
             if (!CanSpawnZombie())
             {
@@ -109,7 +110,8 @@ namespace VolatileHordes.Spawning
                 return null;
             }
     
-            Logger.Debug("Spawned zombie {0} at {1}", zombie, worldSpawn);
+            Logger.Debug("Spawned zombie {0} at {1} into group {2}", zombie, worldSpawn, group?.ToString() ?? "None");
+            group?.Zombies.Add(zombie);
     
             return zombie;
         }

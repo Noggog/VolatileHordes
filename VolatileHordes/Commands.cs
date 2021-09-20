@@ -53,10 +53,10 @@ namespace VolatileHordes
                     Container.RoamControl.Redirect.Fire();
                     break;
                 }
-                case "single-tracker":
+                case "seeker":
                 {
-                    Logger.Info("Artificially spawning a single tracking zombie");
-                    Container.SingleTrackerDirector.SpawnSingle();
+                    Logger.Info("Artificially spawning a seeker squad");
+                    Container.SeekerGroupDirector.Spawn();
                     break;
                 }
                 case "wipe":

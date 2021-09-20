@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using VolatileHordes.AiPackages;
+﻿using VolatileHordes.AiPackages;
 using VolatileHordes.Control;
 using VolatileHordes.GameAbstractions;
 using VolatileHordes.Randomization;
@@ -23,11 +22,11 @@ namespace VolatileHordes
         public static readonly SpawningPositions Spawning = new(World, PlayerZoneManager, Random);
         public static readonly ZombieCreator ZombieCreator = new(World, Spawning, Biome);
         public static readonly ZombieControl ZombieControl = new(Spawning);
-        public static readonly SpawnSingle SpawnSingle = new(ZombieCreator);
-        public static readonly SingleTrackerSpawner SingleTrackerSpawner = new(SpawnSingle, ZombieControl);
         public static readonly GroupManager GroupManager = new(Time, PlayerZoneManager);
-        public static readonly SingleTrackerDirector SingleTrackerDirector = new(GroupManager, Spawning, SingleTrackerSpawner);
-        public static readonly SpawnRowPerpendicular SpawnRowPerpendicular = new(SingleTrackerSpawner);
+        public static readonly PlayerSeekerControl SeekerControl = new(Time, Spawning, ZombieControl);
+        public static readonly SeekerAiPackage SeekerAi = new(SeekerControl);
+        public static readonly SeekerGroupDirector SeekerGroupDirector = new(GroupManager, Spawning, SeekerAi, ZombieCreator, ZombieControl);
+        public static readonly SpawnRowPerpendicular SpawnRowPerpendicular = new(ZombieCreator, ZombieControl);
         public static readonly WanderingHordeSpawner WanderingHordeSpawner = new(Time, SpawnRowPerpendicular);
         public static readonly GamestageCalculator GamestageCalculator = new(PlayerZoneManager);
         public static readonly UserSettings UserSettings = UserSettings.Load();

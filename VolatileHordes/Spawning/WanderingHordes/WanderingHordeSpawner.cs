@@ -22,7 +22,7 @@ namespace VolatileHordes.Spawning.WanderingHordes
             _spawnRow = spawnRow;
         }
         
-        public async Task SpawnHorde(PointF pos, PointF target, int size, ZombieGroup? group)
+        public async Task SpawnHorde(PointF pos, PointF target, int size, ZombieGroup group)
         {
             var rows = size / NumPerRow;
             await _time.Interval(TimeSpan.FromSeconds(SecondDelay))
