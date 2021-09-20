@@ -38,12 +38,14 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AiPackages\SeekerAiPackage.cs" />
     <Compile Include="BiomeData.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Commands.cs" />
     <Compile Include="Container.cs" />
     <Compile Include="Control\FidgetRoam.cs" />
     <Compile Include="Control\LuckyPlayerRetarget.cs" />
+    <Compile Include="Control\PlayerSeekerControl.cs" />
     <Compile Include="Control\RoamControl.cs" />
     <Compile Include="Control\RoamFarOccasionally.cs" />
     <Compile Include="Control\ZombieControl.cs" />
@@ -61,7 +63,8 @@
     <Compile Include="Settings\World\WorldState.cs" />
     <Compile Include="Settings\World\Zombies\ZombieGroupState.cs" />
     <Compile Include="Settings\World\Zombies\ZombieState.cs" />
-    <Compile Include="Spawning\SpawnSingle.cs" />
+    <Compile Include="Spawning\Seeker\SeekerGroupCalculator.cs" />
+    <Compile Include="Spawning\Seeker\SeekerGroupDirector.cs" />
     <Compile Include="Spawning\ZombieGroupSpawn.cs" />
     <Compile Include="Tracking\GroupManager.cs" />
     <Compile Include="Tracking\ZombieGroup.cs" />
@@ -79,10 +82,8 @@
     <Compile Include="Randomization\RandomExt.cs" />
     <Compile Include="Randomization\RandomSource.cs" />
     <Compile Include="Spawning\GamestageCalculator.cs" />
-    <Compile Include="Spawning\SingleTrackerDirector.cs" />
     <Compile Include="Spawning\SpawningPositions.cs" />
     <Compile Include="Spawning\SpawnRowPerpendicular.cs" />
-    <Compile Include="Spawning\SingleTrackerSpawner.cs" />
     <Compile Include="Spawning\SpawnTarget.cs" />
     <Compile Include="Spawning\WanderingHordes\WanderingHordeCalculator.cs" />
     <Compile Include="Spawning\WanderingHordes\WanderingHordeDirector.cs" />

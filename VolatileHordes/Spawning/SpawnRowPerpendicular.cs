@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using UnityEngine;
+using VolatileHordes.Control;
 using VolatileHordes.GameAbstractions;
 using VolatileHordes.Tracking;
 
@@ -9,11 +10,15 @@ namespace VolatileHordes.Spawning
 {
     public class SpawnRowPerpendicular
     {
-        private readonly SingleTrackerSpawner _singleTrackerSpawner;
+        private readonly ZombieCreator _zombieCreator;
+        private readonly ZombieControl _control;
 
-        public SpawnRowPerpendicular(SingleTrackerSpawner singleTrackerSpawner)
+        public SpawnRowPerpendicular(
+            ZombieCreator zombieCreator,
+            ZombieControl control)
         {
-            _singleTrackerSpawner = singleTrackerSpawner;
+            _zombieCreator = zombieCreator;
+            _control = control;
         }
 
         public Vector3 Perpendicular(PointF pt1, PointF pt2)
@@ -22,11 +27,11 @@ namespace VolatileHordes.Spawning
             return Vector3.Cross(lineToTarget, Vector3.up).normalized;
         }
         
-        public void Spawn(PointF spawnLocation, PointF target, byte number, float spacing, ZombieGroup? group)
+        public void Spawn(PointF spawnLocation, PointF target, byte number, float spacing, ZombieGroup group)
         {
             if (number == 0) return;
 
-            _singleTrackerSpawner.Spawn(spawnLocation, target, group);
+            _zombieCreator.CreateZombie(spawnLocation, group);
 
             if (number == 1) return;
 
@@ -37,14 +42,16 @@ namespace VolatileHordes.Spawning
             var numToSpawn = Mathf.Ceil(numPerSide);
             for (int i = 1; i <= numToSpawn; i++)
             {
-                _singleTrackerSpawner.Spawn((spawnLocation.WithHeight(0) + perpendicular * spacing * i).ToPoint(), target, group);
+                _zombieCreator.CreateZombie((spawnLocation.WithHeight(0) + perpendicular * spacing * i).ToPoint(), group);
             }
             
             numToSpawn = Mathf.Floor(numPerSide);
             for (int i = 1; i <= numToSpawn; i++)
             {
-                _singleTrackerSpawner.Spawn((spawnLocation.WithHeight(0) + perpendicular * spacing * i * -1).ToPoint(), target, group);
+                _zombieCreator.CreateZombie((spawnLocation.WithHeight(0) + perpendicular * spacing * i * -1).ToPoint(), group);
             }
+            
+            _control.SendGroupTowards(group, target);
         }
     }
 }

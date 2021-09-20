@@ -29,14 +29,13 @@ namespace VolatileHordes.Control
         {
             interrupt ??= Observable.Return(Unit.Default);
             
-            Logger.Info("Adding roam AI to {0} with a range of {1} at frequency {2}", group, range, frequency);
+            Logger.Info("Adding Roam AI to {0} with a range of {1} at frequency {2}", group, range, frequency);
             return interrupt
                 .Select(_ =>
                 {
                     return _timeManager.IntervalWithVariance(
-                            frequency,
-                            timeSpan => Logger.Info($"Will send {group} {range} away in {timeSpan}"))
-                        .Unit();
+                        frequency,
+                        timeSpan => Logger.Info($"Will send {group} {range} away in {timeSpan}"));
                 })
                 .Switch()
                 .Merge(Redirect.Signalled)

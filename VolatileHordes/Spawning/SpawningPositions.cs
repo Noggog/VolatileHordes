@@ -31,7 +31,7 @@ namespace VolatileHordes.Spawning
             if (zone == null) return null;
             var pos = GetRandomSafeCorner(zone);
             if (pos == null) return null;
-            return new SpawnTarget(pos.Value, zone.PlayerLocation);
+            return new SpawnTarget(pos.Value, zone);
         }
 
         public PlayerZone? GetRandomZone()

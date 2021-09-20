@@ -2,6 +2,7 @@
 {
     public enum AiPackageEnum
     {
-        Roaming
+        Roaming,
+        Seeker,
     }
 }
