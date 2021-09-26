@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -57,6 +57,29 @@ namespace VolatileHordes.Tracking
             {
                 zombie.Destroy();
             }
+        }
+
+        public PointF? GetGeneralLocation()
+        {
+            if (Zombies.Count == 0) return null;
+            if (Zombies.Count == 1) return Zombies[0].GetPosition();
+
+            RectangleF? rect = null;
+            foreach (var zomb in Zombies)
+            {
+                var pos = zomb.GetPosition();
+                if (pos == null) continue;
+                if (rect == null)
+                {
+                    rect = new RectangleF(pos.Value, new SizeF(1, 1));
+                }
+                else
+                {
+                    rect = rect.Value.Absorb(pos.Value);
+                }
+            }
+
+            return rect?.GetCenter();
         }
     }
 }
