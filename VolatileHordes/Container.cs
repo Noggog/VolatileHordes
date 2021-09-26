@@ -25,9 +25,9 @@ namespace VolatileHordes
         public static readonly ZombieControl ZombieControl = new(Spawning);
         public static readonly GroupManager GroupManager = new(Time, PlayerZoneManager);
         public static readonly PlayerSeekerControl SeekerControl = new(Time, Spawning, ZombieControl);
-        public static readonly SeekerAiPackage SeekerAi = new(SeekerControl);
+        public static readonly SeekerAiPackage SeekerAiPackage = new(SeekerControl);
         public static readonly SeekerGroupCalculator SeekerCalculator = new(Random);
-        public static readonly SeekerGroupDirector SeekerGroupDirector = new(GroupManager, SeekerCalculator, Spawning, SeekerAi, ZombieCreator, ZombieControl);
+        public static readonly SeekerGroupDirector SeekerGroupDirector = new(GroupManager, SeekerCalculator, Spawning, SeekerAiPackage, ZombieCreator, ZombieControl);
         public static readonly SpawnRowPerpendicular SpawnRowPerpendicular = new(ZombieCreator, ZombieControl);
         public static readonly WanderingHordeSpawner WanderingHordeSpawner = new(Time, SpawnRowPerpendicular);
         public static readonly GamestageCalculator GamestageCalculator = new(PlayerZoneManager);

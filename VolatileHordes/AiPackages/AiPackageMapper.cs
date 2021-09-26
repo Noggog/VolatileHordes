@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace VolatileHordes.AiPackages
 {
@@ -11,6 +11,8 @@ namespace VolatileHordes.AiPackages
             {
                 case AiPackageEnum.Roaming:
                     return Container.RoamAiPackage;
+                case AiPackageEnum.Seeker:
+                    return Container.SeekerAiPackage;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(e), e, null);
             }
