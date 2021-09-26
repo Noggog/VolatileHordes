@@ -35,7 +35,7 @@ namespace VolatileHordes.Control
                 {
                     return _timeManager.IntervalWithVariance(
                         frequency,
-                        timeSpan => Logger.Info($"Will send {group} {range} away in {timeSpan}"));
+                        timeSpan => Logger.Info("Will send {0} {1} away in {2}", group, range, timeSpan));
                 })
                 .Switch()
                 .Merge(Redirect.Signalled)
@@ -43,18 +43,18 @@ namespace VolatileHordes.Control
                 {
                     if (group.Target == null)
                     {
-                        Logger.Warning($"Could not instruct group {group} to roam, as it had no current target.");
+                        Logger.Warning("Could not instruct group {0} to roam, as it had no current target.", group);
                         return;
                     }
 
                     var newTarget = _spawningPositions.GetRandomPointNear(group.Target.Value, range);
                     if (newTarget == null)
                     {
-                        Logger.Warning($"Could not find target to instruct group {group} to roam to.");
+                        Logger.Warning("Could not find target to instruct group {0} to roam to.", group);
                         return;
                     }
 
-                    Logger.Info($"Sending group {group} to roam to {newTarget.Value}.");
+                    Logger.Info("Sending group {0} to roam to {1}.", group, newTarget.Value);
                     _zombieControl.SendGroupTowards(group, newTarget.Value.ToPoint());
                 },
                     e => Logger.Error("{0} had update error {1}", nameof(RoamControl), e));
