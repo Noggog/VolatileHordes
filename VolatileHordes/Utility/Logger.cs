@@ -1,10 +1,19 @@
 namespace VolatileHordes
 {
+    public enum LogLevel
+    {
+        Information,
+        Debug,
+        Verbose
+    }
+    
     public static class Logger
     {
-        public static void Info(string message, params object[] objs)
+        public static LogLevel Level = LogLevel.Information;
+        
+        public static void Error(string message, params object[] objs)
         {
-            Log.Out($"[{Constants.ModName}] {message}", objs);
+            Log.Error($"[{Constants.ModName}] {message}", objs);
         }
         
         public static void Warning(string message, params object[] objs)
@@ -12,59 +21,142 @@ namespace VolatileHordes
             Log.Warning($"[{Constants.ModName}] {message}", objs);
         }
         
-        public static void Error(string message, params object[] objs)
+        private static void Write(string message)
         {
-            Log.Error($"[{Constants.ModName}] {message}", objs);
+            Log.Out($"[{Constants.ModName}] {message}");
         }
         
-        // TODO("Add a LogLevel to settings, and use it here")
-        public static void Verbose(string message)
+        private static void Write<T1>(string message, T1 o1)
         {
-#if DEBUG
+            Log.Out($"[{Constants.ModName}] {message}", new[] { o1 });
+        }
+        
+        private static void Write<T1, T2>(string message, T1 o1, T2 o2)
+        {
+            Log.Out($"[{Constants.ModName}] {message}", new object?[] { o1, o2 });
+        }
+        
+        private static void Write<T1, T2, T3>(string message, T1 o1, T2 o2, T3 o3)
+        {
+            Log.Out($"[{Constants.ModName}] {message}", new object?[] { o1, o2, o3 });
+        }
+        
+        private static void Write<T1, T2, T3, T4>(string message, T1 o1, T2 o2, T3 o3, T4 o4)
+        {
+            Log.Out($"[{Constants.ModName}] {message}", new object?[] { o1, o2, o3, o4 });
+        }
+        
+        private static void Write<T1, T2, T3, T4, T5>(string message, T1 o1, T2 o2, T3 o3, T4 o4, T5 o5)
+        {
+            Log.Out($"[{Constants.ModName}] {message}", new object?[] { o1, o2, o3, o4, o5 });
+        }
+        
+        public static void Info(string message)
+        {
+            if (LogLevel.Information > Level) return;
             Log.Out($"[{Constants.ModName}] {message}");
-#endif
+        }
+        
+        public static void Info<T1>(string message, T1 o1)
+        {
+            if (LogLevel.Information > Level) return;
+            Log.Out($"[{Constants.ModName}] {message}", new object?[] { o1 });
+        }
+        
+        public static void Info<T1, T2>(string message, T1 o1, T2 o2)
+        {
+            if (LogLevel.Information > Level) return;
+            Log.Out($"[{Constants.ModName}] {message}", new object?[] { o1, o2 });
+        }
+        
+        public static void Info<T1, T2, T3>(string message, T1 o1, T2 o2, T3 o3)
+        {
+            if (LogLevel.Information > Level) return;
+            Log.Out($"[{Constants.ModName}] {message}", new object?[] { o1, o2, o3 });
+        }
+        
+        public static void Info<T1, T2, T3, T4>(string message, T1 o1, T2 o2, T3 o3, T4 o4)
+        {
+            if (LogLevel.Information > Level) return;
+            Log.Out($"[{Constants.ModName}] {message}", new object?[] { o1, o2, o3, o4 });
+        }
+        
+        public static void Info<T1, T2, T3, T4, T5>(string message, T1 o1, T2 o2, T3 o3, T4 o4, T5 o5)
+        {
+            if (LogLevel.Information > Level) return;
+            Log.Out($"[{Constants.ModName}] {message}", new object?[] { o1, o2, o3, o4, o5 });
         }
         
         public static void Debug(string message)
         {
-#if DEBUG
+            if (LogLevel.Debug > Level) return;
             Log.Out($"[{Constants.ModName}] {message}");
-#endif
         }
         
-        public static void Debug(string message, object o1)
+        public static void Debug<T1>(string message, T1 o1)
         {
-#if DEBUG
-            Log.Out($"[{Constants.ModName}] {message}", new[] { o1 });
-#endif
+            if (LogLevel.Debug > Level) return;
+            Log.Out($"[{Constants.ModName}] {message}", new object?[] { o1 });
         }
         
-        public static void Debug(string message, object o1, object o2)
+        public static void Debug<T1, T2>(string message, T1 o1, T2 o2)
         {
-#if DEBUG
-            Log.Out($"[{Constants.ModName}] {message}", new[] { o1, o2 });
-#endif
+            if (LogLevel.Debug > Level) return;
+            Log.Out($"[{Constants.ModName}] {message}", new object?[] { o1, o2 });
         }
         
-        public static void Debug(string message, object o1, object o2, object o3)
+        public static void Debug<T1, T2, T3>(string message, T1 o1, T2 o2, T3 o3)
         {
-#if DEBUG
-            Log.Out($"[{Constants.ModName}] {message}", new[] { o1, o2, o3 });
-#endif
+            if (LogLevel.Debug > Level) return;
+            Log.Out($"[{Constants.ModName}] {message}", new object?[] { o1, o2, o3 });
         }
         
-        public static void Debug(string message, object o1, object o2, object o3, object o4)
+        public static void Debug<T1, T2, T3, T4>(string message, T1 o1, T2 o2, T3 o3, T4 o4)
         {
-#if DEBUG
-            Log.Out($"[{Constants.ModName}] {message}", new[] { o1, o2, o3, o4 });
-#endif
+            if (LogLevel.Debug > Level) return;
+            Log.Out($"[{Constants.ModName}] {message}", new object?[] { o1, o2, o3, o4 });
         }
         
-        public static void Debug(string message, object o1, object o2, object o3, object o4, object o5)
+        public static void Debug<T1, T2, T3, T4, T5>(string message, T1 o1, T2 o2, T3 o3, T4 o4, T5 o5)
         {
-#if DEBUG
-            Log.Out($"[{Constants.ModName}] {message}", new[] { o1, o2, o3, o4, o5 });
-#endif
+            if (LogLevel.Debug > Level) return;
+            Log.Out($"[{Constants.ModName}] {message}", new object?[] { o1, o2, o3, o4, o5 });
+        }
+        
+        public static void Verbose(string message)
+        {
+            if (LogLevel.Verbose > Level) return;
+            Log.Out($"[{Constants.ModName}] {message}");
+        }
+        
+        public static void Verbose<T1>(string message, T1 o1)
+        {
+            if (LogLevel.Verbose > Level) return;
+            Log.Out($"[{Constants.ModName}] {message}", new object?[] { o1 });
+        }
+        
+        public static void Verbose<T1, T2>(string message, T1 o1, T2 o2)
+        {
+            if (LogLevel.Verbose > Level) return;
+            Log.Out($"[{Constants.ModName}] {message}", new object?[] { o1, o2 });
+        }
+        
+        public static void Verbose<T1, T2, T3>(string message, T1 o1, T2 o2, T3 o3)
+        {
+            if (LogLevel.Verbose > Level) return;
+            Log.Out($"[{Constants.ModName}] {message}", new object?[] { o1, o2, o3 });
+        }
+        
+        public static void Verbose<T1, T2, T3, T4>(string message, T1 o1, T2 o2, T3 o3, T4 o4)
+        {
+            if (LogLevel.Verbose > Level) return;
+            Log.Out($"[{Constants.ModName}] {message}", new object?[] { o1, o2, o3, o4 });
+        }
+        
+        public static void Verbose<T1, T2, T3, T4, T5>(string message, T1 o1, T2 o2, T3 o3, T4 o4, T5 o5)
+        {
+            if (LogLevel.Verbose > Level) return;
+            Log.Out($"[{Constants.ModName}] {message}", new object?[] { o1, o2, o3, o4, o5 });
         }
     }
 }
