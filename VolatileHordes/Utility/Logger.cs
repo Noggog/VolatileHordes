@@ -17,6 +17,14 @@ namespace VolatileHordes
             Log.Error($"[{Constants.ModName}] {message}", objs);
         }
         
+        // TODO("Add a LogLevel to settings, and use it here")
+        public static void Verbose(string message)
+        {
+#if DEBUG
+            Log.Out($"[{Constants.ModName}] {message}");
+#endif
+        }
+        
         public static void Debug(string message)
         {
 #if DEBUG
