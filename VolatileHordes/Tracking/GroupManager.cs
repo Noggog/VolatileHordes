@@ -47,7 +47,7 @@ namespace VolatileHordes.Tracking
                 var g = _groups[i];
                 if (now - g.SpawnTime < StaleGroupTime) continue;
                 var count = g.NumAlive();
-                if (count <= 1)
+                if (count == 0)
                 {
                     Logger.Info("Cleaning {0}.", g);
                     var group = _groups[i];
