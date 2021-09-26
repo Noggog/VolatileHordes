@@ -32,7 +32,11 @@ namespace VolatileHordes.Spawning.Seeker
         public void Spawn()
         {
             var spawnTarget = _spawningPositions.GetRandomTarget();
-            if (spawnTarget == null) return;
+            if (spawnTarget == null)
+            {
+                Logger.Warning("Could not find location to spawn seeker group");
+                return;
+            }
             
             var size = _calculator.GetSeekerGroupSize(spawnTarget.Player);
             

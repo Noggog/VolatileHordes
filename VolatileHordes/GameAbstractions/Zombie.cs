@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Drawing;
+using UnityEngine;
 
 namespace VolatileHordes.GameAbstractions
 {
@@ -8,6 +9,7 @@ namespace VolatileHordes.GameAbstractions
         bool SendTowards(Vector3 vector3);
         EntityZombie? GetEntity();
         public void Destroy();
+        PointF? GetPosition();
     }
 
     public class Zombie : IZombie
@@ -24,6 +26,8 @@ namespace VolatileHordes.GameAbstractions
         }
 
         public EntityZombie? GetEntity() => _world.GetEntity(Id) as EntityZombie;
+
+        public PointF? GetPosition() => GetEntity()?.GetPosition().ToPoint();
         
         public void Destroy()
         {

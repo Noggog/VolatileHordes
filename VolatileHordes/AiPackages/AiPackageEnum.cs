@@ -4,5 +4,6 @@
     {
         Roaming,
         Seeker,
+        Runner,
     }
 }

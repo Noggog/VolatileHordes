@@ -61,6 +61,28 @@ namespace VolatileHordes.Spawning
                 height: range * 2);
             return GetRandomPosition(rect, attemptCount);
         }
+
+        public Vector3? GetRandomEdgeRangeAwayFrom(PointF pt, byte range)
+        {
+            var rect = new RectangleF(
+                x: pt.X - range,
+                y: pt.Y - range,
+                width: range * 2,
+                height: range * 2);
+            
+            foreach (var corner in rect.Corners()
+                .ToArray()
+                .EnumerateFromRandomIndex(_randomSource))
+            {
+                var worldPos = GetWorldVector(corner);
+                if (_world.CanSpawnAt(worldPos))
+                {
+                    return worldPos;
+                }
+            }
+
+            return null;
+        }
         
         public Vector3? GetRandomPosition(RectangleF zone, int attemptCount = 10)
         {

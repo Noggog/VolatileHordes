@@ -38,6 +38,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AiPackages\RunnerAiPackage.cs" />
     <Compile Include="AiPackages\SeekerAiPackage.cs" />
     <Compile Include="BiomeData.cs" />
     <Compile Include="Bootstrapper.cs" />
@@ -48,6 +49,7 @@
     <Compile Include="Control\PlayerSeekerControl.cs" />
     <Compile Include="Control\RoamControl.cs" />
     <Compile Include="Control\RoamFarOccasionally.cs" />
+    <Compile Include="Control\RunnerControl.cs" />
     <Compile Include="Control\ZombieControl.cs" />
     <Compile Include="AiPackages\AiPackageEnum.cs" />
     <Compile Include="AiPackages\AiPackageMapper.cs" />
@@ -65,8 +67,10 @@
     <Compile Include="Settings\World\Zombies\ZombieState.cs" />
     <Compile Include="Spawning\Seeker\SeekerGroupCalculator.cs" />
     <Compile Include="Spawning\Seeker\SeekerGroupDirector.cs" />
+    <Compile Include="Spawning\SingleRunnerDirector.cs" />
     <Compile Include="Spawning\ZombieGroupSpawn.cs" />
     <Compile Include="Tracking\GroupManager.cs" />
+    <Compile Include="Tracking\GroupReachedTarget.cs" />
     <Compile Include="Tracking\ZombieGroup.cs" />
     <Compile Include="Utility\DisposableExt.cs" />
     <Compile Include="Utility\IDisposableBucket.cs" />
