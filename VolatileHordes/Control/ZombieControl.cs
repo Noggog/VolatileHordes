@@ -31,8 +31,8 @@ namespace VolatileHordes.Control
                 var worldTargetRedefined = worldTarget;
                 if (withRandomness)
                 {
-                    Logger.Debug(".. With randomness, sending 1 zombie of the group towards {0}", worldTargetRedefined);
                     worldTargetRedefined = _spawningPositions.GetRandomPointNear(target, 5) ?? worldTarget;
+                    Logger.Verbose(".. With randomness, sending 1 zombie of the group towards {0}", worldTargetRedefined);
                 }
                 zombie.SendTowards(worldTargetRedefined);
             }
