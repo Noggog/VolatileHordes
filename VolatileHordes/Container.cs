@@ -26,6 +26,10 @@ namespace VolatileHordes
         public static readonly GroupManager GroupManager = new(Time, PlayerZoneManager);
         public static readonly PlayerSeekerControl SeekerControl = new(Time, Spawning, ZombieControl);
         public static readonly SeekerAiPackage SeekerAiPackage = new(SeekerControl);
+        public static readonly GroupReachedTarget GroupReachedTarget = new(Time);
+        public static readonly RunnerControl RunnerControl = new(ZombieControl, Time, Spawning, GroupReachedTarget);
+        public static readonly RunnerAiPackage RunnerAiPackage = new(RunnerControl);
+        public static readonly SingleRunnerDirector SingleRunnerDirector = new(GroupManager, RunnerAiPackage, Spawning, ZombieControl, ZombieCreator);
         public static readonly SeekerGroupCalculator SeekerCalculator = new(Random);
         public static readonly SeekerGroupDirector SeekerGroupDirector = new(GroupManager, SeekerCalculator, Spawning, SeekerAiPackage, ZombieCreator, ZombieControl);
         public static readonly SpawnRowPerpendicular SpawnRowPerpendicular = new(ZombieCreator, ZombieControl);

@@ -11,12 +11,12 @@ namespace VolatileHordes
     {
         public static LogLevel Level = LogLevel.Information;
         
-        public static void Error(string message, params object[] objs)
+        public static void Error(string message, params object?[] objs)
         {
             Log.Error($"[{Constants.ModName}] {message}", objs);
         }
         
-        public static void Warning(string message, params object[] objs)
+        public static void Warning(string message, params object?[] objs)
         {
             Log.Warning($"[{Constants.ModName}] {message}", objs);
         }

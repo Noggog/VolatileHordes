@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using VolatileHordes.Settings.User.Control;
 using VolatileHordes.Spawning.WanderingHordes;
 
@@ -7,6 +8,14 @@ namespace VolatileHordes.Settings.User
 {
     public class UserSettings
     {
+        private static readonly JsonSerializerSettings JsonSettings;
+
+        static UserSettings()
+        {
+            JsonSettings = new JsonSerializerSettings();
+            JsonSettings.Converters.Add(new StringEnumConverter());
+        }
+            
         public static string SettingsPath = Path.Combine(Directory.GetCurrentDirectory(), "Mods", Constants.ModName, $"{Constants.ModName}.json");
 
         public ControlSettings Control { get; set; } = new();
@@ -30,7 +39,7 @@ namespace VolatileHordes.Settings.User
             else
             {
                 var instance = new UserSettings();
-                File.WriteAllText(SettingsPath, JsonConvert.SerializeObject(instance, Formatting.Indented));
+                File.WriteAllText(SettingsPath, JsonConvert.SerializeObject(instance, Formatting.Indented, JsonSettings));
                 return instance;
             }
         }
