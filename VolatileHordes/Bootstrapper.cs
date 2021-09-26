@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reactive;
 using System.Reactive.Subjects;
+using HarmonyLib;
 
 namespace VolatileHordes
 {
@@ -24,6 +25,14 @@ namespace VolatileHordes
             Settings.World.WorldState.Load();
             Container.Biome.Init();
             _gameStarted.OnNext(Unit.Default);
+
+            InstallHooks();
+        }
+        
+        static void InstallHooks()
+        {
+            var harmony = new Harmony($"{Constants.ModName}.Hooks");
+            harmony.PatchAll();
         }
 
         static void GameUpdate()
