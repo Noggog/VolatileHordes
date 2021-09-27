@@ -28,43 +28,22 @@ namespace VolatileHordes.Spawning
         
         public void Spawn(bool nearPlayer = false)
         {
-            var spawnTarget = _spawningPositions.GetRandomTarget();
+            var spawnTarget = _spawningPositions.GetRandomTarget(nearPlayer);
             if (spawnTarget == null)
             {
                 Logger.Warning("Could not find location to spawn single runner");
                 return;
             }
 
-            var spawnPt = spawnTarget.SpawnPoint.ToPoint();
-
-            var nearestPlayer = _spawningPositions.GetNearestPlayer(spawnTarget.TriggerOrigin);
-            if (nearestPlayer == null)
-            {
-                Logger.Warning("Could not find nearest player");
-                return;
-            }
-
-            if (nearPlayer)
-            {
-                var newTarget = _spawningPositions.GetRandomEdgeRangeAwayFrom(spawnTarget.TriggerOrigin, range: 30);
-                if (newTarget == null)
-                {
-                    Logger.Warning("Could not find artificial point near player");
-                    return;
-                }
-                spawnPt = newTarget.Value.ToPoint();
-            }
-
-            var targetPos = _spawningPositions.GetRandomPosition(nearestPlayer.SpawnRectangle);
+            var targetPos = _spawningPositions.GetRandomPosition(spawnTarget.Player.SpawnRectangle);
             if (targetPos == null)
             {
                 Logger.Warning("Could not find target position");
                 return;
             }
             
-            
             using var groupSpawn = _groupManager.NewGroup(_runnerAiPackage);
-            _zombieCreator.CreateZombie(spawnPt, groupSpawn.Group);
+            _zombieCreator.CreateZombie(spawnTarget.SpawnPoint.ToPoint(), groupSpawn.Group);
             
             _control.SendGroupTowards(groupSpawn.Group, targetPos.Value.ToPoint(), withRandomness: false);
         }
