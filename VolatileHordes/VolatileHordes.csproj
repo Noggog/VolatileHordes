@@ -38,12 +38,14 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AiPackages\CrazyAiPackage.cs" />
     <Compile Include="AiPackages\RunnerAiPackage.cs" />
     <Compile Include="AiPackages\SeekerAiPackage.cs" />
     <Compile Include="BiomeData.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Commands.cs" />
     <Compile Include="Container.cs" />
+    <Compile Include="Control\CrazyControl.cs" />
     <Compile Include="Control\FidgetRoam.cs" />
     <Compile Include="Control\LuckyPlayerRetarget.cs" />
     <Compile Include="Control\PlayerSeekerControl.cs" />
@@ -65,6 +67,7 @@
     <Compile Include="Settings\World\WorldState.cs" />
     <Compile Include="Settings\World\Zombies\ZombieGroupState.cs" />
     <Compile Include="Settings\World\Zombies\ZombieState.cs" />
+    <Compile Include="Spawning\CrazyDirector.cs" />
     <Compile Include="Spawning\Seeker\SeekerGroupCalculator.cs" />
     <Compile Include="Spawning\Seeker\SeekerGroupDirector.cs" />
     <Compile Include="Spawning\SingleRunnerDirector.cs" />

@@ -25,6 +25,18 @@ namespace VolatileHordes.Spawning
             _randomSource = randomSource;
         }
 
+        public SpawnTarget? GetRandomTarget(bool nearPlayer)
+        {
+            if (nearPlayer)
+            {
+                return GetRandomNearPlayer();
+            }
+            else
+            {
+                return GetRandomTarget();
+            }
+        }
+
         public SpawnTarget? GetRandomTarget()
         {
             var zone = GetRandomZone();
@@ -32,6 +44,17 @@ namespace VolatileHordes.Spawning
             var pos = GetRandomSafeCorner(zone);
             if (pos == null) return null;
             return new SpawnTarget(pos.Value, zone);
+        }
+
+        public SpawnTarget? GetRandomNearPlayer()
+        {
+            var spawnTarget = GetRandomTarget();
+            if (spawnTarget == null) return null;
+            var newTarget = GetRandomEdgeRangeAwayFrom(spawnTarget.TriggerOrigin, range: 30);
+            if (newTarget == null) return null;
+            return new SpawnTarget(
+                newTarget.Value,
+                spawnTarget.Player);
         }
 
         public PlayerZone? GetRandomZone()

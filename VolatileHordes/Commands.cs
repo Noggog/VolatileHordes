@@ -65,6 +65,12 @@ namespace VolatileHordes
                     Container.SingleRunnerDirector.Spawn(nearPlayer: true);
                     break;
                 }
+                case "crazy":
+                {
+                    Logger.Info("Artificially spawning a crazy");
+                    Container.CrazyDirector.Spawn(nearPlayer: true);
+                    break;
+                }
                 case "wipe":
                 {
                     Logger.Info("Wiping all tracked zombies");
