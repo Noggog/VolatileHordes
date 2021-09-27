@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -42,7 +42,7 @@ namespace VolatileHordes.Control
                         return;
                     }
 
-                    _control.SendGroupTowards(group, newTarget.Value.ToPoint(), withRandomness: false);
+                    _control.SendGroupTowards(group, newTarget.Value.ToPoint(), withTargetRandomness: false);
                 });
         }
     }
