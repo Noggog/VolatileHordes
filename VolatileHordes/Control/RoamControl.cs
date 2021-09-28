@@ -50,7 +50,7 @@ namespace VolatileHordes.Control
                         .Do(_ => Logger.Verbose("{0} {1} told to redirect by artificial signal.", nameof(RoamControl),
                             group)));
             }
-
+          
             return signal.SubscribeAsync(async _ =>
                 {
                     if (group.Target == null)
