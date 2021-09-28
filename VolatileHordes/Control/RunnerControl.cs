@@ -1,6 +1,4 @@
 using System;
-using System.Drawing;
-using System.Reactive;
 using System.Reactive.Linq;
 using VolatileHordes.Spawning;
 using VolatileHordes.Tracking;
@@ -38,7 +36,7 @@ namespace VolatileHordes.Control
                     var newTarget = _spawningPositions.GetRandomPointNear(target, travelRange);
                     if (newTarget == null)
                     {
-                        Logger.Warning($"Could not find target to instruct group {group} to roam to.");
+                        Logger.Warning($"Could not find target to instruct group {group} to run to.");
                         return;
                     }
 
