@@ -48,5 +48,23 @@ namespace VolatileHordes.GameAbstractions
         {
             return GetEntity()?.ToString() ?? Id.ToString();
         }
+        
+        protected bool Equals(Zombie other)
+        {
+            return Id == other.Id;
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Zombie)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return Id;
+        }
     }
 }

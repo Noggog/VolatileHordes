@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using VolatileHordes.AiPackages;
+using VolatileHordes.GameAbstractions;
 using VolatileHordes.Spawning;
 using VolatileHordes.Zones;
 
@@ -24,6 +25,19 @@ namespace VolatileHordes.Tracking
             timeManager.Interval(TimeSpan.FromSeconds(30))
                 .Subscribe(CleanGroups,
                     onError: e => Logger.Error("{0} had update error {1}", nameof(GroupManager), e));
+        }
+
+        public bool ContainsZombie(IZombie zombie)
+        {
+            foreach (var zombieGroup in _groups)
+            {
+                if (zombieGroup.ContainsZombie(zombie))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public ZombieGroupSpawn NewGroup(IAiPackage? package = null)

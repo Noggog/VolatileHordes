@@ -15,7 +15,7 @@ namespace VolatileHordes.Settings.World.Zombies
         public void ApplyToWorld()
         {
             using var groupSpawn = Container.GroupManager.NewGroup(Container.AiPackageMapper.Get(AiPackage));
-            groupSpawn.Group.Zombies.AddRange(
+            groupSpawn.Group.Add(
                 Zombies
                     .Select<ZombieState, IZombie>(z => new Zombie(Container.World, z.EntityId))
                     .ToArray());
@@ -24,10 +24,10 @@ namespace VolatileHordes.Settings.World.Zombies
 
         public static ZombieGroupState? GetSettings(ZombieGroup g)
         {
-            if (g.Zombies.Count == 0) return null;
+            if (g.Count == 0) return null;
             return new ZombieGroupState()
             {
-                Zombies = g.Zombies
+                Zombies = g
                     .Select(z => new ZombieState()
                     {
                         EntityId = z.Id

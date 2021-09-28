@@ -21,9 +21,10 @@ namespace VolatileHordes
         public static readonly TimeManager Time = new(new NowProvider(), PlayerZoneManager, Random);
         public static readonly PlayerLocationUpdater PlayerLocationUpdater = new(PlayerZoneManager, Time);
         public static readonly SpawningPositions Spawning = new(World, PlayerZoneManager, Random);
-        public static readonly ZombieCreator ZombieCreator = new(World, Spawning, Biome);
-        public static readonly ZombieControl ZombieControl = new(Spawning, Time, Random);
         public static readonly GroupManager GroupManager = new(Time, PlayerZoneManager);
+        public static readonly AmbientZombieManager Ambient = new(World, GroupManager);
+        public static readonly ZombieCreator ZombieCreator = new(World, Spawning, Ambient, Biome);
+        public static readonly ZombieControl ZombieControl = new(Spawning, Time, Random);
         public static readonly PlayerSeekerControl SeekerControl = new(Time, Spawning, ZombieControl);
         public static readonly SeekerAiPackage SeekerAiPackage = new(SeekerControl);
         public static readonly GroupReachedTarget GroupReachedTarget = new(Time);

@@ -33,9 +33,9 @@ namespace VolatileHordes.Control
         public void SendGroupTowards(ZombieGroup zombieGroup, PointF target, bool withTargetRandomness = true)
         {
             var worldTarget = _spawningPositions.GetWorldVector(target);
-            Logger.Debug("Will send {0} zombies towards {1}", zombieGroup.Zombies.Count, worldTarget);
+            Logger.Debug("Will send {0} zombies towards {1}", zombieGroup.Count, worldTarget);
             zombieGroup.Target = target;
-            foreach (var zombie in zombieGroup.Zombies)
+            foreach (var zombie in zombieGroup)
             {
                 if (withTargetRandomness)
                 {
@@ -49,9 +49,9 @@ namespace VolatileHordes.Control
         public async Task SendGroupTowardsDelayed(ZombieGroup zombieGroup, PointF target, bool withTargetRandomness = true)
         {
             var worldTarget = _spawningPositions.GetWorldVector(target);
-            Logger.Debug("Will send {0} zombies towards {1}", zombieGroup.Zombies.Count, worldTarget);
+            Logger.Debug("Will send {0} zombies towards {1}", zombieGroup.Count, worldTarget);
             zombieGroup.Target = target;
-            await Task.WhenAny(zombieGroup.Zombies.Select(async zombie =>
+            await Task.WhenAny(zombieGroup.Select(async zombie =>
             {
                 if (withTargetRandomness)
                 {
