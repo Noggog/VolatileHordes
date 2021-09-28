@@ -33,7 +33,7 @@ namespace VolatileHordes.Settings.User
         {
             if (File.Exists(SettingsPath))
             {
-                var readIn = JsonConvert.DeserializeObject<UserSettings>(File.ReadAllText(SettingsPath));
+                var readIn = JsonConvert.DeserializeObject<UserSettings>(File.ReadAllText(SettingsPath), JsonSettings);
                 return readIn ?? new();
             }
             else

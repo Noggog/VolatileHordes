@@ -5,5 +5,6 @@
         Roaming,
         Seeker,
         Runner,
+        Crazy,
     }
 }

@@ -44,5 +44,8 @@ namespace VolatileHordes
         public static readonly RoamAiPackage RoamAiPackage = new(FidgetRoam, RoamFarOccasionally, LuckyPlayerRetarget);
         public static readonly WanderingHordeDirector WanderingHordeDirector = new(GroupManager, RoamAiPackage, WanderingHordeCalculator, Spawning, WanderingHordeSpawner, ZombieControl);
         public static readonly AiPackageMapper AiPackageMapper = new();
+        public static readonly CrazyControl CrazyControl = new(ZombieControl, Time, Spawning);
+        public static readonly CrazyAiPackage CrazyAiPackage = new(CrazyControl);
+        public static readonly CrazyDirector CrazyDirector = new(GroupManager, CrazyAiPackage, Spawning, ZombieControl, ZombieCreator);
     }
 }

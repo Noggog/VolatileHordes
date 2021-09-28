@@ -15,6 +15,8 @@ namespace VolatileHordes.AiPackages
                     return Container.SeekerAiPackage;
                 case AiPackageEnum.Runner:
                     return Container.RunnerAiPackage;
+                case AiPackageEnum.Crazy:
+                    return Container.CrazyAiPackage;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(e), e, null);
             }
