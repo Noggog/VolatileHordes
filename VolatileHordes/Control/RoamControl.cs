@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reactive;
 using System.Reactive.Linq;
 using VolatileHordes.Spawning;
@@ -32,10 +32,11 @@ namespace VolatileHordes.Control
             IObservable<Unit>? interrupt = null,
             bool respectRedirect = true)
         {
-            interrupt ??= Observable.Return(Unit.Default);
+            interrupt ??= Observable.Empty(Unit.Default);
 
             Logger.Info("Adding Roam AI to {0} with a range of {1} at frequency {2}", group, range, frequency);
             var signal = interrupt
+                .StartWith(Unit.Default)
                 .Select(_ =>
                 {
                     return _timeManager.IntervalWithVariance(
