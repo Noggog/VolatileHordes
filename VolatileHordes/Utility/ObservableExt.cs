@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reactive;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 
 namespace VolatileHordes
 {
@@ -26,6 +27,31 @@ namespace VolatileHordes
                 prevStorage = i;
                 return new ValueTuple<T?, T>(prev, i);
             });
+        }
+        
+        public static IDisposable SubscribeAsync<T>(
+            this IObservable<T> source,
+            Func<Task> action, 
+            Action<Exception>? onError = null)
+        {
+            return source
+                .Select(_ => Observable.FromAsync(action))
+                .Concat()
+                .Subscribe(
+                    onNext: _ => { },
+                    onError: onError);
+        }
+
+        public static IDisposable SubscribeAsync<T>(this IObservable<T> source, 
+            Func<T, Task> action, 
+            Action<Exception>? onError = null)
+        {
+            return source
+                .Select(l => Observable.FromAsync(() => action(l)))
+                .Concat()
+                .Subscribe(
+                    onNext: _ => { },
+                    onError: onError);
         }
     }
 }

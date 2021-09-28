@@ -33,7 +33,7 @@ namespace VolatileHordes.Control
                 .Select(target => _timeManager.Timer(TimeSpan.FromSeconds(10))
                     .Select(_ => target))
                 .Switch()
-                .Subscribe(target =>
+                .SubscribeAsync(async target =>
                 {
                     var newTarget = _spawningPositions.GetRandomPointNear(target, travelRange);
                     if (newTarget == null)
@@ -42,7 +42,7 @@ namespace VolatileHordes.Control
                         return;
                     }
 
-                    _control.SendGroupTowards(group, newTarget.Value.ToPoint(), withTargetRandomness: false);
+                    await _control.SendGroupTowardsDelayed(group, newTarget.Value.ToPoint(), withTargetRandomness: false);
                 });
         }
     }

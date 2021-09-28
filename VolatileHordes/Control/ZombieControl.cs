@@ -1,5 +1,8 @@
 using System;
 using System.Drawing;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
+using UniLinq;
 using VolatileHordes.GameAbstractions;
 using VolatileHordes.Randomization;
 using VolatileHordes.Spawning;
@@ -27,33 +30,42 @@ namespace VolatileHordes.Control
             zombie.SendTowards(worldTarget);
         }
 
-        public void SendGroupTowards(ZombieGroup zombieGroup, PointF target, bool withTargetRandomness = true, bool withDelayRandomness = true)
+        public void SendGroupTowards(ZombieGroup zombieGroup, PointF target, bool withTargetRandomness = true)
         {
             var worldTarget = _spawningPositions.GetWorldVector(target);
             Logger.Debug("Will send {0} zombies towards {1}", zombieGroup.Zombies.Count, worldTarget);
             zombieGroup.Target = target;
             foreach (var zombie in zombieGroup.Zombies)
             {
-                var worldTargetRedefined = worldTarget;
                 if (withTargetRandomness)
                 {
-                    worldTargetRedefined = _spawningPositions.GetRandomPointNear(target, 5) ?? worldTarget;
-                    Logger.Verbose($".. With randomness, will send 1 zombie of the group towards {worldTargetRedefined}");
+                    worldTarget = _spawningPositions.GetRandomPointNear(target, 5) ?? worldTarget;
+                    Logger.Verbose(".. With randomness, will send 1 zombie of the group towards {0}", worldTarget);
                 }
-                if (withDelayRandomness)
-                {
-                    _timeManager.Timer(TimeSpan.FromSeconds(_randomSource.NextDouble(5)))
-                        .Subscribe(x =>
-                        {
-                            Logger.Verbose($"Sending 1 zombie of the group towards {worldTargetRedefined}");
-                            zombie.SendTowards(worldTargetRedefined);
-                        });
-                }
-                else
-                {
-                    zombie.SendTowards(worldTargetRedefined);
-                }
+                zombie.SendTowards(worldTarget);
             }
+        }
+
+        public async Task SendGroupTowardsDelayed(ZombieGroup zombieGroup, PointF target, bool withTargetRandomness = true)
+        {
+            var worldTarget = _spawningPositions.GetWorldVector(target);
+            Logger.Debug("Will send {0} zombies towards {1}", zombieGroup.Zombies.Count, worldTarget);
+            zombieGroup.Target = target;
+            await Task.WhenAny(zombieGroup.Zombies.Select(async zombie =>
+            {
+                if (withTargetRandomness)
+                {
+                    worldTarget = _spawningPositions.GetRandomPointNear(target, 5) ?? worldTarget;
+                    Logger.Verbose(".. With randomness, will send 1 zombie of the group towards {0}", worldTarget);
+                }
+
+                await _timeManager.Timer(TimeSpan.FromSeconds(_randomSource.NextDouble(5)))
+                    .Do(x =>
+                    {
+                        Logger.Verbose("Sending 1 zombie of the group towards {0}", worldTarget);
+                        zombie.SendTowards(worldTarget);
+                    });
+            }));
         }
     }
 }
