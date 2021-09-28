@@ -102,6 +102,7 @@ namespace VolatileHordes.Tracking
             RectangleF? rect = null;
             foreach (var zomb in _zombies.Values)
             {
+                if (!zomb.IsAlive) continue;
                 var pos = zomb.GetPosition();
                 if (pos == null) continue;
                 if (rect == null)

@@ -10,6 +10,7 @@ namespace VolatileHordes.GameAbstractions
         EntityZombie? GetEntity();
         public void Destroy();
         PointF? GetPosition();
+        bool IsAlive { get; }
     }
 
     public class Zombie : IZombie
@@ -28,6 +29,8 @@ namespace VolatileHordes.GameAbstractions
         public EntityZombie? GetEntity() => _world.GetEntity(Id) as EntityZombie;
 
         public PointF? GetPosition() => GetEntity()?.GetPosition().ToPoint();
+
+        public bool IsAlive => !GetEntity()?.bDead ?? false;
         
         public void Destroy()
         {
