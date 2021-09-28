@@ -50,10 +50,8 @@ namespace VolatileHordes.Control
                         .Do(_ => Logger.Verbose("{0} {1} told to redirect by artificial signal.", nameof(RoamControl),
                             group)));
             }
-            
-            Logger.Info("Adding Roam AI to {0} with a range of {1} at frequency {2}", group, range, frequency);
-            return signal
-                .Subscribe(_ =>
+          
+            return signal.SubscribeAsync(async _ =>
                 {
                     if (group.Target == null)
                     {
@@ -69,9 +67,9 @@ namespace VolatileHordes.Control
                     }
 
                     Logger.Info("Sending group {0} to roam to {1}.", group, newTarget.Value);
-                    _zombieControl.SendGroupTowards(group, newTarget.Value.ToPoint());
+                    await _zombieControl.SendGroupTowardsDelayed(group, newTarget.Value.ToPoint());
                 },
-                    e => Logger.Error("{0} had update error {1}", nameof(RoamControl), e));
+                e => Logger.Error("{0} had update error {1}", nameof(RoamControl), e));
         }
     }
 }

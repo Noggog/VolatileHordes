@@ -1,4 +1,4 @@
-﻿using VolatileHordes.AiPackages;
+using VolatileHordes.AiPackages;
 using VolatileHordes.Control;
 using VolatileHordes.Tracking;
 
@@ -45,7 +45,7 @@ namespace VolatileHordes.Spawning
             using var groupSpawn = _groupManager.NewGroup(_runnerAiPackage);
             _zombieCreator.CreateZombie(spawnTarget.SpawnPoint.ToPoint(), groupSpawn.Group);
             
-            _control.SendGroupTowards(groupSpawn.Group, targetPos.Value.ToPoint(), withRandomness: false);
+            _control.SendGroupTowards(groupSpawn.Group, targetPos.Value.ToPoint(), withTargetRandomness: false);
         }
     }
 }

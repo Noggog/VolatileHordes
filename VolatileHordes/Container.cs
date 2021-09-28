@@ -1,4 +1,4 @@
-﻿using VolatileHordes.AiPackages;
+using VolatileHordes.AiPackages;
 using VolatileHordes.Control;
 using VolatileHordes.GameAbstractions;
 using VolatileHordes.Randomization;
@@ -22,7 +22,7 @@ namespace VolatileHordes
         public static readonly PlayerLocationUpdater PlayerLocationUpdater = new(PlayerZoneManager, Time);
         public static readonly SpawningPositions Spawning = new(World, PlayerZoneManager, Random);
         public static readonly ZombieCreator ZombieCreator = new(World, Spawning, Biome);
-        public static readonly ZombieControl ZombieControl = new(Spawning);
+        public static readonly ZombieControl ZombieControl = new(Spawning, Time, Random);
         public static readonly GroupManager GroupManager = new(Time, PlayerZoneManager);
         public static readonly PlayerSeekerControl SeekerControl = new(Time, Spawning, ZombieControl);
         public static readonly SeekerAiPackage SeekerAiPackage = new(SeekerControl);

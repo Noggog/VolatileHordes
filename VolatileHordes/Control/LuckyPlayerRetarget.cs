@@ -37,7 +37,7 @@ namespace VolatileHordes.Control
             var occurredSubj = new Subject<Unit>();
             occurred = occurredSubj;
             return _timeManager.Interval(TimeSpan.FromMinutes(1))
-                .Subscribe(x =>
+                .SubscribeAsync(async () =>
                 {
                     if (group.Target == null)
                     {
@@ -55,9 +55,9 @@ namespace VolatileHordes.Control
                         return;
                     }
                     
-                    _zombieControl.SendGroupTowards(group, player.PlayerLocation);
-                    
                     occurredSubj.OnNext(Unit.Default);
+                    
+                    await _zombieControl.SendGroupTowardsDelayed(group, player.PlayerLocation);
                 },
                     e => Logger.Error("{0} had update error {1}", nameof(LuckyPlayerRetarget), e));
         }
