@@ -25,20 +25,33 @@ namespace VolatileHordes.Control
             _zombieControl = zombieControl;
         }
 
-        public IDisposable ApplyTo(ZombieGroup group, byte range, TimeRange frequency, IObservable<Unit>? interrupt = null)
+        public IDisposable ApplyTo(
+            ZombieGroup group,
+            byte range, 
+            TimeRange frequency,
+            IObservable<Unit>? interrupt = null,
+            bool respectRedirect = true)
         {
             interrupt ??= Observable.Return(Unit.Default);
-            
+
             Logger.Info("Adding Roam AI to {0} with a range of {1} at frequency {2}", group, range, frequency);
-            return interrupt
+            var signal = interrupt
                 .Select(_ =>
                 {
                     return _timeManager.IntervalWithVariance(
                         frequency,
                         timeSpan => Logger.Info("Will send {0} {1} away in {2}", group, range, timeSpan));
                 })
-                .Switch()
-                .Merge(Redirect.Signalled)
+                .Switch();
+            if (respectRedirect)
+            {
+                signal = signal.Merge(
+                    Redirect.Signalled
+                        .Do(_ => Logger.Verbose("{0} {1} told to redirect by artificial signal.", nameof(RoamControl),
+                            group)));
+            }
+            
+            return signal
                 .Subscribe(_ =>
                 {
                     if (group.Target == null)

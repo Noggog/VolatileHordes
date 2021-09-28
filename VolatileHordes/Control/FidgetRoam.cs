@@ -24,7 +24,8 @@ namespace VolatileHordes.Control
                 group,
                 _settings.Range,
                 new TimeRange(TimeSpan.FromSeconds(_settings.MinSeconds), TimeSpan.FromSeconds(_settings.MaxSeconds)),
-                interrupt);
+                interrupt,
+                respectRedirect: false);
         }
     }
 }
