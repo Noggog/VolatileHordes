@@ -61,6 +61,7 @@
     <Compile Include="GameAbstractions\Player.cs" />
     <Compile Include="GameAbstractions\World.cs" />
     <Compile Include="Hooks\PreventVanillaHordes.cs" />
+    <Compile Include="Hooks\ZombieSpawnTracking.cs" />
     <Compile Include="Settings\User\Control\ControlSettings.cs" />
     <Compile Include="Settings\User\Control\LuckyPlayerRetargetSettings.cs" />
     <Compile Include="Settings\User\Control\RoamControlSettings.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="Spawning\Seeker\SeekerGroupDirector.cs" />
     <Compile Include="Spawning\SingleRunnerDirector.cs" />
     <Compile Include="Spawning\ZombieGroupSpawn.cs" />
+    <Compile Include="Tracking\AmbientZombieManager.cs" />
     <Compile Include="Tracking\GroupManager.cs" />
     <Compile Include="Tracking\GroupReachedTarget.cs" />
     <Compile Include="Tracking\ZombieGroup.cs" />

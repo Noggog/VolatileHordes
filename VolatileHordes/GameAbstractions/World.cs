@@ -11,7 +11,7 @@ namespace VolatileHordes.GameAbstractions
         
         bool CanSpawnAt(Vector3 pos);
         int GetTerrainHeight(PointF pt);
-        IZombie? SpawnZombie(int classId, Vector3 pos);
+        void SpawnZombie(EntityZombie zombie);
         void DestroyZombie(IZombie zombie);
         Chunk? GetChunkAt(PointF pt);
         Entity? GetEntity(int id);
@@ -25,20 +25,9 @@ namespace VolatileHordes.GameAbstractions
         
         public int GetTerrainHeight(PointF pt) => World.GetTerrainHeight((int)pt.X, (int)pt.Y);
         
-        public IZombie? SpawnZombie(int classId, Vector3 pos)
+        public void SpawnZombie(EntityZombie zombie)
         {
-            if (EntityFactory.CreateEntity(classId, pos) is not EntityZombie zombieEnt)
-            {
-                return null;
-            }
-
-            zombieEnt.bIsChunkObserver = true;
-            zombieEnt.SetSpawnerSource(EnumSpawnerSource.StaticSpawner);
-            zombieEnt.IsHordeZombie = true;
-            
-            World.SpawnEntityInWorld(zombieEnt);
-            
-            return new Zombie(this, zombieEnt.entityId);
+            World.SpawnEntityInWorld(zombie);
         }
 
         public void DestroyZombie(IZombie zombie)

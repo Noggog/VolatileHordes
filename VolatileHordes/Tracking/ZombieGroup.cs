@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using VolatileHordes.AiPackages;
 using VolatileHordes.GameAbstractions;
@@ -10,7 +10,7 @@ using VolatileHordes.Utility;
 
 namespace VolatileHordes.Tracking
 {
-    public class ZombieGroup : IDisposable, IDisposableBucket
+    public class ZombieGroup : IDisposable, IDisposableBucket, IEnumerable<IZombie>
     {
         private static int _nextId;
         public int Id { get; }
@@ -18,9 +18,12 @@ namespace VolatileHordes.Tracking
         private readonly List<IDisposable> _behaviors = new();
         
         public DateTime SpawnTime { get; } = DateTime.Now;
-        public List<IZombie> Zombies { get; } = new();
+
+        private readonly Dictionary<int, IZombie> _zombies = new();
 
         private readonly BehaviorSubject<PointF?> _target = new(null);
+
+        public int Count => _zombies.Count;
 
         public PointF? Target
         {
@@ -36,9 +39,27 @@ namespace VolatileHordes.Tracking
             AiPackage = package;
         }
 
+        public void Add(IEnumerable<IZombie> zombies)
+        {
+            foreach (var zombie in zombies)
+            {
+                Add(zombie);
+            }
+        }
+
+        public void Add(IZombie zombie)
+        {
+            _zombies[zombie.Id] = zombie;
+        }
+
         public void AddForDisposal(IDisposable disposable)
         {
             _behaviors.Add(disposable);
+        }
+
+        public bool Remove(IZombie zombie)
+        {
+            return _zombies.Remove(zombie.Id);
         }
 
         public void Dispose()
@@ -49,19 +70,25 @@ namespace VolatileHordes.Tracking
             }
         }
 
-        public int NumAlive() => Zombies
+        public int NumAlive() => _zombies.Values
             .Select(z => z.GetEntity())
             .NotNull()
             .Count(e => !e.IsDead());
 
         public override string ToString()
         {
-            return $"{nameof(ZombieGroup)}-{Id} ({NumAlive()}/{Zombies.Count})";
+            return $"{nameof(ZombieGroup)}-{Id} ({NumAlive()}/{_zombies.Count})";
         }
+
+        public IEnumerator<IZombie> GetEnumerator() => _zombies.Values.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        public bool ContainsZombie(IZombie zombie) => _zombies.ContainsKey(zombie.Id);
 
         public void Destroy()
         {
-            foreach (var zombie in Zombies)
+            foreach (var zombie in _zombies.Values)
             {
                 zombie.Destroy();
             }
@@ -69,11 +96,11 @@ namespace VolatileHordes.Tracking
 
         public PointF? GetGeneralLocation()
         {
-            if (Zombies.Count == 0) return null;
-            if (Zombies.Count == 1) return Zombies[0].GetPosition();
+            if (_zombies.Values.Count == 0) return null;
+            if (_zombies.Values.Count == 1) return _zombies.Values.First().GetPosition();
 
             RectangleF? rect = null;
-            foreach (var zomb in Zombies)
+            foreach (var zomb in _zombies.Values)
             {
                 var pos = zomb.GetPosition();
                 if (pos == null) continue;
