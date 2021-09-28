@@ -1,25 +1,31 @@
 using System;
 using System.Reactive;
 using System.Reactive.Linq;
+using UnityEngine;
+using VolatileHordes.Settings.User.Control;
 using VolatileHordes.Spawning;
 using VolatileHordes.Tracking;
 using VolatileHordes.Utility;
 
 namespace VolatileHordes.Control
 {
-    public class RoamControl
+    /**
+     * Fidgets in a way where the direction can only change by a certain number of degrees at each fidget.
+     */
+    public class FidgetForward
     {
+        private readonly RoamControlSettings _settings;
         private readonly TimeManager _timeManager;
         private readonly SpawningPositions _spawningPositions;
         private readonly ZombieControl _zombieControl;
 
-        public Signal Redirect { get; } = new();
-
-        public RoamControl(
+        public FidgetForward(
+            RoamControlSettings settings,
             TimeManager timeManager,
             SpawningPositions spawningPositions,
             ZombieControl zombieControl)
         {
+            _settings = settings;
             _timeManager = timeManager;
             _spawningPositions = spawningPositions;
             _zombieControl = zombieControl;
@@ -27,32 +33,29 @@ namespace VolatileHordes.Control
 
         public IDisposable ApplyTo(
             ZombieGroup group,
-            byte range, 
-            TimeRange frequency,
-            IObservable<Unit>? interrupt = null,
-            bool respectRedirect = true)
+            IObservable<Unit>? interrupt = null)
         {
-            interrupt ??= Observable.Empty(Unit.Default);
+            return ApplyTo(group, _settings.Range, new TimeRange(TimeSpan.FromSeconds(_settings.MinSeconds), TimeSpan.FromSeconds(_settings.MaxSeconds)), interrupt);
+        }
 
-            Logger.Info("Adding Roam AI to {0} with a range of {1} at frequency {2}", group, range, frequency);
-            var signal = interrupt
+            public IDisposable ApplyTo(
+            ZombieGroup group,
+            byte range,
+            TimeRange frequency,
+            IObservable<Unit>? interrupt = null)
+        {
+            Vector3? oldTarget = null;
+
+            Logger.Info("Adding FidgetForward AI to {0} with a range of {1} at frequency {2}", group, range, frequency);
+            return (interrupt ?? Observable.Empty(Unit.Default))
                 .StartWith(Unit.Default)
-                .Select(_ =>
+                .SwitchMap(_ =>
                 {
                     return _timeManager.IntervalWithVariance(
-                        frequency,
-                        timeSpan => Logger.Info("Will send {0} {1} away in {2}", group, range, timeSpan));
+                        timeRange : frequency,
+                        onNewInterval : timeSpan => Logger.Info("Will fidget {0} in {1}", group, timeSpan));
                 })
-                .Switch();
-            if (respectRedirect)
-            {
-                signal = signal.Merge(
-                    Redirect.Signalled
-                        .Do(_ => Logger.Verbose("{0} {1} told to redirect by artificial signal.", nameof(RoamControl), group))
-                        );
-            }
-          
-            return signal.SubscribeAsync(async _ =>
+                .SubscribeAsync(async _ =>
                 {
                     if (group.Target == null)
                     {
@@ -60,13 +63,18 @@ namespace VolatileHordes.Control
                         return;
                     }
 
-                    var newTarget = _spawningPositions.GetRandomPointNear(group.Target.Value, range);
+                    Vector3? newTarget;
+                    if (oldTarget == null)
+                        newTarget = _spawningPositions.GetRandomPointNear(group.Target.Value, range);
+                    else
+                        newTarget = _spawningPositions.GetRandomPointNear(group.Target.Value.OverPointWithDistance(oldTarget.Value.ToPoint(), range), range);
+
                     if (newTarget == null)
                     {
                         Logger.Warning("Could not find target to instruct group {0} to roam to.", group);
                         return;
                     }
-
+                    oldTarget = newTarget.Value;
                     Logger.Info("Sending group {0} to roam to {1}.", group, newTarget.Value);
                     await _zombieControl.SendGroupTowardsDelayed(group, newTarget.Value.ToPoint());
                 },

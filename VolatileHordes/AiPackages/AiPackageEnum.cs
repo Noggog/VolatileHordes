@@ -1,4 +1,4 @@
-﻿namespace VolatileHordes.AiPackages
+namespace VolatileHordes.AiPackages
 {
     public enum AiPackageEnum
     {
@@ -6,5 +6,6 @@
         Seeker,
         Runner,
         Crazy,
+        FidgetForward,
     }
 }
