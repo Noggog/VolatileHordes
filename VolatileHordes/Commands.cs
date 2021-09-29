@@ -82,6 +82,11 @@ namespace VolatileHordes
                     Container.PlayerZoneManager.Print();
                     break;
                 }
+                case "ambient":
+                {
+                    Container.AmbientSpawner.Spawn();
+                    break;
+                }
                 default:
                     break;
             }

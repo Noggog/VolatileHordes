@@ -38,6 +38,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AiPackages\AmbientAiPackage.cs" />
     <Compile Include="AiPackages\CrazyAiPackage.cs" />
     <Compile Include="AiPackages\RunnerAiPackage.cs" />
     <Compile Include="AiPackages\SeekerAiPackage.cs" />
@@ -48,6 +49,7 @@
     <Compile Include="Control\CrazyControl.cs" />
     <Compile Include="Control\FidgetRoam.cs" />
     <Compile Include="Control\LuckyPlayerRetarget.cs" />
+    <Compile Include="Control\NoiseResponderControl.cs" />
     <Compile Include="Control\PlayerSeekerControl.cs" />
     <Compile Include="Control\RoamControl.cs" />
     <Compile Include="Control\RoamFarOccasionally.cs" />
@@ -60,15 +62,21 @@
     <Compile Include="GameAbstractions\Zombie.cs" />
     <Compile Include="GameAbstractions\Player.cs" />
     <Compile Include="GameAbstractions\World.cs" />
+    <Compile Include="Hooks\NoiseTrigger.cs" />
     <Compile Include="Hooks\PreventVanillaHordes.cs" />
     <Compile Include="Hooks\ZombieSpawnTracking.cs" />
+    <Compile Include="Noise\NoiseEvent.cs" />
+    <Compile Include="Noise\NoiseManager.cs" />
     <Compile Include="Settings\User\Control\ControlSettings.cs" />
     <Compile Include="Settings\User\Control\LuckyPlayerRetargetSettings.cs" />
     <Compile Include="Settings\User\Control\RoamControlSettings.cs" />
+    <Compile Include="Settings\User\Noise\NoiseItem.cs" />
+    <Compile Include="Settings\User\Noise\NoiseSettings.cs" />
     <Compile Include="Settings\User\UserSettings.cs" />
     <Compile Include="Settings\World\WorldState.cs" />
     <Compile Include="Settings\World\Zombies\ZombieGroupState.cs" />
     <Compile Include="Settings\World\Zombies\ZombieState.cs" />
+    <Compile Include="Spawning\AmbientSpawner.cs" />
     <Compile Include="Spawning\CrazyDirector.cs" />
     <Compile Include="Spawning\Seeker\SeekerGroupCalculator.cs" />
     <Compile Include="Spawning\Seeker\SeekerGroupDirector.cs" />

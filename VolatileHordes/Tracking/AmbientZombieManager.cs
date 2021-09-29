@@ -1,4 +1,5 @@
-﻿using VolatileHordes.GameAbstractions;
+﻿using VolatileHordes.AiPackages;
+using VolatileHordes.GameAbstractions;
 
 namespace VolatileHordes.Tracking
 {
@@ -7,14 +8,17 @@ namespace VolatileHordes.Tracking
         private readonly IWorld _world;
         private readonly GroupManager _groupManager;
 
-        private readonly ZombieGroup _group = new(null);
+        private readonly ZombieGroup _group;
 
         public AmbientZombieManager(
             IWorld world,
-            GroupManager groupManager)
+            GroupManager groupManager,
+            AmbientAiPackage aiPackage)
         {
             _world = world;
             _groupManager = groupManager;
+            _group = new(aiPackage);
+            aiPackage.ApplyTo(_group);
         }
         
         public void ZombieSpawned(int entityId)
