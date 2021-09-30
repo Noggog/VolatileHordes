@@ -37,9 +37,7 @@ namespace VolatileHordes.Spawning
 
         public void PrintZombieStats()
         {
-#if DEBUG
-            Logger.Debug("Currently {0} zombies. {1}% of total. {2}% of allowed", CurrentlyActiveZombies, (100.0f * CurrentlyActiveZombies / MaxAliveZombies), (100.0f * CurrentlyActiveZombies / MaxSpawnedZombies));
-#endif
+            Logger.Info("Currently {0} zombies. {1}% of total. {2}% of allowed", CurrentlyActiveZombies, (100.0f * CurrentlyActiveZombies / MaxAliveZombies), (100.0f * CurrentlyActiveZombies / MaxSpawnedZombies));
         }
         
         public bool IsSpawnProtected(Vector3 pos)

@@ -2,6 +2,6 @@
 {
     public class LuckyPlayerRetargetSettings
     {
-        public double ChancePerMinute { get; set; } = 0.02;
+        public float ChancePerMinute { get; set; } = 0.02f;
     }
 }

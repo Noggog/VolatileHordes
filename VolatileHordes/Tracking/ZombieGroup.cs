@@ -2,8 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Reactive.Subjects;
+using UniLinq;
 using VolatileHordes.AiPackages;
 using VolatileHordes.GameAbstractions;
 using VolatileHordes.Utility;
@@ -99,25 +99,39 @@ namespace VolatileHordes.Tracking
             if (_zombies.Values.Count == 0) return null;
             if (_zombies.Values.Count == 1) return _zombies.Values.First().GetPosition();
 
-            RectangleF? rect = null;
+            // Average all point locations for center of mass
+            PointF? ret = null;
             foreach (var zomb in _zombies.Values)
             {
                 if (!zomb.IsAlive) continue;
                 var pos = zomb.GetPosition();
                 if (pos == null) continue;
-                if (rect == null)
+                if (ret == null)
                 {
-                    rect = new RectangleF(pos.Value, new SizeF(1, 1));
+                    ret = pos;
                 }
                 else
                 {
-                    rect = rect.Value.Absorb(pos.Value);
+                    ret = pos.Value.Average(ret.Value);
                 }
             }
 
-            return rect?.GetCenter();
+            return ret;
         }
 
         public IObservable<PointF?> FollowTarget() => _target;
+
+        public void PrintRelativeTo(PointF pt)
+        {
+            Logger.Info("{0}", this);
+            var generalLoc = GetGeneralLocation();
+            Logger.Info("General Location {0}, {1} away", generalLoc, generalLoc?.AbsDistance(pt));
+            foreach (var zombie in _zombies.Values
+                .OrderBy(x => x.Id))
+            {
+                if (!zombie.IsAlive) continue;
+                zombie.PrintRelativeTo(pt);
+            }
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using UnityEngine;
+using VolatileHordes.Utility;
 
 namespace VolatileHordes.GameAbstractions
 {
@@ -11,6 +12,7 @@ namespace VolatileHordes.GameAbstractions
         public void Destroy();
         PointF? GetPosition();
         bool IsAlive { get; }
+        void PrintRelativeTo(PointF pt);
     }
 
     public class Zombie : IZombie
@@ -68,6 +70,12 @@ namespace VolatileHordes.GameAbstractions
         public override int GetHashCode()
         {
             return Id;
+        }
+
+        public void PrintRelativeTo(PointF pt)
+        {
+            var loc = GetPosition();
+            Logger.Info("{0} at {1}, {2} away", Id, loc, loc?.AbsDistance(pt));
         }
     }
 }

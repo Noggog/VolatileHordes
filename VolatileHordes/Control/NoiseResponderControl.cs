@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Drawing;
 using System.Reactive;
 using System.Reactive.Subjects;
 using VolatileHordes.Noise;
 using VolatileHordes.Randomization;
-using VolatileHordes.Spawning;
+using VolatileHordes.Settings.User.Control;
 using VolatileHordes.Tracking;
 using VolatileHordes.Utility;
 
@@ -12,51 +13,58 @@ namespace VolatileHordes.Control
     public class NoiseResponderControlFactory
     {
         private readonly RandomSource _randomSource;
-        private readonly SpawningPositions _spawningPositions;
         private readonly ZombieControl _zombieControl;
         private readonly NoiseManager _noiseManager;
+        private readonly NoiseResponderSettings _noiseResponderSettings;
 
         public NoiseResponderControlFactory(
             RandomSource randomSource,
-            SpawningPositions spawningPositions,
             ZombieControl zombieControl,
-            NoiseManager noiseManager)
+            NoiseManager noiseManager,
+            NoiseResponderSettings noiseResponderSettings)
         {
             _randomSource = randomSource;
-            _spawningPositions = spawningPositions;
             _zombieControl = zombieControl;
             _noiseManager = noiseManager;
+            _noiseResponderSettings = noiseResponderSettings;
         }
         
         public NoiseResponderControl Create()
         {
             return new NoiseResponderControl(
                 _randomSource,
-                _spawningPositions,
                 _zombieControl,
-                _noiseManager.Noise);
+                _noiseManager.Noise,
+                _noiseResponderSettings);
         }
     }
     
     public class NoiseResponderControl
     {
         private readonly RandomSource _randomSource;
-        private readonly SpawningPositions _spawningPositions;
         private readonly ZombieControl _zombieControl;
         private readonly IObservable<NoiseEvent> _noises;
         private readonly Subject<Unit> _occurred = new();
-        private readonly Percent _chance = new Percent(0.3);
+        
+        private Percent _rememberedVolume;
+        private readonly ushort _radius;
+        private readonly Percent _maxBaseChance;
+        private readonly float _maxVolumeMultiplier;
+        private readonly byte _investigateDistance;
 
         public NoiseResponderControl(
             RandomSource randomSource,
-            SpawningPositions spawningPositions,
             ZombieControl zombieControl,
-            IObservable<NoiseEvent> noises)
+            IObservable<NoiseEvent> noises,
+            NoiseResponderSettings noiseResponderSettings)
         {
             _randomSource = randomSource;
-            _spawningPositions = spawningPositions;
             _zombieControl = zombieControl;
             _noises = noises;
+            _radius = noiseResponderSettings.Radius;
+            _maxBaseChance = Percent.FactoryPutInRange(noiseResponderSettings.MaxBaseChance);
+            _maxVolumeMultiplier = noiseResponderSettings.MaxVolumeMultiplier;
+            _investigateDistance = noiseResponderSettings.InvestigationDistance;
         }
         
         public IDisposable ApplyTo(ZombieGroup group, out IObservable<Unit> occurred)
@@ -64,13 +72,75 @@ namespace VolatileHordes.Control
             occurred = _occurred;
             return _noises.Subscribe(noise =>
             {
-                Logger.Info("Sending zombie towards player");
-                if (_randomSource.NextChance(_chance))
+                var loc = group.GetGeneralLocation();
+                if (loc == null)
                 {
-                    _zombieControl.SendGroupTowards(group, noise.Origin);
-                    _occurred.OnNext(Unit.Default);
+                    Logger.Warning("{0} could not respond to noise because it could not get location.", group);
+                    return;
                 }
+
+                _rememberedVolume += noise.Volume;
+                var chance = ChanceToRespond(
+                    loc.Value,
+                    noise.Origin,
+                    _rememberedVolume,
+                    _radius,
+                    _maxBaseChance,
+                    _maxVolumeMultiplier);
+
+                if (!_randomSource.NextChance(chance)) return;
+
+                var target = GetTarget(group.Target, loc.Value, noise.Origin, _investigateDistance);
+                
+                Logger.Info("{0} responding to noise at {1}, moving to {2}", group, noise.Origin, target);
+                _zombieControl.SendGroupTowards(group, target);
+                _occurred.OnNext(Unit.Default);
             });
+        }
+
+        public static PointF GetTarget(
+            PointF? currentTarget, 
+            PointF curLoc, 
+            PointF noiseOrigin,
+            byte investigateDistance)
+        {
+            if (!currentTarget.HasValue || curLoc.IsTargetAwayFrom(currentTarget.Value, noiseOrigin))
+            {
+                currentTarget = curLoc;
+            }
+
+            var currentVec = currentTarget.Value.ToZeroHeightVector();
+            var noiseVec = noiseOrigin.ToZeroHeightVector();
+            
+            var diff = noiseVec - currentVec;
+            var distance = diff.normalized * investigateDistance;
+            if (diff.magnitude < distance.magnitude)
+            {
+                distance = diff;
+            }
+
+            var targetVec = currentVec + diff;
+            var targetPt = targetVec.ToPoint();
+            return targetPt;
+        }
+        
+        public static Percent ChanceToRespond(
+            PointF zombieLocation,
+            PointF originLocation,
+            Percent rememberedVolume,
+            ushort radius,
+            Percent maxBaseChance,
+            float maxVolumeMultiplier)
+        {
+            var pctDistance = zombieLocation.PercentAwayFrom(originLocation, radius).Inverse;
+
+            var chance = maxBaseChance * pctDistance;
+
+            var volumeMult = 1f + rememberedVolume * maxVolumeMultiplier;
+
+            chance = Percent.FactoryPutInRange(chance * volumeMult);
+
+            return chance;
         }
     }
 }
