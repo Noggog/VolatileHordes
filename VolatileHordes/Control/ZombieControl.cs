@@ -51,7 +51,7 @@ namespace VolatileHordes.Control
             var worldTarget = _spawningPositions.GetWorldVector(target);
             Logger.Debug("Will send {0} zombies towards {1}", zombieGroup.Zombies.Count, worldTarget);
             zombieGroup.Target = target;
-            await Task.WhenAny(zombieGroup.Zombies.Select(async zombie =>
+            await Task.WhenAll(zombieGroup.Zombies.Select(async zombie =>
             {
                 if (withTargetRandomness)
                 {
