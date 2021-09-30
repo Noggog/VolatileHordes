@@ -16,10 +16,9 @@ namespace VolatileHordes.Utility
         /**
          * Scoping function which allow you to more easily use a variable in a scope.
          */
-        public static T Let<T>(this T t, Action<T> action)
+        public static K Let<T, K>(this T t, Func<T, K> action)
         {
-            action(t);
-            return t;
+            return action(t);
         }
 
         public static T Log<T>(this T t, String prefix)

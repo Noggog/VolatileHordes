@@ -1,3 +1,4 @@
+using System;
 using System.Drawing;
 using UnityEngine;
 
@@ -18,6 +19,12 @@ namespace VolatileHordes.Utility
                 * distance
                 .Log("* distance")
                 ).ToPoint();
+        }
+
+        static double CalculateAngle(PointF start, PointF end)
+        {
+            return Math.Atan2(end.Y - start.Y, end.X - start.X)
+                .Let(radian => (radian * (180 / Math.PI) + 360) % 360);
         }
     }
 }
