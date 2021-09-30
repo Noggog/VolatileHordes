@@ -22,11 +22,18 @@ namespace VolatileHordes
         static void StartGame()
         {
             Logger.Info($"Game started");
-            Settings.World.WorldState.Load();
-            Container.Biome.Init();
-            _gameStarted.OnNext(Unit.Default);
+            try
+            {
+                Settings.World.WorldState.Load();
+                Container.Biome.Init();
+                _gameStarted.OnNext(Unit.Default);
 
-            InstallHooks();
+                InstallHooks();
+            }
+            catch (Exception e)
+            {
+                Logger.Error("Exception while starting {0}", e);
+            }
         }
         
         static void InstallHooks()
