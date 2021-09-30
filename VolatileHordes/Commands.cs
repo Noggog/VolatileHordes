@@ -15,13 +15,13 @@ namespace VolatileHordes
             return Constants.ModName;
         }
 
-        public override void Execute(List<string> paramList, CommandSenderInfo _)
+        public override void Execute(List<string> paramList, CommandSenderInfo sender)
         {
-            ExecuteTask(paramList)
+            ExecuteTask(paramList, sender)
                 .FireAndForget(x => Log.Error("Error running command {0}", x));
         }
 
-        private async Task ExecuteTask(List<string> paramList)
+        private async Task ExecuteTask(List<string> paramList, CommandSenderInfo sender)
         {
             if (paramList.Count < 1)
                 return;
@@ -30,7 +30,7 @@ namespace VolatileHordes
             {
                 case "stats":
                 {
-                    Container.ZombieCreator.PrintZombieStats();
+                    Container.Stats.Print(sender);
                     break;
                 }
                 case "wander":

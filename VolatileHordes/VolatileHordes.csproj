@@ -82,6 +82,7 @@
     <Compile Include="Spawning\Seeker\SeekerGroupDirector.cs" />
     <Compile Include="Spawning\SingleRunnerDirector.cs" />
     <Compile Include="Spawning\ZombieGroupSpawn.cs" />
+    <Compile Include="Stats.cs" />
     <Compile Include="Tracking\AmbientZombieManager.cs" />
     <Compile Include="Tracking\GroupManager.cs" />
     <Compile Include="Tracking\GroupReachedTarget.cs" />
