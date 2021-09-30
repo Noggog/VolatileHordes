@@ -26,5 +26,13 @@ namespace VolatileHordes.Utility
             return Math.Atan2(end.Y - start.Y, end.X - start.X)
                 .Let(radian => (radian * (180 / Math.PI) + 360) % 360);
         }
+
+        static PointF PointDistanceAway(PointF point, double angle, byte distance)
+        {
+            return new PointF(
+                (float)(point.X + Math.Cos(angle) * distance),
+                (float)(point.Y + Math.Sin(angle) * distance)
+            );
+        }
     }
 }
