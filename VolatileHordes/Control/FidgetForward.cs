@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using System.Reactive;
 using System.Reactive.Linq;
 using UnityEngine;
@@ -33,21 +34,21 @@ namespace VolatileHordes.Control
 
         public IDisposable ApplyTo(
             ZombieGroup group,
-            IObservable<Unit>? interrupt = null)
+            IObservable<Unit>? restart = null)
         {
-            return ApplyTo(group, _settings.Range, new TimeRange(TimeSpan.FromSeconds(_settings.MinSeconds), TimeSpan.FromSeconds(_settings.MaxSeconds)), interrupt);
+            return ApplyTo(group, _settings.Range, new TimeRange(TimeSpan.FromSeconds(_settings.MinSeconds), TimeSpan.FromSeconds(_settings.MaxSeconds)), restart);
         }
 
             public IDisposable ApplyTo(
             ZombieGroup group,
             byte range,
             TimeRange frequency,
-            IObservable<Unit>? interrupt = null)
+            IObservable<Unit>? restart = null)
         {
-            Vector3? oldTarget = null;
+            PointF? oldTarget = null;
 
             Logger.Info("Adding FidgetForward AI to {0} with a range of {1} at frequency {2}", group, range, frequency);
-            return (interrupt ?? Observable.Empty(Unit.Default))
+            return (restart ?? Observable.Empty(Unit.Default))
                 .StartWith(Unit.Default)
                 .SwitchMap(_ =>
                 {
@@ -63,18 +64,20 @@ namespace VolatileHordes.Control
                         return;
                     }
 
-                    Vector3? newTarget;
-                    if (oldTarget == null)
-                        newTarget = _spawningPositions.GetRandomPointNear(group.Target.Value, range);
-                    else
-                        newTarget = _spawningPositions.GetRandomPointNear(group.Target.Value.OverPointWithDistance(oldTarget.Value.ToPoint(), range), range);
+                    group.Target.Also(x => Logger.Debug("group.Target:{0}", x));
+
+                    Vector3? newTarget = _spawningPositions.GetRandomPointNear(
+                        oldTarget == null ? group.Target.Value : PointService.Leapfrog(oldTarget.Value, group.Target.Value, range)
+                            .Also(x => Logger.Debug("newTarget:{0}", x)),
+                        range
+                    );
 
                     if (newTarget == null)
                     {
                         Logger.Warning("Could not find target to instruct group {0} to roam to.", group);
                         return;
                     }
-                    oldTarget = newTarget.Value;
+                    oldTarget = group.Target.Value;
                     Logger.Info("Sending group {0} to roam to {1}.", group, newTarget.Value);
                     await _zombieControl.SendGroupTowardsDelayed(group, newTarget.Value.ToPoint());
                 },

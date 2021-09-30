@@ -15,13 +15,5 @@ namespace VolatileHordes.Utility
             var diff = pt.ToZeroHeightVector() - rhs.ToZeroHeightVector();
             return Mathf.Abs(diff.magnitude);
         }
-
-        /**
-         * Returns a point that is [distance] distance away from [a], crossing through [b].
-         */
-        public static PointF OverPointWithDistance(this PointF a, PointF b, byte distance)
-        {
-            return ((a.ToZeroHeightVector() - b.ToZeroHeightVector()).normalized * distance).ToPoint();
-        }
     }
 }
