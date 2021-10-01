@@ -48,10 +48,17 @@ namespace VolatileHordes.Tests.Utility
         }
         
         [Fact]
-        public void IsTargetAwayFromAway2()
+        public void IsTargetAwayFromAwayLeft()
         {
             Assert.True(
-                new PointF(0, 0).IsTargetAwayFrom(new PointF(1, 1), new PointF(0, -1)));
+                new PointF(0, 0).IsTargetAwayFrom(new PointF(0, 1), new PointF(-1, -0.1f)));
+        }
+        
+        [Fact]
+        public void IsTargetAwayFromAwayRight()
+        {
+            Assert.True(
+                new PointF(0, 0).IsTargetAwayFrom(new PointF(0, 1), new PointF(1, -0.1f)));
         }
         
         [Fact]
@@ -62,10 +69,31 @@ namespace VolatileHordes.Tests.Utility
         }
         
         [Fact]
+        public void IsTargetAwayFromNotAwayLeft()
+        {
+            Assert.False(
+                new PointF(0, 0).IsTargetAwayFrom(new PointF(0, 1), new PointF(-1, 0.1f)));
+        }
+        
+        [Fact]
+        public void IsTargetAwayFromNotAwayRight()
+        {
+            Assert.False(
+                new PointF(0, 0).IsTargetAwayFrom(new PointF(0, 1), new PointF(1, 0.1f)));
+        }
+        
+        [Fact]
         public void IsTargetAwayFromSame()
         {
             Assert.False(
                 new PointF(0, 0).IsTargetAwayFrom(new PointF(0, 1), new PointF(0, 1)));
+        }
+        
+        [Fact]
+        public void IsTargetAwayFromSame2()
+        {
+            Assert.False(
+                new PointF(0, 0).IsTargetAwayFrom(new PointF(0, 1), new PointF(-1, 0)));
         }
     }
 }

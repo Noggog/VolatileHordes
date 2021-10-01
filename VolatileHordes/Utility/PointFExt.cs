@@ -1,4 +1,6 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
+using System.Windows;
 using UnityEngine;
 
 namespace VolatileHordes.Utility
@@ -8,6 +10,11 @@ namespace VolatileHordes.Utility
         public static Vector3 ToZeroHeightVector(this PointF pt)
         {
             return new Vector3(pt.X, 0, pt.Y);
+        }
+        
+        public static Vector ToVector(this PointF pt)
+        {
+            return new Vector(pt.X, pt.Y);
         }
 
         public static float AbsDistance(this PointF pt, PointF rhs)
@@ -29,10 +36,10 @@ namespace VolatileHordes.Utility
 
         public static bool IsTargetAwayFrom(this PointF curLoc, PointF target, PointF from)
         {
-            var locVector = curLoc.ToZeroHeightVector();
-            var targetDiff = target.ToZeroHeightVector() - locVector;
-            var fromDiff = from.ToZeroHeightVector() - locVector;
-            return Vector3.Dot(targetDiff, fromDiff) < 0;
+            var locVector = curLoc.ToVector();
+            var targetDiff = target.ToVector() - locVector;
+            var fromDiff = from.ToVector() - locVector;
+            return Math.Abs(Vector.AngleBetween(targetDiff, fromDiff)) > 90;
         }
     }
 }
