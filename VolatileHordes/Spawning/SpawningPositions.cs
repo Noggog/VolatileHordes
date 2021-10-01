@@ -97,7 +97,7 @@ namespace VolatileHordes.Spawning
                 .ToArray()
                 .EnumerateFromRandomIndex(_randomSource))
             {
-                var worldPos = GetWorldVector(corner);
+                var worldPos = _world.GetWorldVector(corner);
                 if (_world.CanSpawnAt(worldPos))
                 {
                     return worldPos;
@@ -112,7 +112,7 @@ namespace VolatileHordes.Spawning
             for (int i = 0; i < attemptCount; i++)
             {
                 var pos = TryGetSingleRandomZonePos(zone);
-                var worldPos = GetWorldVector(pos);
+                var worldPos = _world.GetWorldVector(pos);
                 if (_world.CanSpawnAt(worldPos))
                 {
                     return worldPos;
@@ -131,7 +131,7 @@ namespace VolatileHordes.Spawning
 
             foreach (var corner in corners.EnumerateFromRandomIndex(_randomSource))
             {
-                var worldPos = GetWorldVector(corner);
+                var worldPos = _world.GetWorldVector(corner);
                 if (_world.CanSpawnAt(worldPos))
                 {
                     return worldPos;
@@ -146,12 +146,6 @@ namespace VolatileHordes.Spawning
             return new PointF(
                 _randomSource.Get(zone.Left, zone.Right),
                 _randomSource.Get(zone.Bottom, zone.Top));
-        }
-
-        public Vector3 GetWorldVector(PointF pt)
-        {
-            int height = _world.GetTerrainHeight(pt);
-            return pt.WithHeight(height + 1);
         }
 
         public PlayerZone? GetNearestPlayer(PointF pt)

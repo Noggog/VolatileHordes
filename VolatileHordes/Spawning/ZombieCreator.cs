@@ -84,7 +84,7 @@ namespace VolatileHordes.Spawning
                 return null;
             }
 
-            var worldSpawn = _spawningPositions.GetWorldVector(spawnLocation);
+            var worldSpawn = _world.GetWorldVector(spawnLocation);
     
             if (!CanZombieSpawnAt(worldSpawn))
             {
