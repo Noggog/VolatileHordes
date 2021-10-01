@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Windows;
 using UnityEngine;
@@ -19,8 +19,7 @@ namespace VolatileHordes.Utility
 
         public static float AbsDistance(this PointF pt, PointF rhs)
         {
-            var diff = pt.ToZeroHeightVector() - rhs.ToZeroHeightVector();
-            return Mathf.Abs(diff.magnitude);
+            return (float)Math.Abs(Math.Sqrt(Math.Pow((rhs.X - pt.X), 2) + Math.Pow((rhs.Y - pt.Y), 2)));
         }
 
         public static PointF Average(this PointF pt, PointF rhs)

@@ -59,6 +59,7 @@
     <Compile Include="AiPackages\AiPackageMapper.cs" />
     <Compile Include="AiPackages\IAiPackage.cs" />
     <Compile Include="AiPackages\RoamAiPackage.cs" />
+    <Compile Include="GameAbstractions\ILogger.cs" />
     <Compile Include="GameAbstractions\Zombie.cs" />
     <Compile Include="GameAbstractions\Player.cs" />
     <Compile Include="GameAbstractions\World.cs" />

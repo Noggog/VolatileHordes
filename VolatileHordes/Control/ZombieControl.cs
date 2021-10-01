@@ -10,7 +10,14 @@ using VolatileHordes.Tracking;
 
 namespace VolatileHordes.Control
 {
-    public class ZombieControl
+    public interface IZombieControl
+    {
+        void SendZombieTowards(IZombie zombie, PointF target);
+        void SendGroupTowards(IZombieGroup zombieGroup, PointF target, bool withTargetRandomness = true);
+        Task SendGroupTowardsDelayed(IZombieGroup zombieGroup, PointF target, bool withTargetRandomness = true);
+    }
+
+    public class ZombieControl : IZombieControl
     {
         private readonly SpawningPositions _spawningPositions;
         private readonly TimeManager _timeManager;
@@ -29,7 +36,7 @@ namespace VolatileHordes.Control
             zombie.SendTowards(target);
         }
 
-        public void SendGroupTowards(ZombieGroup zombieGroup, PointF target, bool withTargetRandomness = true)
+        public void SendGroupTowards(IZombieGroup zombieGroup, PointF target, bool withTargetRandomness = true)
         {
             Logger.Debug("Will send {0} zombies towards {1}", zombieGroup.Count, target);
             zombieGroup.Target = target;
@@ -44,7 +51,7 @@ namespace VolatileHordes.Control
             }
         }
 
-        public async Task SendGroupTowardsDelayed(ZombieGroup zombieGroup, PointF target, bool withTargetRandomness = true)
+        public async Task SendGroupTowardsDelayed(IZombieGroup zombieGroup, PointF target, bool withTargetRandomness = true)
         {
             Logger.Debug("Will send {0} zombies towards {1}", zombieGroup.Count, target);
             zombieGroup.Target = target;

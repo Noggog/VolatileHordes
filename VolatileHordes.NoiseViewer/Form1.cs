@@ -1,16 +1,10 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using VolatileHordes.Utility;
+using VolatileHordes.NoiseViewer.Simulations;
 
 namespace VolatileHordes.NoiseViewer
 {
@@ -25,11 +19,18 @@ namespace VolatileHordes.NoiseViewer
         public Form1()
         {
             InitializeComponent();
-            Observable.FromEventPattern<EventHandler, EventArgs>(
-                    h => this.ResetButton.Click += h,
-                    h => this.ResetButton.Click -= h)
-                .Unit()
-                .StartWith(Unit.Default)
+            Observable.Merge(
+                    Observable.FromEventPattern<EventHandler, EventArgs>(
+                            h => this.ResetButton.Click += h,
+                            h => this.ResetButton.Click -= h)
+                        .Unit()
+                        .StartWith(Unit.Default)
+                        .Do(_ => SimulationContainer.Simulation.Reset()),
+                    Observable.FromEventPattern<EventHandler, EventArgs>(
+                            h => this.NoiseButton.Click += h,
+                            h => this.NoiseButton.Click -= h)
+                        .Unit()
+                        .Do(_ => SimulationContainer.NoiseManager.CauseNoise()))
                 .Select(_ => GetBitmap())
                 .DisposeOld()
                 .Subscribe(x =>
@@ -58,9 +59,24 @@ namespace VolatileHordes.NoiseViewer
             gr.SmoothingMode = SmoothingMode.None;
             gr.Clear(System.Drawing.Color.Black);
 
-            gr.FillEllipse(new SolidBrush(Color.FromArgb(15, 15, 15)), Reposition(0 - RadiusSize), Reposition(0 - RadiusSize), Scale(RadiusSize * 2), Scale(RadiusSize * 2));
+            // Draw noise radius
+            DrawCircle(gr, new SolidBrush(Color.FromArgb(15, 15, 15)), new Point(0, 0), RadiusSize);
+            // Draw player circle
+            DrawCircle(gr, new SolidBrush(Color.CadetBlue), new PointF(0, 0), 2);
+            
+            // Draw zombie circles
+            foreach (var simulationZombieGroup in SimulationContainer.Simulation.ZombieGroups)
+            {
+                var pt = simulationZombieGroup.Target!;
+                DrawCircle(gr, new SolidBrush(Color.Firebrick), new PointF((int)pt.Value.X, (int)pt.Value.Y), 2);
+            }
 
             return bm;
+        }
+
+        private void DrawCircle(Graphics gr, Brush brush, PointF pt, int radius)
+        {
+            gr.FillEllipse(brush, Reposition((int)(pt.X - radius)), Reposition((int)(pt.Y - radius)), Scale(radius * 2), Scale(radius * 2));
         }
     }
 }

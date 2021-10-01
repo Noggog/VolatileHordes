@@ -7,7 +7,12 @@ using VolatileHordes.Utility;
 
 namespace VolatileHordes.Noise
 {
-    public class NoiseManager
+    public interface INoiseSource
+    {
+        IObservable<NoiseEvent> Noise { get; }
+    }
+
+    public class NoiseManager : INoiseSource
     {
         private readonly TimeManager _timeManager;
         private readonly Dictionary<string, byte> _noisyNames = new(StringComparer.OrdinalIgnoreCase);

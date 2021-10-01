@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Reactive;
 using System.Reactive.Subjects;
+using VolatileHordes.GameAbstractions;
 using VolatileHordes.Noise;
 using VolatileHordes.Randomization;
 using VolatileHordes.Settings.User.Control;
@@ -13,20 +14,23 @@ namespace VolatileHordes.Control
     public class NoiseResponderControlFactory
     {
         private readonly RandomSource _randomSource;
-        private readonly ZombieControl _zombieControl;
-        private readonly NoiseManager _noiseManager;
+        private readonly IZombieControl _zombieControl;
+        private readonly INoiseSource _noiseManager;
         private readonly NoiseResponderSettings _noiseResponderSettings;
+        private readonly ILogger _logger;
 
         public NoiseResponderControlFactory(
             RandomSource randomSource,
-            ZombieControl zombieControl,
-            NoiseManager noiseManager,
-            NoiseResponderSettings noiseResponderSettings)
+            IZombieControl zombieControl,
+            INoiseSource noiseManager,
+            NoiseResponderSettings noiseResponderSettings,
+            ILogger logger)
         {
             _randomSource = randomSource;
             _zombieControl = zombieControl;
             _noiseManager = noiseManager;
             _noiseResponderSettings = noiseResponderSettings;
+            _logger = logger;
         }
         
         public NoiseResponderControl Create()
@@ -35,15 +39,17 @@ namespace VolatileHordes.Control
                 _randomSource,
                 _zombieControl,
                 _noiseManager.Noise,
-                _noiseResponderSettings);
+                _noiseResponderSettings,
+                _logger);
         }
     }
     
     public class NoiseResponderControl
     {
         private readonly RandomSource _randomSource;
-        private readonly ZombieControl _zombieControl;
+        private readonly IZombieControl _zombieControl;
         private readonly IObservable<NoiseEvent> _noises;
+        private readonly ILogger _logger;
         private readonly Subject<Unit> _occurred = new();
         
         private Percent _rememberedVolume;
@@ -54,20 +60,22 @@ namespace VolatileHordes.Control
 
         public NoiseResponderControl(
             RandomSource randomSource,
-            ZombieControl zombieControl,
+            IZombieControl zombieControl,
             IObservable<NoiseEvent> noises,
-            NoiseResponderSettings noiseResponderSettings)
+            NoiseResponderSettings noiseResponderSettings,
+            ILogger logger)
         {
             _randomSource = randomSource;
             _zombieControl = zombieControl;
             _noises = noises;
+            _logger = logger;
             _radius = noiseResponderSettings.Radius;
             _maxBaseChance = Percent.FactoryPutInRange(noiseResponderSettings.MaxBaseChance);
             _maxVolumeMultiplier = noiseResponderSettings.MaxVolumeMultiplier;
             _investigateDistance = noiseResponderSettings.InvestigationDistance;
         }
         
-        public IDisposable ApplyTo(ZombieGroup group, out IObservable<Unit> occurred)
+        public IDisposable ApplyTo(IZombieGroup group, out IObservable<Unit> occurred)
         {
             occurred = _occurred;
             return _noises.Subscribe(noise =>
@@ -75,7 +83,7 @@ namespace VolatileHordes.Control
                 var loc = group.GetGeneralLocation();
                 if (loc == null)
                 {
-                    Logger.Warning("{0} could not respond to noise because it could not get location.", group);
+                    _logger.Warning("{0} could not respond to noise because it could not get location.", group);
                     return;
                 }
 
@@ -92,7 +100,7 @@ namespace VolatileHordes.Control
 
                 var target = GetTarget(group.Target, loc.Value, noise.Origin, _investigateDistance);
                 
-                Logger.Info("{0} responding to noise at {1}, moving to {2}", group, noise.Origin, target);
+                _logger.Info("{0} responding to noise at {1}, moving to {2}", group, noise.Origin, target);
                 _zombieControl.SendGroupTowards(group, target);
                 _occurred.OnNext(Unit.Default);
             });
@@ -109,18 +117,25 @@ namespace VolatileHordes.Control
                 currentTarget = curLoc;
             }
 
-            var currentVec = currentTarget.Value.ToZeroHeightVector();
-            var noiseVec = noiseOrigin.ToZeroHeightVector();
+            var currentVec = currentTarget.Value.ToVector();
+            var noiseVec = noiseOrigin.ToVector();
             
             var diff = noiseVec - currentVec;
-            var distance = diff.normalized * investigateDistance;
-            if (diff.magnitude < distance.magnitude)
+            var normalizedDiff = diff;
+            normalizedDiff.Normalize();
+            var distance = normalizedDiff * investigateDistance;
+            if (diff.Length < distance.Length)
             {
                 distance = diff;
             }
 
-            var targetVec = currentVec + diff;
+            var targetVec = currentVec + distance;
             var targetPt = targetVec.ToPoint();
+            if (float.IsNaN(targetPt.X))
+            {
+                int wer = 23;
+                wer++;
+            }
             return targetPt;
         }
         
