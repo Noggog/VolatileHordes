@@ -2,12 +2,12 @@
 using System.Drawing;
 using System.Reactive;
 using System.Reactive.Subjects;
-using VolatileHordes.GameAbstractions;
 using VolatileHordes.Noise;
 using VolatileHordes.Randomization;
 using VolatileHordes.Settings.User.Control;
 using VolatileHordes.Tracking;
 using VolatileHordes.Utility;
+using ILogger = VolatileHordes.GameAbstractions.ILogger;
 
 namespace VolatileHordes.Control
 {
@@ -87,14 +87,11 @@ namespace VolatileHordes.Control
                     return;
                 }
 
+                var dist = loc.Value.AbsDistance(noise.Origin);
+                if (dist > _radius) return;
+
+                var chance = GetChanceToRespond(loc.Value, noise.Origin, noise.Volume);
                 _rememberedVolume += noise.Volume;
-                var chance = ChanceToRespond(
-                    loc.Value,
-                    noise.Origin,
-                    _rememberedVolume,
-                    _radius,
-                    _maxBaseChance,
-                    _maxVolumeMultiplier);
 
                 if (!_randomSource.NextChance(chance)) return;
 
@@ -104,6 +101,17 @@ namespace VolatileHordes.Control
                 _zombieControl.SendGroupTowards(group, target);
                 _occurred.OnNext(Unit.Default);
             });
+        }
+
+        public Percent GetChanceToRespond(PointF loc, PointF noiseOrigin, Percent incomingVolume)
+        {
+            return ChanceToRespond(
+                loc,
+                noiseOrigin,
+                _rememberedVolume + incomingVolume,
+                _radius,
+                _maxBaseChance,
+                _maxVolumeMultiplier);
         }
 
         public static PointF GetTarget(
@@ -121,6 +129,10 @@ namespace VolatileHordes.Control
             var noiseVec = noiseOrigin.ToVector();
             
             var diff = noiseVec - currentVec;
+            if (diff.Length.EqualsWithin(0))
+            {
+                return currentVec.ToPoint();
+            }
             var normalizedDiff = diff;
             normalizedDiff.Normalize();
             var distance = normalizedDiff * investigateDistance;
@@ -130,13 +142,7 @@ namespace VolatileHordes.Control
             }
 
             var targetVec = currentVec + distance;
-            var targetPt = targetVec.ToPoint();
-            if (float.IsNaN(targetPt.X))
-            {
-                int wer = 23;
-                wer++;
-            }
-            return targetPt;
+            return targetVec.ToPoint();
         }
         
         public static Percent ChanceToRespond(

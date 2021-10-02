@@ -9,12 +9,12 @@ namespace VolatileHordes.NoiseViewer.Simulations
 {
     public class Simulation
     {
-        private NoiseResponderControlFactory NoiseResponderControlFactory = new NoiseResponderControlFactory(
+        private NoiseResponderControlFactory NoiseResponderControlFactory = new(
             new RandomSource(), SimulationContainer.ZombieControl,
             SimulationContainer.NoiseManager, new NoiseResponderSettings(),
             SimulationContainer.Logger);
 
-        public List<IZombieGroup> ZombieGroups = new();
+        public List<SimulationZombieGroup> ZombieGroups = new();
         
         public void Reset()
         {
@@ -41,12 +41,10 @@ namespace VolatileHordes.NoiseViewer.Simulations
         
         private void AddGroupAt(PointF pt)
         {
-            var group = new SimulationZombieGroup()
+            ZombieGroups.Add(new SimulationZombieGroup(NoiseResponderControlFactory.Create())
             {
                 Target = pt
-            };
-            NoiseResponderControlFactory.Create().ApplyTo(group, out _);
-            ZombieGroups.Add(group);
+            });
         }
     }
 }

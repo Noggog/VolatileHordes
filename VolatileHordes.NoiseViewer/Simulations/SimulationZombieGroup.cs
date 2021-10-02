@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using VolatileHordes.AiPackages;
+using VolatileHordes.Control;
 using VolatileHordes.GameAbstractions;
 using VolatileHordes.Tracking;
 
@@ -10,11 +11,19 @@ namespace VolatileHordes.NoiseViewer.Simulations
 {
     public class SimulationZombieGroup : IZombieGroup
     {
+        public NoiseResponderControl NoiseControl { get; }
         public int Id { get; }
         public DateTime SpawnTime { get; }
         public int Count { get; }
         public PointF? Target { get; set; }
         public IAiPackage? AiPackage { get; }
+
+        public SimulationZombieGroup(NoiseResponderControl noiseControl)
+        {
+            NoiseControl = noiseControl;
+            NoiseControl.ApplyTo(this, out _);
+        }
+        
         public void Add(IEnumerable<IZombie> zombies)
         {
             throw new NotImplementedException();

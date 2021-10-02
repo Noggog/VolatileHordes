@@ -90,6 +90,7 @@
     <Compile Include="Tracking\GroupReachedTarget.cs" />
     <Compile Include="Tracking\ZombieGroup.cs" />
     <Compile Include="Utility\DisposableExt.cs" />
+    <Compile Include="Utility\DoubleExt.cs" />
     <Compile Include="Utility\IDisposableBucket.cs" />
     <Compile Include="Utility\INowProvider.cs" />
     <Compile Include="Utility\ListExt.cs" />

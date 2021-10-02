@@ -5,6 +5,7 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Windows.Forms;
 using VolatileHordes.NoiseViewer.Simulations;
+using VolatileHordes.Utility;
 
 namespace VolatileHordes.NoiseViewer
 {
@@ -19,6 +20,16 @@ namespace VolatileHordes.NoiseViewer
         public Form1()
         {
             InitializeComponent();
+
+            this.NoisePerClickSlider.Value = (int)(0.03 * this.NoisePerClickSlider.Maximum);
+
+            Observable.FromEventPattern<EventHandler, EventArgs>(
+                            h => this.NoisePerClickSlider.ValueChanged += h,
+                            h => this.NoisePerClickSlider.ValueChanged -= h)
+                        .Unit()
+                        .StartWith(Unit.Default)
+                        .Subscribe(_ => NoisePerClickDisplay.Text = (GetPercent() * 100).ToString("n0"));
+
             Observable.Merge(
                     Observable.FromEventPattern<EventHandler, EventArgs>(
                             h => this.ResetButton.Click += h,
@@ -30,7 +41,7 @@ namespace VolatileHordes.NoiseViewer
                             h => this.NoiseButton.Click += h,
                             h => this.NoiseButton.Click -= h)
                         .Unit()
-                        .Do(_ => SimulationContainer.NoiseManager.CauseNoise()))
+                        .Do(_ => SimulationContainer.NoiseManager.CauseNoise(GetPercent())))
                 .Select(_ => GetBitmap())
                 .DisposeOld()
                 .Subscribe(x =>
@@ -52,6 +63,11 @@ namespace VolatileHordes.NoiseViewer
             return i * ScaleAmount;
         }
 
+        private Percent GetPercent()
+        {
+            return new Percent(1.0f * NoisePerClickSlider.Value / NoisePerClickSlider.Maximum);
+        }
+
         private Bitmap GetBitmap()
         {
             var bm = new Bitmap(ImageSize, ImageSize);
@@ -68,7 +84,9 @@ namespace VolatileHordes.NoiseViewer
             foreach (var simulationZombieGroup in SimulationContainer.Simulation.ZombieGroups)
             {
                 var pt = simulationZombieGroup.Target!;
-                DrawCircle(gr, new SolidBrush(Color.Firebrick), new PointF((int)pt.Value.X, (int)pt.Value.Y), 2);
+                var chance = simulationZombieGroup.NoiseControl.GetChanceToRespond(pt.Value, new PointF(0, 0), GetPercent());
+                DrawCircle(gr, new SolidBrush(Color.FromArgb((int)(255 * chance.Value), 255, 0, 0)), pt.Value, 2);
+                DrawCircle(gr, Pens.DimGray, pt.Value, 2);
             }
 
             return bm;
@@ -77,6 +95,11 @@ namespace VolatileHordes.NoiseViewer
         private void DrawCircle(Graphics gr, Brush brush, PointF pt, int radius)
         {
             gr.FillEllipse(brush, Reposition((int)(pt.X - radius)), Reposition((int)(pt.Y - radius)), Scale(radius * 2), Scale(radius * 2));
+        }
+
+        private void DrawCircle(Graphics gr, Pen pen, PointF pt, int radius)
+        {
+            gr.DrawEllipse(pen, Reposition((int)(pt.X - radius)), Reposition((int)(pt.Y - radius)), Scale(radius * 2), Scale(radius * 2));
         }
     }
 }
