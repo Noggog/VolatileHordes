@@ -39,11 +39,11 @@ namespace VolatileHordes.Control
             return ApplyTo(group, _settings.Range, new TimeRange(TimeSpan.FromSeconds(_settings.MinSeconds), TimeSpan.FromSeconds(_settings.MaxSeconds)), restart);
         }
 
-            public IDisposable ApplyTo(
-            ZombieGroup group,
-            byte range,
-            TimeRange frequency,
-            IObservable<Unit>? restart = null)
+        public IDisposable ApplyTo(
+        ZombieGroup group,
+        byte range,
+        TimeRange frequency,
+        IObservable<Unit>? restart = null)
         {
             PointF? oldTarget = null;
 
@@ -53,8 +53,8 @@ namespace VolatileHordes.Control
                 .SwitchMap(_ =>
                 {
                     return _timeManager.IntervalWithVariance(
-                        timeRange : frequency,
-                        onNewInterval : timeSpan => Logger.Info("Will fidget {0} in {1}", group, timeSpan));
+                        timeRange: frequency,
+                        onNewInterval: timeSpan => Logger.Info("Will fidget {0} in {1}", group, timeSpan));
                 })
                 .SubscribeAsync(async _ =>
                 {
@@ -68,7 +68,7 @@ namespace VolatileHordes.Control
 
                     Vector3? newTarget = _spawningPositions.GetRandomPointNear(
                         oldTarget == null ? group.Target.Value : PointService.Leapfrog(oldTarget.Value, group.Target.Value, range)
-                            .Also(x => Logger.Debug("newTarget:{0}", x)),
+                            .Log("newTarget"),
                         range
                     );
 
