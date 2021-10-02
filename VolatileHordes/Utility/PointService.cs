@@ -1,11 +1,18 @@
 using System;
 using System.Drawing;
-using UnityEngine;
+using VolatileHordes.Randomization;
 
 namespace VolatileHordes.Utility
 {
-    public static class PointService
+    public class PointService
     {
+        private RandomSource _random { get; }
+
+        public PointService(RandomSource random)
+        {
+            _random = random;
+        }
+
         /**
          * Returns a point that is [distance] distance away from [start], crossing through [end].
          */
@@ -21,18 +28,23 @@ namespace VolatileHordes.Utility
                 ).ToPoint();
         }
 
-        static double CalculateAngle(PointF start, PointF end)
+        public static double CalculateAngle(PointF start, PointF end)
         {
             return Math.Atan2(end.Y - start.Y, end.X - start.X)
                 .Let(radian => (radian * (180 / Math.PI) + 360) % 360);
         }
 
-        static PointF PointDistanceAway(PointF point, double angle, byte distance)
+        public static PointF PointDistanceAway(PointF point, double angle, byte distance)
         {
             return new PointF(
                 (float)(point.X + Math.Cos(angle) * distance),
                 (float)(point.Y + Math.Sin(angle) * distance)
             );
+        }
+
+        public double RandomlyAdjustAngle(double angle, double amount)
+        {
+            return angle + _random.NextDouble() * amount * (1 - (_random.NextBool() ? 2 : 0));
         }
     }
 }

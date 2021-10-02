@@ -49,5 +49,6 @@ namespace VolatileHordes
         public static readonly CrazyControl CrazyControl = new(ZombieControl, Time, Spawning);
         public static readonly CrazyAiPackage CrazyAiPackage = new(CrazyControl);
         public static readonly CrazyDirector CrazyDirector = new(GroupManager, CrazyAiPackage, Spawning, ZombieControl, ZombieCreator);
+        public static readonly PointService PointService = new(Random);
     }
 }

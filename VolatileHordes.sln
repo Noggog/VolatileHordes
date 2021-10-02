@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VolatileHordes", "VolatileH
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VolatileHordes.Tests", "VolatileHordes.Tests\VolatileHordes.Tests.csproj", "{C3935972-826D-45C8-B0F4-722EA23C8B47}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VolatileHordes.Playground", "VolatileHordes.Playground\VolatileHordes.Playground.csproj", "{44E44388-7B40-4C20-8C5A-59C2486E9876}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{C3935972-826D-45C8-B0F4-722EA23C8B47}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C3935972-826D-45C8-B0F4-722EA23C8B47}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C3935972-826D-45C8-B0F4-722EA23C8B47}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44E44388-7B40-4C20-8C5A-59C2486E9876}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44E44388-7B40-4C20-8C5A-59C2486E9876}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44E44388-7B40-4C20-8C5A-59C2486E9876}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44E44388-7B40-4C20-8C5A-59C2486E9876}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
