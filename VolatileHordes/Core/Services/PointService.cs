@@ -34,7 +34,8 @@ namespace VolatileHordes.Utility
                 .Let(radian => (radian * (180 / Math.PI) + 360) % 360);
         }
 
-        public PointF PointDistanceAway(PointF point, double angle, byte distance)
+        // TODO: bugged: angle is radians instead of expected degrees.
+        public PointF PointDistanceAwayByAngle(PointF point, double angle, byte distance)
         {
             return new PointF(
                 (float)(point.X + Math.Cos(angle) * distance),

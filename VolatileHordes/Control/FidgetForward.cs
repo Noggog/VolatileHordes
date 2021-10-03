@@ -74,7 +74,7 @@ namespace VolatileHordes.Control
                     group.Target.Also(x => Logger.Debug("group.Target:{0}", x));
 
                     Vector3? newTarget = spawningPositions.GetRandomPointNear(
-                        oldTarget == null ? group.Target.Value : pointService.PointDistanceAway(
+                        oldTarget == null ? group.Target.Value : pointService.PointDistanceAwayByAngle(
                             group.Target.Value,
                             pointService.RandomlyAdjustAngle(pointService.AngleBetween(group.Target.Value, oldTarget.Value).Log("Angle"), 20).Log("Angle after randomize"),
                             Convert.ToByte(randomSource.NextDouble(range))
