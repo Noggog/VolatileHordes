@@ -42,6 +42,8 @@
     <Compile Include="AiPackages\FidgetForwardAIPackage.cs" />
     <Compile Include="AiPackages\RunnerAiPackage.cs" />
     <Compile Include="AiPackages\SeekerAiPackage.cs" />
+    <Compile Include="Core\Models\Angle\AngleType.cs" />
+    <Compile Include="Core\Models\Angle\Angle.cs" />
     <Compile Include="Core\Services\BiomeData.cs" />
     <Compile Include="Core\Services\Bootstrapper.cs" />
     <Compile Include="Core\Services\Commands.cs" />
