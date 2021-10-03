@@ -1,15 +1,17 @@
 ﻿using System.Drawing;
-using UnityEngine;
+using VolatileHordes.Utility;
 
 namespace VolatileHordes.GameAbstractions
 {
     public interface IZombie
     {
         int Id { get; }
-        bool SendTowards(Vector3 vector3);
+        bool SendTowards(PointF pt);
         EntityZombie? GetEntity();
         public void Destroy();
         PointF? GetPosition();
+        bool IsAlive { get; }
+        void PrintRelativeTo(PointF pt);
     }
 
     public class Zombie : IZombie
@@ -28,6 +30,8 @@ namespace VolatileHordes.GameAbstractions
         public EntityZombie? GetEntity() => _world.GetEntity(Id) as EntityZombie;
 
         public PointF? GetPosition() => GetEntity()?.GetPosition().ToPoint();
+
+        public bool IsAlive => !GetEntity()?.bDead ?? false;
         
         public void Destroy()
         {
@@ -36,11 +40,11 @@ namespace VolatileHordes.GameAbstractions
             _world.DestroyZombie(this);
         }
 
-        public bool SendTowards(Vector3 vector3)
+        public bool SendTowards(PointF pt)
         {
             var entity = GetEntity();
             if (entity == null) return false;
-            entity.SetInvestigatePosition(vector3, 6000, false);
+            entity.SetInvestigatePosition(_world.GetWorldVector(pt), 6000, false);
             return true;
         }
 
@@ -65,6 +69,12 @@ namespace VolatileHordes.GameAbstractions
         public override int GetHashCode()
         {
             return Id;
+        }
+
+        public void PrintRelativeTo(PointF pt)
+        {
+            var loc = GetPosition();
+            Logger.Info("{0} at {1}, {2} away", Id, loc, loc?.AbsDistance(pt));
         }
     }
 }

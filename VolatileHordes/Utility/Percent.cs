@@ -4,32 +4,32 @@ namespace VolatileHordes.Utility
 {
     public struct Percent : IComparable, IEquatable<Percent>
     {
-        public static readonly Percent One = new Percent(1d);
-        public static readonly Percent Zero = new Percent(0d);
+        public static readonly Percent One = new Percent(1f);
+        public static readonly Percent Zero = new Percent(0f);
 
-        public readonly double Value;
-        public Percent Inverse => new Percent(1d - this.Value, check: false);
+        public readonly float Value;
+        public Percent Inverse => new Percent(1f - this.Value, check: false);
 
-        private Percent(double d, bool check)
+        private Percent(float f, bool check)
         {
-            if (!check || InRange(d))
+            if (!check || InRange(f))
             {
-                this.Value = d;
+                this.Value = f;
             }
             else
             {
-                throw new ArgumentException("Element out of range: " + d);
+                throw new ArgumentException("Element out of range: " + f);
             }
         }
 
-        public Percent(double d)
-            : this(d, check: true)
+        public Percent(float f)
+            : this(f, check: true)
         {
         }
 
-        public static bool InRange(double d)
+        public static bool InRange(float f)
         {
-            return d >= 0 || d <= 1;
+            return f >= 0 || f <= 1;
         }
 
         public static Percent operator +(Percent c1, Percent c2)
@@ -52,41 +52,41 @@ namespace VolatileHordes.Utility
             return new Percent(c1.Value / c2.Value);
         }
 
-        public static implicit operator double(Percent c1)
+        public static implicit operator float(Percent c1)
         {
             return c1.Value;
         }
 
-        public static Percent FactoryPutInRange(double d)
+        public static Percent FactoryPutInRange(float f)
         {
-            if (double.IsNaN(d) || double.IsInfinity(d))
+            if (double.IsNaN(f) || double.IsInfinity(f))
             {
                 throw new ArgumentException();
             }
-            if (d < 0)
+            if (f < 0)
             {
                 return Percent.Zero;
             }
-            else if (d > 1)
+            else if (f > 1)
             {
                 return Percent.One;
             }
-            return new Percent(d, check: false);
+            return new Percent(f, check: false);
         }
 
         public static Percent FactoryPutInRange(int cur, int max)
         {
-            return FactoryPutInRange(1.0d * cur / max);
+            return FactoryPutInRange(1.0f * cur / max);
         }
 
         public static Percent FactoryPutInRange(long cur, long max)
         {
-            return FactoryPutInRange(1.0d * cur / max);
+            return FactoryPutInRange(1.0f * cur / max);
         }
 
         public static Percent AverageFromPercents(params Percent[] ps)
         {
-            double percent = 0;
+            float percent = 0;
             foreach (var p in ps)
             {
                 percent += p.Value;
@@ -96,7 +96,7 @@ namespace VolatileHordes.Utility
 
         public static Percent MultFromPercents(params Percent[] ps)
         {
-            double percent = 1;
+            float percent = 1;
             foreach (var p in ps)
             {
                 percent *= p.Value;
@@ -164,7 +164,7 @@ namespace VolatileHordes.Utility
 
         public static bool TryParse(string str, out Percent p)
         {
-            if (double.TryParse(str, out double d))
+            if (float.TryParse(str, out float d))
             {
                 if (InRange(d))
                 {

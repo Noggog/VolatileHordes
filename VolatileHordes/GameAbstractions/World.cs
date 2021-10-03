@@ -15,6 +15,7 @@ namespace VolatileHordes.GameAbstractions
         void DestroyZombie(IZombie zombie);
         Chunk? GetChunkAt(PointF pt);
         Entity? GetEntity(int id);
+        Vector3 GetWorldVector(PointF pt);
     }
 
     public class WorldWrapper : IWorld
@@ -43,5 +44,11 @@ namespace VolatileHordes.GameAbstractions
         }
 
         public Entity? GetEntity(int id) => World.GetEntity(id);
+
+        public Vector3 GetWorldVector(PointF pt)
+        {
+            int height = GetTerrainHeight(pt);
+            return pt.WithHeight(height + 1);
+        }
     }
 }

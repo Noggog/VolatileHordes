@@ -6,5 +6,6 @@
         Seeker,
         Runner,
         Crazy,
+        Ambient,
     }
 }
