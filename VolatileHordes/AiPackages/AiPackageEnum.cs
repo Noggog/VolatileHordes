@@ -7,5 +7,6 @@ namespace VolatileHordes.AiPackages
         Runner,
         Crazy,
         FidgetForward,
+        Ambient,
     }
 }

@@ -20,6 +20,8 @@ namespace VolatileHordes.Settings.User
 
         public ControlSettings Control { get; set; } = new();
 
+        public NoiseSettings Noise { get; set; } = new();
+
         public LogLevel LogLevel { get; set; } = LogLevel.Information;
 
         public static UserSettings Load()

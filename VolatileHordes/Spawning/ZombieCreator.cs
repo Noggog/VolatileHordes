@@ -9,6 +9,7 @@ namespace VolatileHordes.Spawning
     {
         private readonly IWorld _world;
         private readonly SpawningPositions _spawningPositions;
+        private readonly AmbientZombieManager _ambientZombieManager;
         private readonly BiomeData _biomeData;
         private static readonly int MaxAliveZombies = GamePrefs.GetInt(EnumGamePrefs.MaxSpawnedZombies);
         private static readonly int MaxSpawnedZombies = (int)(MaxAliveZombies * 0.5);
@@ -18,10 +19,12 @@ namespace VolatileHordes.Spawning
         public ZombieCreator(
             IWorld world,
             SpawningPositions spawningPositions,
+            AmbientZombieManager ambientZombieManager,
             BiomeData biomeData)
         {
             _world = world;
             _spawningPositions = spawningPositions;
+            _ambientZombieManager = ambientZombieManager;
             _biomeData = biomeData;
         }
 
@@ -34,9 +37,7 @@ namespace VolatileHordes.Spawning
 
         public void PrintZombieStats()
         {
-#if DEBUG
-            Logger.Debug("Currently {0} zombies. {1}% of total. {2}% of allowed", CurrentlyActiveZombies, (100.0f * CurrentlyActiveZombies / MaxAliveZombies), (100.0f * CurrentlyActiveZombies / MaxSpawnedZombies));
-#endif
+            Logger.Info("Currently {0} zombies. {1}% of total. {2}% of allowed", CurrentlyActiveZombies, (100.0f * CurrentlyActiveZombies / MaxAliveZombies), (100.0f * CurrentlyActiveZombies / MaxSpawnedZombies));
         }
         
         public bool IsSpawnProtected(Vector3 pos)
@@ -83,7 +84,7 @@ namespace VolatileHordes.Spawning
                 return null;
             }
 
-            var worldSpawn = _spawningPositions.GetWorldVector(spawnLocation);
+            var worldSpawn = _world.GetWorldVector(spawnLocation);
     
             if (!CanZombieSpawnAt(worldSpawn))
             {
@@ -101,17 +102,24 @@ namespace VolatileHordes.Spawning
                 classId = EntityGroups.GetRandomFromGroup("ZombiesAll", ref lastClassId);
                 Logger.Debug("Used fallback for zombie class!");
             }
-
-            var zombie = _world.SpawnZombie(classId, worldSpawn);
             
-            if (zombie == null)
+            if (EntityFactory.CreateEntity(classId, worldSpawn) is not EntityZombie zombieEnt)
             {
                 Logger.Error("Unable to create zombie entity!, Entity Id: {0}, Pos: {1}", classId, worldSpawn);
                 return null;
             }
+
+            zombieEnt.bIsChunkObserver = true;
+            zombieEnt.SetSpawnerSource(EnumSpawnerSource.StaticSpawner);
+            zombieEnt.IsHordeZombie = true;
+            
+            var zombie = new Zombie(_world, zombieEnt.entityId);
+            
+            group?.Add(zombie);
+            _ambientZombieManager.MarkTracked(zombie);
     
+            _world.SpawnZombie(zombieEnt);
             Logger.Debug("Spawned zombie {0} at {1} into group {2}", zombie, worldSpawn, group?.ToString() ?? "None");
-            group?.Zombies.Add(zombie);
     
             return zombie;
         }

@@ -1,6 +1,7 @@
 using VolatileHordes.AiPackages;
 using VolatileHordes.Control;
 using VolatileHordes.GameAbstractions;
+using VolatileHordes.Noise;
 using VolatileHordes.Randomization;
 using VolatileHordes.Settings.User;
 using VolatileHordes.Spawning;
@@ -22,9 +23,16 @@ namespace VolatileHordes
         public static readonly TimeManager Time = new(new NowProvider(), PlayerZoneManager, Random);
         public static readonly PlayerLocationUpdater PlayerLocationUpdater = new(PlayerZoneManager, Time);
         public static readonly SpawningPositions Spawning = new(World, PlayerZoneManager, Random);
-        public static readonly ZombieCreator ZombieCreator = new(World, Spawning, Biome);
-        public static readonly ZombieControl ZombieControl = new(Spawning, Time, Random);
         public static readonly GroupManager GroupManager = new(Time, PlayerZoneManager);
+        public static readonly ZombieControl ZombieControl = new(Spawning, Time, Random);
+        public static readonly UserSettings UserSettings = UserSettings.Load();
+        public static readonly NoiseManager NoiseManager = new(Time, UserSettings.Noise);
+        public static readonly ILogger Logger = new LoggerWrapper();
+        public static readonly NoiseResponderControlFactory NoiseResponderControlFactory = new(Random, ZombieControl, NoiseManager, UserSettings.Control.NoiseResponder, Logger);
+        public static readonly AmbientAiPackage AmbientAiPackage = new(NoiseResponderControlFactory);
+        public static readonly AmbientZombieManager Ambient = new(World, GroupManager, AmbientAiPackage);
+        public static readonly ZombieCreator ZombieCreator = new(World, Spawning, Ambient, Biome);
+        public static readonly AmbientSpawner AmbientSpawner = new(ZombieCreator, Spawning);
         public static readonly PlayerSeekerControl SeekerControl = new(Time, Spawning, ZombieControl);
         public static readonly SeekerAiPackage SeekerAiPackage = new(SeekerControl);
         public static readonly GroupReachedTarget GroupReachedTarget = new(Time);
@@ -36,7 +44,6 @@ namespace VolatileHordes
         public static readonly SpawnRowPerpendicular SpawnRowPerpendicular = new(ZombieCreator, ZombieControl);
         public static readonly WanderingHordeSpawner WanderingHordeSpawner = new(Time, SpawnRowPerpendicular);
         public static readonly GamestageCalculator GamestageCalculator = new(PlayerZoneManager);
-        public static readonly UserSettings UserSettings = UserSettings.Load();
         public static readonly WanderingHordeCalculator WanderingHordeCalculator = new(UserSettings.WanderingHordeSettings, GamestageCalculator, Random);
         public static readonly RoamControl RoamControl = new(Time, Spawning, ZombieControl);
         public static readonly FidgetRoam FidgetRoam = new(UserSettings.Control.FidgetRoam, RoamControl);
@@ -50,5 +57,6 @@ namespace VolatileHordes
         public static readonly CrazyControl CrazyControl = new(ZombieControl, Time, Spawning);
         public static readonly CrazyAiPackage CrazyAiPackage = new(CrazyControl);
         public static readonly CrazyDirector CrazyDirector = new(GroupManager, CrazyAiPackage, Spawning, ZombieControl, ZombieCreator);
+        public static readonly Stats Stats = new(PlayerZoneManager, GroupManager, Ambient, ZombieCreator);
     }
 }

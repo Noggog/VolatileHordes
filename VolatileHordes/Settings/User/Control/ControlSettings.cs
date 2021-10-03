@@ -17,5 +17,7 @@
         };
 
         public LuckyPlayerRetargetSettings LuckyPlayerRetarget { get; set; } = new();
+
+        public NoiseResponderSettings NoiseResponder { get; set; } = new();
     }
 }

@@ -33,7 +33,15 @@ namespace VolatileHordes
                 return new ValueTuple<T?, T>(prev, i);
             });
         }
-        
+
+        public static IObservable<T> DisposeOld<T>(this IObservable<T> source)
+            where T : IDisposable
+        {
+            return source.Pairwise()
+                .Do(x => x.Item1?.Dispose())
+                .Select(x => x.Item2);
+        }
+
         public static IDisposable SubscribeAsync<T>(
             this IObservable<T> source,
             Func<Task> action, 

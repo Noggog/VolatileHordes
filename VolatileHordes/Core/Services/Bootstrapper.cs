@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reactive;
 using System.Reactive.Subjects;
+using HarmonyLib;
 
 namespace VolatileHordes
 {
@@ -21,9 +22,24 @@ namespace VolatileHordes
         static void StartGame()
         {
             Logger.Info($"Game started");
-            Settings.World.WorldState.Load();
-            Container.Biome.Init();
-            _gameStarted.OnNext(Unit.Default);
+            try
+            {
+                Settings.World.WorldState.Load();
+                Container.Biome.Init();
+                _gameStarted.OnNext(Unit.Default);
+
+                InstallHooks();
+            }
+            catch (Exception e)
+            {
+                Logger.Error("Exception while starting {0}", e);
+            }
+        }
+        
+        static void InstallHooks()
+        {
+            var harmony = new Harmony($"{Constants.ModName}.Hooks");
+            harmony.PatchAll();
         }
 
         static void GameUpdate()
