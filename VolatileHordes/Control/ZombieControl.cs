@@ -55,7 +55,7 @@ namespace VolatileHordes.Control
         {
             Logger.Debug("Will send {0} zombies towards {1}", zombieGroup.Count, target);
             zombieGroup.Target = target;
-            await Task.WhenAny(zombieGroup.Select(async zombie =>
+            await Task.WhenAll(zombieGroup.Select(async zombie =>
             {
                 if (withTargetRandomness)
                 {

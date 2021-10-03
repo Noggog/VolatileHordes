@@ -48,8 +48,8 @@ namespace VolatileHordes.Control
             {
                 signal = signal.Merge(
                     Redirect.Signalled
-                        .Do(_ => Logger.Verbose("{0} {1} told to redirect by artificial signal.", nameof(RoamControl),
-                            group)));
+                        .Do(_ => Logger.Verbose("{0} {1} told to redirect by artificial signal.", nameof(RoamControl), group))
+                        );
             }
           
             return signal.SubscribeAsync(async _ =>
