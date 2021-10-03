@@ -91,7 +91,7 @@ namespace VolatileHordes.Control
                     Logger.Info("Sending group {0} to roam to {1}.", group, newTarget.Value);
                     await zombieControl.SendGroupTowardsDelayed(group, newTarget.Value.ToPoint());
                 },
-                e => Logger.Error("{0} had update error {1}", nameof(RoamControl), e));
+                e => Logger.Error("{0} had update error {1}", nameof(FidgetForward), e));
         }
     }
 }
