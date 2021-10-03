@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Reactive;
+using System.Reactive.Disposables;
 using System.Reactive.Subjects;
 using VolatileHordes.Noise;
 using VolatileHordes.Randomization;
@@ -38,7 +39,7 @@ namespace VolatileHordes.Control
             return new NoiseResponderControl(
                 _randomSource,
                 _zombieControl,
-                _noiseManager.Noise,
+                _noiseManager,
                 _noiseResponderSettings,
                 _logger);
         }
@@ -48,20 +49,20 @@ namespace VolatileHordes.Control
     {
         private readonly RandomSource _randomSource;
         private readonly IZombieControl _zombieControl;
-        private readonly IObservable<NoiseEvent> _noises;
+        private readonly INoiseSource _noises;
         private readonly ILogger _logger;
         private readonly Subject<Unit> _occurred = new();
         
         private Percent _rememberedVolume;
         private readonly ushort _radius;
-        private readonly Percent _maxBaseChance;
-        private readonly float _maxVolumeMultiplier;
-        private readonly byte _investigateDistance;
+        private readonly byte _investigateDistanceMin;
+        private readonly byte _investigateDistanceBonus;
+        private readonly float _noiseLostPerTick;
 
         public NoiseResponderControl(
             RandomSource randomSource,
             IZombieControl zombieControl,
-            IObservable<NoiseEvent> noises,
+            INoiseSource noises,
             NoiseResponderSettings noiseResponderSettings,
             ILogger logger)
         {
@@ -70,73 +71,85 @@ namespace VolatileHordes.Control
             _noises = noises;
             _logger = logger;
             _radius = noiseResponderSettings.Radius;
-            _maxBaseChance = Percent.FactoryPutInRange(noiseResponderSettings.MaxBaseChance);
-            _maxVolumeMultiplier = noiseResponderSettings.MaxVolumeMultiplier;
-            _investigateDistance = noiseResponderSettings.InvestigationDistance;
+            _investigateDistanceMin = Math.Min(noiseResponderSettings.InvestigationDistanceMin, noiseResponderSettings.InvestigationDistanceMax);
+            var max = Math.Max(noiseResponderSettings.InvestigationDistanceMin, noiseResponderSettings.InvestigationDistanceMax);
+            _investigateDistanceBonus = (byte)(max - _investigateDistanceMin);
+            _noiseLostPerTick = noiseResponderSettings.NoiseLostPerTwoSeconds;
         }
         
         public IDisposable ApplyTo(IZombieGroup group, out IObservable<Unit> occurred)
         {
             occurred = _occurred;
-            return _noises.Subscribe(noise =>
-            {
-                var loc = group.GetGeneralLocation();
-                if (loc == null)
+            var compositeDisposable = new CompositeDisposable();
+            _noises.NoiseReduction
+                .Subscribe(_ =>
                 {
-                    _logger.Warning("{0} could not respond to noise because it could not get location.", group);
-                    return;
-                }
+                    _rememberedVolume = Percent.FactoryPutInRange(_rememberedVolume.Value - _noiseLostPerTick);
+                })
+                .DisposeWith(compositeDisposable);
+            _noises.Noise.Subscribe(noise =>
+                {
+                    var loc = group.GetLocationClosestTo(noise.Origin);
+                    if (loc == null)
+                    {
+                        _logger.Warning("{0} could not respond to noise because it could not get location.", group);
+                        return;
+                    }
 
-                var dist = loc.Value.AbsDistance(noise.Origin);
-                if (dist > _radius) return;
+                    var curDistToOrigin = loc.Value.AbsDistance(noise.Origin);
+                    if (curDistToOrigin > _radius) return;
 
-                var chance = GetChanceToRespond(loc.Value, noise.Origin, noise.Volume);
-                _rememberedVolume += noise.Volume;
+                    _rememberedVolume = Percent.FactoryPutInRange(_rememberedVolume.Value + noise.Volume);
+                    
+                    var chance = GetChanceToRespond(loc.Value, noise.Origin);
 
-                if (!_randomSource.NextChance(chance)) return;
+                    _logger.Verbose("{0} with remembered volume {1} has a chance of {2} to respond to noise at {3}",
+                        group, _rememberedVolume, chance, noise.Origin);
 
-                var target = GetTarget(group.Target, loc.Value, noise.Origin, _investigateDistance);
-                
-                _logger.Info("{0} responding to noise at {1}, moving to {2}", group, noise.Origin, target);
-                _zombieControl.SendGroupTowards(group, target);
-                _occurred.OnNext(Unit.Default);
-            });
+                    if (!_randomSource.NextChance(chance)) return;
+
+                    var target = GetTarget(loc.Value, noise.Origin, GetInvestigateDistance());
+
+                    _logger.Debug("{0} with remembered volume {1} responding to noise at {2}, moving to {3}", group,
+                        _rememberedVolume, noise.Origin, target);
+                    _zombieControl.SendGroupTowards(group, target);
+                    _occurred.OnNext(Unit.Default);
+                })
+                .DisposeWith(compositeDisposable);
+            return compositeDisposable;
         }
 
-        public Percent GetChanceToRespond(PointF loc, PointF noiseOrigin, Percent incomingVolume)
+        public Percent GetChanceToRespond(PointF loc, PointF noiseOrigin)
         {
             return ChanceToRespond(
                 loc,
                 noiseOrigin,
-                _rememberedVolume + incomingVolume,
-                _radius,
-                _maxBaseChance,
-                _maxVolumeMultiplier);
+                _rememberedVolume,
+                _radius);
+        }
+
+        private float GetInvestigateDistance()
+        {
+            return _investigateDistanceMin + _investigateDistanceBonus * _rememberedVolume;
         }
 
         public static PointF GetTarget(
-            PointF? currentTarget, 
             PointF curLoc, 
             PointF noiseOrigin,
-            byte investigateDistance)
+            float investigateDistance)
         {
-            if (!currentTarget.HasValue || curLoc.IsTargetAwayFrom(currentTarget.Value, noiseOrigin))
-            {
-                currentTarget = curLoc;
-            }
-
-            var currentVec = currentTarget.Value.ToVector();
-            var noiseVec = noiseOrigin.ToVector();
+            var currentVec = curLoc.ToZeroHeightVector();
+            var noiseVec = noiseOrigin.ToZeroHeightVector();
             
             var diff = noiseVec - currentVec;
-            if (diff.Length.EqualsWithin(0))
+            if (diff.magnitude.EqualsWithin(0))
             {
                 return currentVec.ToPoint();
             }
             var normalizedDiff = diff;
             normalizedDiff.Normalize();
             var distance = normalizedDiff * investigateDistance;
-            if (diff.Length < distance.Length)
+            if (diff.magnitude < distance.magnitude)
             {
                 distance = diff;
             }
@@ -149,17 +162,11 @@ namespace VolatileHordes.Control
             PointF zombieLocation,
             PointF originLocation,
             Percent rememberedVolume,
-            ushort radius,
-            Percent maxBaseChance,
-            float maxVolumeMultiplier)
+            ushort radius)
         {
             var pctDistance = zombieLocation.PercentAwayFrom(originLocation, radius).Inverse;
 
-            var chance = maxBaseChance * pctDistance;
-
-            var volumeMult = 1f + rememberedVolume * maxVolumeMultiplier;
-
-            chance = Percent.FactoryPutInRange(chance * volumeMult);
+            var chance = Percent.FactoryPutInRange(pctDistance * rememberedVolume);
 
             return chance;
         }

@@ -40,7 +40,7 @@ namespace VolatileHordes
                 group.PrintRelativeTo(playerPt);
             }
             Logger.Info("Ambient:");
-            _ambientZombieManager.Group.PrintRelativeTo(playerPt);
+            _ambientZombieManager.PrintRelativeTo(playerPt);
         }
     }
 }

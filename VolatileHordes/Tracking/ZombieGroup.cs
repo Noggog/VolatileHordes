@@ -27,6 +27,7 @@ namespace VolatileHordes.Tracking
         bool ContainsZombie(IZombie zombie);
         void Destroy();
         PointF? GetGeneralLocation();
+        PointF? GetLocationClosestTo(PointF pt);
         IObservable<PointF?> FollowTarget();
         void PrintRelativeTo(PointF pt);
     }
@@ -109,7 +110,7 @@ namespace VolatileHordes.Tracking
 
         public void Destroy()
         {
-            foreach (var zombie in _zombies.Values)
+            foreach (var zombie in _zombies.Values.ToArray())
             {
                 zombie.Destroy();
             }
@@ -134,6 +135,36 @@ namespace VolatileHordes.Tracking
                 else
                 {
                     ret = pos.Value.Average(ret.Value);
+                }
+            }
+
+            return ret;
+        }
+
+        public PointF? GetLocationClosestTo(PointF pt)
+        {
+            if (_zombies.Values.Count == 0) return null;
+            if (_zombies.Values.Count == 1) return _zombies.Values.First().GetPosition();
+
+            PointF? ret = null;
+            float dist = float.MaxValue;
+            foreach (var zomb in _zombies.Values)
+            {
+                if (!zomb.IsAlive) continue;
+                var pos = zomb.GetPosition();
+                if (pos == null) continue;
+                var ptDist = pos.Value.AbsDistance(pt);
+                if (ret == null)
+                {
+                    ret = pos;
+                    dist = ptDist;
+                    continue;
+                }
+
+                if (ptDist < dist)
+                {
+                    dist = ptDist;
+                    ret = pos;
                 }
             }
 

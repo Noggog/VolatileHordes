@@ -12,11 +12,6 @@ namespace VolatileHordes
             return new PointF(vect.x, vect.z);
         }
         
-        public static PointF ToPoint(this Vector vect)
-        {
-            return new PointF((float)vect.X, (float)vect.Y);
-        }
-        
         public static Vector3 WithHeight(this PointF pt, float height)
         {
             return new Vector3(pt.X, height, pt.Y);

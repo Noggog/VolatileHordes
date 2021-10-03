@@ -3,8 +3,8 @@
     public class NoiseResponderSettings
     {
         public byte Radius { get; set; } = 100;
-        public float MaxBaseChance { get; set; } = 0.5f;
-        public byte InvestigationDistance { get; set; } = 10;
-        public float MaxVolumeMultiplier { get; set; } = 4f;
+        public byte InvestigationDistanceMin { get; set; } = 6;
+        public byte InvestigationDistanceMax { get; set; } = 25;
+        public float NoiseLostPerTwoSeconds { get; set; } = 0.1f;
     }
 }

@@ -75,6 +75,11 @@ namespace VolatileHordes
                 {
                     Logger.Info("Wiping all tracked zombies");
                     Container.GroupManager.DestroyAll();
+                    if (paramList.Count > 1 && paramList[1].EqualsCaseInsensitive("all"))
+                    {
+                        Logger.Info("Wiping all ambient zombies");
+                        Container.Ambient.DestroyAll();
+                    }
                     break;
                 }
                 case "players":
