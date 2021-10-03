@@ -26,5 +26,11 @@ namespace VolatileHordes.Utility
             Logger.Debug("{0}:{1}", prefix, t);
             return t;
         }
+
+        public static T PrintLn<T>(this T t, String prefix)
+        {
+            Console.WriteLine("{0}:{1}", prefix, t);
+            return t;
+        }
     }
 }
