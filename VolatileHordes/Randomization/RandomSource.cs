@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using VolatileHordes.Utility;
 
 namespace VolatileHordes.Randomization

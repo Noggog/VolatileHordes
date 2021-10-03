@@ -7,14 +7,24 @@ using VolatileHordes.Utility;
 
 namespace VolatileHordes.Playground
 {
+
     class Program
     {
+
         static void Main(string[] args)
         {
-            Console.WriteLine(
-                "result:{0}",
-                new PointService(new Randomization.RandomSource()).RandomlyAdjustAngle(10, 45)
-            );
+            var pointService = new PointService(new Randomization.RandomSource());
+            pointService.RandomlyAdjustAngle(10, 45)
+                .PrintLn("RandomlyAdjustAngle 10, 45");
+            pointService.RandomlyAdjustAngle(10, 45)
+                .PrintLn("RandomlyAdjustAngle 10, 45");
+            pointService.RandomlyAdjustAngle(10, 45)
+                .PrintLn("RandomlyAdjustAngle 10, 45");
+            pointService.RandomlyAdjustAngle(10, 45)
+                .PrintLn("RandomlyAdjustAngle 10, 45");
+
+            // pointService.PointDistanceAway();
+
             Console.ReadLine();
         }
     }

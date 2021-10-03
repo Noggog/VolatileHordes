@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Reactive;
 using System.Reactive.Linq;
 using UnityEngine;
+using VolatileHordes.Randomization;
 using VolatileHordes.Settings.User.Control;
 using VolatileHordes.Spawning;
 using VolatileHordes.Tracking;
@@ -15,28 +16,34 @@ namespace VolatileHordes.Control
      */
     public class FidgetForward
     {
-        private readonly RoamControlSettings _settings;
-        private readonly TimeManager _timeManager;
-        private readonly SpawningPositions _spawningPositions;
-        private readonly ZombieControl _zombieControl;
+        private readonly RoamControlSettings settings;
+        private readonly TimeManager timeManager;
+        private readonly SpawningPositions spawningPositions;
+        private readonly ZombieControl zombieControl;
+        private readonly PointService pointService;
+        private readonly RandomSource randomSource;
 
         public FidgetForward(
             RoamControlSettings settings,
             TimeManager timeManager,
             SpawningPositions spawningPositions,
-            ZombieControl zombieControl)
+            ZombieControl zombieControl,
+            PointService pointService,
+            RandomSource randomSource)
         {
-            _settings = settings;
-            _timeManager = timeManager;
-            _spawningPositions = spawningPositions;
-            _zombieControl = zombieControl;
+            this.settings = settings;
+            this.timeManager = timeManager;
+            this.spawningPositions = spawningPositions;
+            this.zombieControl = zombieControl;
+            this.pointService = pointService;
+            this.randomSource = randomSource;
         }
 
         public IDisposable ApplyTo(
             ZombieGroup group,
             IObservable<Unit>? restart = null)
         {
-            return ApplyTo(group, _settings.Range, new TimeRange(TimeSpan.FromSeconds(_settings.MinSeconds), TimeSpan.FromSeconds(_settings.MaxSeconds)), restart);
+            return ApplyTo(group, settings.Range, new TimeRange(TimeSpan.FromSeconds(settings.MinSeconds), TimeSpan.FromSeconds(settings.MaxSeconds)), restart);
         }
 
         public IDisposable ApplyTo(
@@ -52,7 +59,7 @@ namespace VolatileHordes.Control
                 .StartWith(Unit.Default)
                 .SwitchMap(_ =>
                 {
-                    return _timeManager.IntervalWithVariance(
+                    return timeManager.IntervalWithVariance(
                         timeRange: frequency,
                         onNewInterval: timeSpan => Logger.Info("Will fidget {0} in {1}", group, timeSpan));
                 })
@@ -66,9 +73,12 @@ namespace VolatileHordes.Control
 
                     group.Target.Also(x => Logger.Debug("group.Target:{0}", x));
 
-                    Vector3? newTarget = _spawningPositions.GetRandomPointNear(
-                        oldTarget == null ? group.Target.Value : PointService.Leapfrog(oldTarget.Value, group.Target.Value, range)
-                            .Log("newTarget"),
+                    Vector3? newTarget = spawningPositions.GetRandomPointNear(
+                        oldTarget == null ? group.Target.Value : pointService.PointDistanceAway(
+                            group.Target.Value,
+                            pointService.RandomlyAdjustAngle(pointService.AngleBetween(group.Target.Value, oldTarget.Value).Log("Angle"), 20).Log("Angle after randomize"),
+                            Convert.ToByte(randomSource.NextDouble(range))
+                        ),
                         range
                     );
 
@@ -79,7 +89,7 @@ namespace VolatileHordes.Control
                     }
                     oldTarget = group.Target.Value;
                     Logger.Info("Sending group {0} to roam to {1}.", group, newTarget.Value);
-                    await _zombieControl.SendGroupTowardsDelayed(group, newTarget.Value.ToPoint());
+                    await zombieControl.SendGroupTowardsDelayed(group, newTarget.Value.ToPoint());
                 },
                 e => Logger.Error("{0} had update error {1}", nameof(RoamControl), e));
         }
