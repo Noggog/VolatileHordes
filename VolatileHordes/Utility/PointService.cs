@@ -44,7 +44,7 @@ namespace VolatileHordes.Utility
 
         public double RandomlyAdjustAngle(double angle, double amount)
         {
-            return (angle + ((random.NextDouble().PrintLn("aaa") * amount).PrintLn("bbb") * (1 - (random.NextBool().PrintLn("NextBool") ? 2 : 0).PrintLn("ccc")).PrintLn("ddd")).PrintLn("eee")).PrintLn("fff");
+            return (angle + random.NextDouble() * amount * (1 - (random.NextBool() ? 2 : 0)));
         }
     }
 }
