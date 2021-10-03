@@ -20,13 +20,11 @@ namespace VolatileHordes.Utility
          */
         public PointF Leapfrog(PointF start, PointF end, byte distance)
         {
-            if (start == end) Logger.Warning("OverPointWithDistance: start == end:{0}", start);
-            return (start.ToZeroHeightVector() + (end.ToZeroHeightVector() - start.ToZeroHeightVector())
-                .Log("difference")
-                .normalized
-                .Log("normalized")
-                * distance
-                .Log("* distance")
+            if (start == end) Logger.Warning("Leapfrog: start == end:{0}", start);
+            return (start.ToZeroHeightVector()
+                    + (end.ToZeroHeightVector() - start.ToZeroHeightVector())
+                    .normalized
+                    * distance
                 ).ToPoint();
         }
 
