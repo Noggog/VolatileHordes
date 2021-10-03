@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using VolatileHordes.Core.Models;
 using VolatileHordes.Randomization;
 
 namespace VolatileHordes.Utility
@@ -34,12 +35,12 @@ namespace VolatileHordes.Utility
                 .Let(radian => (radian * (180 / Math.PI) + 360) % 360);
         }
 
-        // TODO: bugged: angle is radians instead of expected degrees.
         public PointF PointDistanceAwayByAngle(PointF point, double angle, byte distance)
         {
+            var _angle = new Angle(angle, Core.AngleType.Degree);
             return new PointF(
-                (float)(point.X + Math.Cos(angle) * distance),
-                (float)(point.Y + Math.Sin(angle) * distance)
+                (float)(point.X + Math.Cos(_angle.Radian) * distance),
+                (float)(point.Y + Math.Sin(_angle.Radian) * distance)
             );
         }
 
