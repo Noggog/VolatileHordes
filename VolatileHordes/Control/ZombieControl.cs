@@ -13,8 +13,8 @@ namespace VolatileHordes.Control
     public interface IZombieControl
     {
         void SendZombieTowards(IZombie zombie, PointF target);
-        void SendGroupTowards(IZombieGroup zombieGroup, PointF target, bool withTargetRandomness = true);
-        Task SendGroupTowardsDelayed(IZombieGroup zombieGroup, PointF target, bool withTargetRandomness = true);
+        void SendGroupTowards(ZombieGroup zombieGroup, PointF target, bool withTargetRandomness = true);
+        Task SendGroupTowardsDelayed(ZombieGroup zombieGroup, PointF target, bool withTargetRandomness = true);
     }
 
     public class ZombieControl : IZombieControl
@@ -36,7 +36,7 @@ namespace VolatileHordes.Control
             zombie.SendTowards(target);
         }
 
-        public void SendGroupTowards(IZombieGroup zombieGroup, PointF target, bool withTargetRandomness = true)
+        public void SendGroupTowards(ZombieGroup zombieGroup, PointF target, bool withTargetRandomness = true)
         {
             Logger.Debug("Will send {0} zombies towards {1}", zombieGroup.Count, target);
             zombieGroup.Target = target;
@@ -51,7 +51,7 @@ namespace VolatileHordes.Control
             }
         }
 
-        public async Task SendGroupTowardsDelayed(IZombieGroup zombieGroup, PointF target, bool withTargetRandomness = true)
+        public async Task SendGroupTowardsDelayed(ZombieGroup zombieGroup, PointF target, bool withTargetRandomness = true)
         {
             Logger.Debug("Will send {0} zombies towards {1}", zombieGroup.Count, target);
             zombieGroup.Target = target;
