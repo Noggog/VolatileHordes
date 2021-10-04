@@ -8,7 +8,7 @@ namespace VolatileHordes.GameAbstractions
     public interface IWorld
     {
         IEnumerable<IPlayer> Players { get; }
-        
+        bool TryGetPlayerEntity(int id, out EntityPlayer player);
         bool CanSpawnAt(Vector3 pos);
         int GetTerrainHeight(PointF pt);
         void SpawnZombie(EntityZombie zombie);
@@ -21,6 +21,11 @@ namespace VolatileHordes.GameAbstractions
     public class WorldWrapper : IWorld
     {
         private World World => GameManager.Instance.World;
+
+        public bool TryGetPlayerEntity(int id, out EntityPlayer player)
+        {
+            return World.Players.dict.TryGetValue(id, out player);
+        }
 
         public bool CanSpawnAt(Vector3 pos) => World.CanMobsSpawnAtPos(pos);
         
@@ -36,7 +41,7 @@ namespace VolatileHordes.GameAbstractions
             World.RemoveEntity(zombie.Id, EnumRemoveEntityReason.Despawned);
         }
 
-        public IEnumerable<IPlayer> Players => World.Players.list.Select<EntityPlayer, IPlayer>(p => new Player(p));
+        public IEnumerable<IPlayer> Players => World.Players.list.Select<EntityPlayer, IPlayer>(p => new Player(this, p.entityId));
         
         public Chunk? GetChunkAt(PointF pt)
         {

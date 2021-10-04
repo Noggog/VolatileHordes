@@ -19,7 +19,7 @@ namespace VolatileHordes
         public static readonly PointService PointService = new(Random);
         public static readonly BiomeData Biome = new(Random);
         public static readonly IWorld World = new WorldWrapper();
-        public static readonly PlayerZoneManager PlayerZoneManager = new();
+        public static readonly PlayerZoneManager PlayerZoneManager = new(World);
         public static readonly TimeManager Time = new(new NowProvider(), PlayerZoneManager, Random);
         public static readonly PlayerLocationUpdater PlayerLocationUpdater = new(PlayerZoneManager, Time);
         public static readonly SpawningPositions Spawning = new(World, PlayerZoneManager, Random);
