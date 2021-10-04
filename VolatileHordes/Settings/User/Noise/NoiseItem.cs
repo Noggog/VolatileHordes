@@ -1,4 +1,4 @@
-﻿namespace VolatileHordes.Settings.User
+﻿namespace VolatileHordes.Settings.User.Noise
 {
     public record NoiseItem(string Name, byte Volume)
     {

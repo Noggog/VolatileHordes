@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using VolatileHordes.Settings.User.Control;
 using VolatileHordes.Settings.User.Director;
+using VolatileHordes.Settings.User.Noise;
 using VolatileHordes.Spawning.WanderingHordes;
 
 namespace VolatileHordes.Settings.User

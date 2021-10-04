@@ -64,8 +64,8 @@
     <Compile Include="AiPackages\IAiPackage.cs" />
     <Compile Include="AiPackages\RoamAiPackage.cs" />
     <Compile Include="Core\Services\Stats.cs" />
+    <Compile Include="Core\Services\ZoneProcessing.cs" />
     <Compile Include="Director\GameStageCalculator.cs" />
-    <Compile Include="Director\PlayerGroup.cs" />
     <Compile Include="GameAbstractions\ILogger.cs" />
     <Compile Include="GameAbstractions\Zombie.cs" />
     <Compile Include="GameAbstractions\Player.cs" />
@@ -75,6 +75,7 @@
     <Compile Include="Hooks\ZombieSpawnTracking.cs" />
     <Compile Include="Noise\NoiseEvent.cs" />
     <Compile Include="Noise\NoiseManager.cs" />
+    <Compile Include="Players\PlayerGroup.cs" />
     <Compile Include="Settings\User\Control\ControlSettings.cs" />
     <Compile Include="Settings\User\Control\LuckyPlayerRetargetSettings.cs" />
     <Compile Include="Settings\User\Control\NoiseResponderSettings.cs" />
@@ -129,10 +130,9 @@
     <Compile Include="Core\Extensions\RectangleExt.cs" />
     <Compile Include="Core\Models\ValueTuple.cs" />
     <Compile Include="Core\Extensions\VectorExt.cs" />
-    <Compile Include="Zones\PlayerLocationUpdater.cs" />
-    <Compile Include="Zones\PlayerZoneManager.cs" />
-    <Compile Include="Zones\PlayerZone.cs" />
-    <Compile Include="Zones\ZoneProcessing.cs" />
+    <Compile Include="Players\PlayerLocationUpdater.cs" />
+    <Compile Include="Players\PlayerZoneManager.cs" />
+    <Compile Include="Players\PlayerZone.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="mod.xml" />

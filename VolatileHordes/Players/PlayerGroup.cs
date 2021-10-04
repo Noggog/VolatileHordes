@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using VolatileHordes.Zones;
+using VolatileHordes.Director;
 
-namespace VolatileHordes.Director
+namespace VolatileHordes.Players
 {
     public class PlayerGroup
     {

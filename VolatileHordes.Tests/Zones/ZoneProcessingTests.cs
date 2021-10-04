@@ -2,8 +2,9 @@
 using System.Drawing;
 using System.Linq;
 using NSubstitute;
+using VolatileHordes.Core.Services;
 using VolatileHordes.GameAbstractions;
-using VolatileHordes.Zones;
+using VolatileHordes.Players;
 using Xunit;
 
 namespace VolatileHordes.Tests.Zones

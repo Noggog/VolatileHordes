@@ -2,9 +2,9 @@ using System;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using VolatileHordes.Players;
 using VolatileHordes.Randomization;
 using VolatileHordes.Utility;
-using VolatileHordes.Zones;
 
 namespace VolatileHordes
 {
