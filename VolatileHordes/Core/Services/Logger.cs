@@ -158,5 +158,35 @@ namespace VolatileHordes
             if (LogLevel.Verbose > Level) return;
             Log.Out($"[{Constants.ModName}] {message}", new object?[] { o1, o2, o3, o4, o5 });
         }
+
+        public static void Temp(string message)
+        {
+            Log.Out($"[{Constants.ModName}] {message}");
+        }
+
+        public static void Temp<T1>(string message, T1 o1)
+        {
+            Log.Out($"[{Constants.ModName}] {message}", new object?[] { o1 });
+        }
+
+        public static void Temp<T1, T2>(string message, T1 o1, T2 o2)
+        {
+            Log.Out($"[{Constants.ModName}] {message}", new object?[] { o1, o2 });
+        }
+
+        public static void Temp<T1, T2, T3>(string message, T1 o1, T2 o2, T3 o3)
+        {
+            Log.Out($"[{Constants.ModName}] {message}", new object?[] { o1, o2, o3 });
+        }
+
+        public static void Temp<T1, T2, T3, T4>(string message, T1 o1, T2 o2, T3 o3, T4 o4)
+        {
+            Log.Out($"[{Constants.ModName}] {message}", new object?[] { o1, o2, o3, o4 });
+        }
+
+        public static void Temp<T1, T2, T3, T4, T5>(string message, T1 o1, T2 o2, T3 o3, T4 o4, T5 o5)
+        {
+            Log.Out($"[{Constants.ModName}] {message}", new object?[] { o1, o2, o3, o4, o5 });
+        }
     }
 }

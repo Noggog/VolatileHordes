@@ -23,7 +23,7 @@ namespace VolatileHordes.Utility
 
         public static T Log<T>(this T t, String prefix)
         {
-            Logger.Debug("{0}:{1}", prefix, t);
+            Logger.Temp("{0}:{1}", prefix, t);
             return t;
         }
 
