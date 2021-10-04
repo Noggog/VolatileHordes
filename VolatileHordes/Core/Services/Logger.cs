@@ -2,6 +2,7 @@ namespace VolatileHordes
 {
     public enum LogLevel
     {
+        None,
         Information,
         Debug,
         Verbose
