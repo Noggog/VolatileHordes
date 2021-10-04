@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Reactive;
 using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using VolatileHordes.Noise;
 using VolatileHordes.Randomization;
@@ -77,47 +78,46 @@ namespace VolatileHordes.Control
             _noiseLostPerTick = noiseResponderSettings.NoiseLostPerTwoSeconds;
         }
         
-        public IDisposable ApplyTo(ZombieGroup group, out IObservable<Unit> occurred)
+        public IObservable<Unit> ApplyTo(ZombieGroup group, out IObservable<Unit> occurred)
         {
             occurred = _occurred;
-            var compositeDisposable = new CompositeDisposable();
-            _noises.NoiseReduction
-                .Subscribe(_ =>
-                {
-                    _rememberedVolume = Percent.FactoryPutInRange(_rememberedVolume.Value - _noiseLostPerTick);
-                })
-                .DisposeWith(compositeDisposable);
-            _noises.Noise.Subscribe(noise =>
-                {
-                    if (group.Empty) return;
-                    var loc = group.GetLocationClosestTo(noise.Origin);
-                    if (loc == null)
+            return Observable.Merge(
+                _noises.NoiseReduction
+                    .Do(_ =>
                     {
-                        _logger.Warning("{0} could not respond to noise because it could not get location.", group);
-                        return;
-                    }
+                        _rememberedVolume = Percent.FactoryPutInRange(_rememberedVolume.Value - _noiseLostPerTick);
+                    })
+                    .Unit(),
+                _noises.Noise.Do(noise =>
+                    {
+                        if (group.Empty) return;
+                        var loc = group.GetLocationClosestTo(noise.Origin);
+                        if (loc == null)
+                        {
+                            _logger.Warning("{0} could not respond to noise because it could not get location.", group);
+                            return;
+                        }
 
-                    var curDistToOrigin = loc.Value.AbsDistance(noise.Origin);
-                    if (curDistToOrigin > _radius) return;
+                        var curDistToOrigin = loc.Value.AbsDistance(noise.Origin);
+                        if (curDistToOrigin > _radius) return;
 
-                    _rememberedVolume = Percent.FactoryPutInRange(_rememberedVolume.Value + noise.Volume);
-                    
-                    var chance = GetChanceToRespond(loc.Value, noise.Origin);
+                        _rememberedVolume = Percent.FactoryPutInRange(_rememberedVolume.Value + noise.Volume);
 
-                    _logger.Verbose("{0} with remembered volume {1} has a chance of {2} to respond to noise at {3}",
-                        group, _rememberedVolume, chance, noise.Origin);
+                        var chance = GetChanceToRespond(loc.Value, noise.Origin);
 
-                    if (!_randomSource.NextChance(chance)) return;
+                        _logger.Verbose("{0} with remembered volume {1} has a chance of {2} to respond to noise at {3}",
+                            group, _rememberedVolume, chance, noise.Origin);
 
-                    var target = GetTarget(loc.Value, noise.Origin, GetInvestigateDistance());
+                        if (!_randomSource.NextChance(chance)) return;
 
-                    _logger.Debug("{0} with remembered volume {1} responding to noise at {2}, moving to {3}", group,
-                        _rememberedVolume, noise.Origin, target);
-                    _zombieControl.SendGroupTowards(group, target);
-                    _occurred.OnNext(Unit.Default);
-                })
-                .DisposeWith(compositeDisposable);
-            return compositeDisposable;
+                        var target = GetTarget(loc.Value, noise.Origin, GetInvestigateDistance());
+
+                        _logger.Debug("{0} with remembered volume {1} responding to noise at {2}, moving to {3}", group,
+                            _rememberedVolume, noise.Origin, target);
+                        _zombieControl.SendGroupTowards(group, target);
+                        _occurred.OnNext(Unit.Default);
+                    })
+                    .Unit());
         }
 
         public Percent GetChanceToRespond(PointF loc, PointF noiseOrigin)

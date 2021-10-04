@@ -18,6 +18,7 @@ namespace VolatileHordes.AiPackages
         public void ApplyTo(ZombieGroup group)
         {
             _crazyControl.ApplyTo(group, new TimeRange(TimeSpan.FromSeconds(4), TimeSpan.FromSeconds(15)), 50)
+                .Subscribe()
                 .DisposeWith(group);
         }
     }

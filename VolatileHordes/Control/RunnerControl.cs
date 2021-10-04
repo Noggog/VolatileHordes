@@ -1,4 +1,5 @@
 using System;
+using System.Reactive;
 using System.Reactive.Linq;
 using VolatileHordes.Spawning;
 using VolatileHordes.Tracking;
@@ -24,14 +25,14 @@ namespace VolatileHordes.Control
             _groupReachedTarget = groupReachedTarget;
         }
         
-        public IDisposable ApplyTo(ZombieGroup group, byte targetPointRadius, byte travelRange)
+        public IObservable<Unit> ApplyTo(ZombieGroup group, byte targetPointRadius, byte travelRange)
         {
             return _groupReachedTarget.WhenReachedTarget(group, targetPointRadius, g => g.GetGeneralLocation())
                 // Wait 10 seconds to let investigation position settle in
                 .Select(target => _timeManager.Timer(TimeSpan.FromSeconds(10))
                     .Select(_ => target))
                 .Switch()
-                .SubscribeAsync(async target =>
+                .DoAsync(async target =>
                 {
                     var newTarget = _spawningPositions.GetRandomPointNear(target, travelRange);
                     if (newTarget == null)
@@ -41,7 +42,8 @@ namespace VolatileHordes.Control
                     }
 
                     await _control.SendGroupTowardsDelayed(group, newTarget.Value.ToPoint(), withTargetRandomness: false);
-                });
+                })
+                .Unit();
         }
     }
 }

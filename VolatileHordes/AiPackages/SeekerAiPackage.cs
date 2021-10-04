@@ -18,6 +18,7 @@ namespace VolatileHordes.AiPackages
         public void ApplyTo(ZombieGroup group)
         {
             _seekerControl.ApplyTo(group, TimeSpan.FromSeconds(10))
+                .Subscribe()
                 .DisposeWith(group);
         }
     }

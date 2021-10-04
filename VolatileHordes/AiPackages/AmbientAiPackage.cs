@@ -1,4 +1,5 @@
-﻿using VolatileHordes.Control;
+﻿using System;
+using VolatileHordes.Control;
 using VolatileHordes.Tracking;
 using VolatileHordes.Utility;
 
@@ -18,6 +19,7 @@ namespace VolatileHordes.AiPackages
         {
             var noiseControl = _noiseResponderControlFactory.Create();
             noiseControl.ApplyTo(group, out _)
+                .Subscribe()
                 .DisposeWith(group);
         }
     }

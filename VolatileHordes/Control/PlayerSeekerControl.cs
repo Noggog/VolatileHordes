@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Reactive;
+using System.Reactive.Linq;
 using VolatileHordes.Spawning;
 using VolatileHordes.Tracking;
 
@@ -20,11 +22,11 @@ namespace VolatileHordes.Control
             _zombieControl = zombieControl;
         }
 
-        public IDisposable ApplyTo(ZombieGroup group, TimeSpan frequency)
+        public IObservable<Unit> ApplyTo(ZombieGroup group, TimeSpan frequency)
         {
             Logger.Info("Adding Hunter AI to {0} at frequency {1}", group, frequency);
             return _timeManager.Interval(frequency)
-                .Subscribe(_ =>
+                .Do(_ =>
                 {
                     if (group.Target == null)
                     {
@@ -40,7 +42,8 @@ namespace VolatileHordes.Control
                     }
                     
                     _zombieControl.SendGroupTowards(group, player.PlayerLocation);
-                });
+                })
+                .Unit();
         }
     }
 }

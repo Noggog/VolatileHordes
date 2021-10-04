@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Reactive;
+using System.Reactive.Linq;
 using VolatileHordes.Spawning;
 using VolatileHordes.Tracking;
 
@@ -20,10 +22,10 @@ namespace VolatileHordes.Control
             _spawningPositions = spawningPositions;
         }
         
-        public IDisposable ApplyTo(ZombieGroup group, TimeRange redirectTimeRange, byte travelRange)
+        public IObservable<Unit> ApplyTo(ZombieGroup group, TimeRange redirectTimeRange, byte travelRange)
         {
             return _timeManager.IntervalWithVariance(redirectTimeRange)
-                .Subscribe(_ =>
+                .Do(_ =>
                 {
                     var curLoc = group.GetGeneralLocation();
                     if (curLoc == null)
@@ -40,7 +42,8 @@ namespace VolatileHordes.Control
                     }
 
                     _control.SendGroupTowards(group, newTarget.Value.ToPoint());
-                });
+                })
+                .Unit();
         }
     }
 }
