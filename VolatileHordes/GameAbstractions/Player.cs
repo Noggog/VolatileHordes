@@ -10,6 +10,7 @@ namespace VolatileHordes.GameAbstractions
         EntityPlayer? TryGetEntity();
         bool TryGetEntity(out EntityPlayer player);
         IEnumerable<Vector3> Bedrolls { get; }
+        int? TryGameStage();
     }
 
     public class Player : IPlayer
@@ -47,6 +48,11 @@ namespace VolatileHordes.GameAbstractions
         {
             player = TryGetEntity()!;
             return player != null;
+        }
+        
+        public int? TryGameStage()
+        {
+            return TryGetEntity()?.gameStage;
         }
     }
 }

@@ -3,7 +3,7 @@ using VolatileHordes.Spawning;
 using VolatileHordes.Tracking;
 using VolatileHordes.Zones;
 
-namespace VolatileHordes
+namespace VolatileHordes.Core.Services
 {
     public class Stats
     {

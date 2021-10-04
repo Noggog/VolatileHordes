@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using VolatileHordes.GameAbstractions;
+using VolatileHordes.Director;
 
 namespace VolatileHordes.Zones
 {
@@ -22,6 +23,8 @@ namespace VolatileHordes.Zones
         public PointF PlayerLocation => Center;
         
         public IPlayer Player { get; }
+        
+        public PlayerGroup Group { get; }
 
         public RectangleF SpawnRectangle => new(
             x: MinsSpawnBlock.X,
@@ -29,8 +32,11 @@ namespace VolatileHordes.Zones
             width: MaxsSpawnBlock.X - MinsSpawnBlock.X,
             height: MaxsSpawnBlock.Y - MinsSpawnBlock.Y);
 
-        public PlayerZone(IPlayer player)
+        public PlayerZone(
+            PlayerGroup group,
+            IPlayer player)
         {
+            Group = group;
             Player = player;
         }
     }

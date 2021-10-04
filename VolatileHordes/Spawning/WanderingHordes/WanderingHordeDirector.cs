@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using VolatileHordes.AiPackages;
 using VolatileHordes.Control;
+using VolatileHordes.Director;
 using VolatileHordes.Tracking;
 
 namespace VolatileHordes.Spawning.WanderingHordes
@@ -12,6 +13,7 @@ namespace VolatileHordes.Spawning.WanderingHordes
         private readonly WanderingHordeCalculator _hordeCalculator;
         private readonly SpawningPositions _spawningPositions;
         private readonly WanderingHordeSpawner _spawner;
+        private readonly GameStageCalculator _gameStageCalculator;
         private readonly ZombieControl _control;
 
         public WanderingHordeDirector(
@@ -20,6 +22,7 @@ namespace VolatileHordes.Spawning.WanderingHordes
             WanderingHordeCalculator hordeCalculator,
             SpawningPositions spawningPositions,
             WanderingHordeSpawner spawner,
+            GameStageCalculator gameStageCalculator,
             ZombieControl control)
         {
             _groupManager = groupManager;
@@ -27,6 +30,7 @@ namespace VolatileHordes.Spawning.WanderingHordes
             _hordeCalculator = hordeCalculator;
             _spawningPositions = spawningPositions;
             _spawner = spawner;
+            _gameStageCalculator = gameStageCalculator;
             _control = control;
         }
 
@@ -35,8 +39,10 @@ namespace VolatileHordes.Spawning.WanderingHordes
             var spawnTarget = _spawningPositions.GetRandomTarget();
             if (spawnTarget == null) return;
 
+            var gameStage = _gameStageCalculator.GetGamestage(spawnTarget.Player.Group);
+
             int noHorde = 0;
-            size ??= _hordeCalculator.GetHordeSize(ref noHorde);
+            size ??= _hordeCalculator.GetHordeSize(gameStage, ref noHorde);
 
             using var groupSpawn = _groupManager.NewGroup(_roamAiPackage);
             

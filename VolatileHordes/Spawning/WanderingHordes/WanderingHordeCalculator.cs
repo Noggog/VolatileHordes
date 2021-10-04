@@ -6,16 +6,13 @@ namespace VolatileHordes.Spawning.WanderingHordes
     public class WanderingHordeCalculator
     {
         private readonly WanderingHordeSettings _settings;
-        private readonly GamestageCalculator _gamestageCalculator;
         private readonly RandomSource _rand;
 
         public WanderingHordeCalculator(
             WanderingHordeSettings settings,
-            GamestageCalculator gamestageCalculator,
             RandomSource rand)
         {
             _settings = settings;
-            _gamestageCalculator = gamestageCalculator;
             _rand = rand;
         }
         
@@ -25,9 +22,9 @@ namespace VolatileHordes.Spawning.WanderingHordes
             return min + (diff * prog);
         }
         
-        public int GetHordeSize(ref int noHordeCounter)
+        public int GetHordeSize(float gameStage, ref int noHordeCounter)
         {
-            float percentThroughGeneration = 1.0f * _gamestageCalculator.GetEffectiveGamestage() / _settings.UpperGamestage;
+            float percentThroughGeneration = gameStage / _settings.UpperGamestage;
             
             var percentLargeHorde = Interpolate(_settings.PercentLargeHordeStart, _settings.PercentLargeHordeEnd, percentThroughGeneration);
             percentLargeHorde += noHordeCounter * _settings.PercentAddedWhenNoHorde;

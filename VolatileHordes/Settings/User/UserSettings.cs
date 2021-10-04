@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using VolatileHordes.Settings.User.Control;
+using VolatileHordes.Settings.User.Director;
 using VolatileHordes.Spawning.WanderingHordes;
 
 namespace VolatileHordes.Settings.User
@@ -21,6 +22,8 @@ namespace VolatileHordes.Settings.User
         public ControlSettings Control { get; set; } = new();
 
         public NoiseSettings Noise { get; set; } = new();
+
+        public DirectorSettings Director { get; set; } = new();
 
         public LogLevel LogLevel { get; set; } = LogLevel.Information;
 
