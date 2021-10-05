@@ -18,30 +18,65 @@ namespace VolatileHordes.Playground
             var randomSource = new RandomSource();
             var pointService = new PointService(randomSource);
 
-            pointService.PointDistanceAwayByAngle(
-                point: new PointF(8, 4),
-                angle: 0,
-                distance: 5
+            var point1 = new PointF(-2910.056f, -1633.051f);
+            var point2 = new PointF(-2907.456f, -1632.18f);
+
+            pointService.AngleBetween(
+                start: point1,
+                end: point2
             )
-                .PrintLn("PointDistanceAwayByAngle angle: 0");
+                .PrintLn("aaa");
+
             pointService.PointDistanceAwayByAngle(
-                point: new PointF(8, 4),
-                angle: 45,
-                distance: 5
+                point2,
+                6.7,
+                5
             )
-                .PrintLn("PointDistanceAwayByAngle angle: 45");
-            pointService.PointDistanceAwayByAngle(
-                point: new PointF(8, 4),
-                angle: 90,
-                distance: 5
-            )
-                .PrintLn("PointDistanceAwayByAngle angle: 90");
-            pointService.PointDistanceAwayByAngle(
-                point: new PointF(8, 4),
-                angle: 180,
-                distance: 5
-            )
-                .PrintLn("PointDistanceAwayByAngle angle: 180");
+                .PrintLn("bbb");
+
+
+            //pointService.PointDistanceAwayByAngle(
+            //    point: new PointF(5, 5),
+            //    angle: 90,
+            //    distance: 5
+            //)
+            //    .PrintLn("aaa");
+
+            //pointService.AngleBetween(
+            //    start: new PointF(5, 5),
+            //    end: new PointF(5, 10)
+            //)
+            //    .PrintLn("aaa");
+
+            //pointService.PointDistanceAwayByAngle(
+            //    point: new PointF(8, 4),
+            //    angle: 0,
+            //    distance: 5
+            //)
+            //    .PrintLn("PointDistanceAwayByAngle angle: 0");
+            //pointService.PointDistanceAwayByAngle(
+            //    point: new PointF(8, 4),
+            //    angle: 45,
+            //    distance: 5
+            //)
+            //    .PrintLn("PointDistanceAwayByAngle angle: 45");
+            //pointService.PointDistanceAwayByAngle(
+            //    point: new PointF(8, 4),
+            //    angle: 90,
+            //    distance: 5
+            //)
+            //    .PrintLn("PointDistanceAwayByAngle angle: 90");
+            //pointService.PointDistanceAwayByAngle(
+            //    point: new PointF(8, 4),
+            //    angle: 180,
+            //    distance: 5
+            //)
+            //    .PrintLn("PointDistanceAwayByAngle angle: 180");
+
+
+            //2021 - 10 - 03T22: 11:36 475.295 INF[VolatileHordes] oldTarget: { X = -3164.685, Y = -1353.029}
+            //2021 - 10 - 03T22: 11:36 475.295 INF[VolatileHordes] group.Target:{ X = -3168.046, Y = -1352.861}
+
 
             Console.ReadLine();
         }
