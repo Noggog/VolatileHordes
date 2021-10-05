@@ -76,11 +76,17 @@ namespace VolatileHordes.Control
                     }
 
                     Vector3? newTarget = world.GetWorldVector(
-                        oldTarget == null ? group.Target.Value
-                        : pointService.PointDistanceAwayByAngle(
-                            group.Target.Value,
-                            pointService.RandomlyAdjustAngle(pointService.AngleBetween(oldTarget.Value, group.Target.Value), 20),
-                            range
+                        pointService.PointDistanceAwayByAngle(
+                            point: group.Target.Value,
+                            angle: oldTarget == null ? 360 * randomSource.NextDouble()
+                            : pointService.RandomlyAdjustAngle(
+                                pointService.AngleBetween(
+                                    oldTarget.Value,
+                                    group.Target.Value
+                                ),
+                                20
+                            ),
+                            distance: range
                         )
                     );
 
