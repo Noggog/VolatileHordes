@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Reactive;
 using System.Reactive.Linq;
 using UnityEngine;
+using VolatileHordes.GameAbstractions;
 using VolatileHordes.Randomization;
 using VolatileHordes.Settings.User.Control;
 using VolatileHordes.Spawning;
@@ -22,6 +23,7 @@ namespace VolatileHordes.Control
         private readonly ZombieControl zombieControl;
         private readonly PointService pointService;
         private readonly RandomSource randomSource;
+        private readonly IWorld world;
 
         public FidgetForward(
             RoamControlSettings settings,
@@ -29,7 +31,8 @@ namespace VolatileHordes.Control
             SpawningPositions spawningPositions,
             ZombieControl zombieControl,
             PointService pointService,
-            RandomSource randomSource)
+            RandomSource randomSource,
+            IWorld world)
         {
             this.settings = settings;
             this.timeManager = timeManager;
@@ -37,6 +40,7 @@ namespace VolatileHordes.Control
             this.zombieControl = zombieControl;
             this.pointService = pointService;
             this.randomSource = randomSource;
+            this.world = world;
         }
 
         public IDisposable ApplyTo(
@@ -71,15 +75,13 @@ namespace VolatileHordes.Control
                         return;
                     }
 
-                    group.Target.Also(x => Logger.Debug("group.Target:{0}", x));
-
-                    Vector3? newTarget = spawningPositions.GetRandomPointNear(
-                        oldTarget == null ? group.Target.Value : pointService.PointDistanceAwayByAngle(
+                    Vector3? newTarget = world.GetWorldVector(
+                        oldTarget == null ? group.Target.Value
+                        : pointService.PointDistanceAwayByAngle(
                             group.Target.Value,
-                            pointService.RandomlyAdjustAngle(pointService.AngleBetween(group.Target.Value, oldTarget.Value).Log("Angle"), 20).Log("Angle after randomize"),
-                            Convert.ToByte(randomSource.NextDouble(range))
-                        ),
-                        range
+                            pointService.RandomlyAdjustAngle(pointService.AngleBetween(oldTarget.Value, group.Target.Value), 20),
+                            range
+                        )
                     );
 
                     if (newTarget == null)
