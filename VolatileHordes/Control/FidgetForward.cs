@@ -2,8 +2,6 @@ using System;
 using System.Drawing;
 using System.Reactive;
 using System.Reactive.Linq;
-using UnityEngine;
-using VolatileHordes.GameAbstractions;
 using VolatileHordes.Randomization;
 using VolatileHordes.Settings.User.Control;
 using VolatileHordes.Spawning;
@@ -23,7 +21,6 @@ namespace VolatileHordes.Control
         private readonly ZombieControl zombieControl;
         private readonly PointService pointService;
         private readonly RandomSource randomSource;
-        private readonly IWorld world;
 
         public FidgetForward(
             RoamControlSettings settings,
@@ -31,8 +28,7 @@ namespace VolatileHordes.Control
             SpawningPositions spawningPositions,
             ZombieControl zombieControl,
             PointService pointService,
-            RandomSource randomSource,
-            IWorld world)
+            RandomSource randomSource)
         {
             this.settings = settings;
             this.timeManager = timeManager;
@@ -40,7 +36,6 @@ namespace VolatileHordes.Control
             this.zombieControl = zombieControl;
             this.pointService = pointService;
             this.randomSource = randomSource;
-            this.world = world;
         }
 
         public IDisposable ApplyTo(
@@ -75,10 +70,10 @@ namespace VolatileHordes.Control
                         return;
                     }
 
-                    Vector3? newTarget = world.GetWorldVector(
-                        pointService.PointDistanceAwayByAngle(
-                            point: group.Target.Value,
-                            angle: oldTarget == null ? 360 * randomSource.NextDouble()
+                    var newTarget = pointService.PointDistanceAwayByAngle(
+                        point: group.Target.Value,
+                        angle: oldTarget == null
+                            ? 360 * randomSource.NextDouble()
                             : pointService.RandomlyAdjustAngle(
                                 pointService.AngleBetween(
                                     oldTarget.Value,
@@ -86,18 +81,12 @@ namespace VolatileHordes.Control
                                 ),
                                 20
                             ),
-                            distance: range
-                        )
+                        distance: range
                     );
 
-                    if (newTarget == null)
-                    {
-                        Logger.Warning("Could not find target to instruct group {0} to roam to.", group);
-                        return;
-                    }
                     oldTarget = group.Target.Value;
-                    Logger.Info("Sending group {0} to roam to {1}.", group, newTarget.Value);
-                    await zombieControl.SendGroupTowardsDelayed(group, newTarget.Value.ToPoint());
+                    Logger.Info("Sending group {0} to roam to {1}.", group, newTarget);
+                    await zombieControl.SendGroupTowardsDelayed(group, newTarget);
                 },
                 e => Logger.Error("{0} had update error {1}", nameof(FidgetForward), e));
         }
