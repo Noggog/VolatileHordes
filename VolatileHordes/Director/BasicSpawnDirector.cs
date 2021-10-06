@@ -12,12 +12,12 @@ namespace VolatileHordes.Director
 {
     public class BasicSpawnDirector
     {
-        private readonly TimeManager timeManager;
-        private readonly WanderingHordeDirector wanderingHordeDirector;
-        private readonly RandomSource randomSource;
-        private readonly FidgetForwardDirector fidgetForwardDirector;
-        private readonly PlayerZoneManager playerZoneManager;
-        private readonly GameStageCalculator gameStageCalculator;
+        private readonly TimeManager _timeManager;
+        private readonly WanderingHordeDirector _wanderingHordeDirector;
+        private readonly RandomSource _randomSource;
+        private readonly FidgetForwardDirector _fidgetForwardDirector;
+        private readonly PlayerZoneManager _playerZoneManager;
+        private readonly GameStageCalculator _gameStageCalculator;
 
         public BasicSpawnDirector(
             TimeManager timeManager,
@@ -28,18 +28,18 @@ namespace VolatileHordes.Director
             GameStageCalculator gameStageCalculator
         )
         {
-            this.timeManager = timeManager;
-            this.randomSource = randomSource;
-            this.wanderingHordeDirector = wanderingHordeDirector;
-            this.fidgetForwardDirector = fidgetForwardDirector;
-            this.playerZoneManager = playerZoneManager;
-            this.gameStageCalculator = gameStageCalculator;
+            _timeManager = timeManager;
+            _randomSource = randomSource;
+            _wanderingHordeDirector = wanderingHordeDirector;
+            _fidgetForwardDirector = fidgetForwardDirector;
+            _playerZoneManager = playerZoneManager;
+            _gameStageCalculator = gameStageCalculator;
         }
 
-        public void start()
+        public void Start()
         {
             Logger.Temp("BasicSpawnDirector.start`Open");
-            timeManager.IntervalWithVariance(
+            _timeManager.IntervalWithVariance(
                 new TimeRange(TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(2)),
                 onNewInterval: timeSpan => Logger.Temp("Will emit in {0}", timeSpan)
             )
@@ -48,19 +48,19 @@ namespace VolatileHordes.Director
                     var spawnCount =
                         (int)
                         (6
-                        + gameStageCalculator.GetGamestage(playerZoneManager.Zones.First().Group).Log("gameStage")
+                        + _gameStageCalculator.GetGamestage(_playerZoneManager.Zones.First().Group).Log("gameStage")
                         * 0.2);
 
                     Logger.Temp("Spawning. spawnCount:{0}", spawnCount);
-                    var randomNumber = randomSource.Get(2);
+                    var randomNumber = _randomSource.Get(2);
 
                     switch (randomNumber)
                     {
                         case 0:
-                            await wanderingHordeDirector.Spawn(spawnCount);
+                            await _wanderingHordeDirector.Spawn(spawnCount);
                             break;
                         case 1:
-                            await fidgetForwardDirector.Spawn(spawnCount);
+                            await _fidgetForwardDirector.Spawn(spawnCount);
                             break;
                         default:
                             throw new Exception($"Unhandled case:{randomNumber}");

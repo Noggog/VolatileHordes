@@ -34,7 +34,7 @@ namespace VolatileHordes
             {
                 Logger.Error("Exception while starting {0}", e);
             }
-            Container.BasicSpawnDirector.start();
+            Container.BasicSpawnDirector.Start();
         }
         
         static void InstallHooks()
