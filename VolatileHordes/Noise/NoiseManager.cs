@@ -5,6 +5,7 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using UnityEngine;
 using VolatileHordes.Settings.User;
+using VolatileHordes.Settings.User.Noise;
 using VolatileHordes.Utility;
 
 namespace VolatileHordes.Noise

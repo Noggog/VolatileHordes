@@ -1,9 +1,11 @@
 using VolatileHordes.AiPackages;
 using VolatileHordes.Control;
+using VolatileHordes.Core.ObservableTransforms;
 using VolatileHordes.Core.Services;
 using VolatileHordes.Director;
 using VolatileHordes.GameAbstractions;
 using VolatileHordes.Noise;
+using VolatileHordes.Players;
 using VolatileHordes.Randomization;
 using VolatileHordes.Settings.User;
 using VolatileHordes.Spawning;
@@ -11,7 +13,6 @@ using VolatileHordes.Spawning.Seeker;
 using VolatileHordes.Spawning.WanderingHordes;
 using VolatileHordes.Tracking;
 using VolatileHordes.Utility;
-using VolatileHordes.Zones;
 
 namespace VolatileHordes
 {
@@ -31,7 +32,9 @@ namespace VolatileHordes
         public static readonly ZombieControl ZombieControl = new(Spawning, Time, Random);
         public static readonly NoiseManager NoiseManager = new(Time, UserSettings.Noise);
         public static readonly ILogger Logger = new LoggerWrapper();
-        public static readonly NoiseResponderControlFactory NoiseResponderControlFactory = new(Random, ZombieControl, NoiseManager, UserSettings.Control.NoiseResponder, Logger);
+        public static readonly TimedSignalFlowShutoff TimedSignalFlowShutoff = new(Time);
+        public static readonly TemporaryAiShutoff TemporaryAiShutoff = new(TimedSignalFlowShutoff);
+        public static readonly NoiseResponderControlFactory NoiseResponderControlFactory = new(Random, ZombieControl, NoiseManager, TemporaryAiShutoff, UserSettings.Control.NoiseResponder, Logger);
         public static readonly AmbientAiPackage AmbientAiPackage = new(NoiseResponderControlFactory);
         public static readonly AmbientZombieManager Ambient = new(World, GroupManager, AmbientAiPackage);
         public static readonly ZombieCreator ZombieCreator = new(World, Spawning, Ambient, Biome);
@@ -53,11 +56,11 @@ namespace VolatileHordes
         public static readonly RoamFarOccasionally RoamFarOccasionally = new(UserSettings.Control.FarRoam,RoamControl);
         public static readonly LuckyPlayerRetarget LuckyPlayerRetarget = new(Time, Random, UserSettings.Control.LuckyPlayerRetarget, Spawning, ZombieControl);
         public static readonly FidgetForwardAIPackage FidgetForwardAIPackage = new(LuckyPlayerRetarget, FidgetForward);
-        public static readonly RoamAiPackage RoamAiPackage = new(FidgetRoam, RoamFarOccasionally, LuckyPlayerRetarget);
-        public static readonly WanderingHordeDirector WanderingHordeDirector = new(GroupManager, FidgetForwardAIPackage, WanderingHordeCalculator, Spawning, WanderingHordeSpawner, GamestageCalculator, ZombieControl);
+        public static readonly RoamAiPackage RoamAiPackage = new(FidgetRoam, NoiseResponderControlFactory, RoamFarOccasionally, LuckyPlayerRetarget);
+        public static readonly WanderingHordeDirector WanderingHordeDirector = new(GroupManager, RoamAiPackage, WanderingHordeCalculator, Spawning, WanderingHordeSpawner, GamestageCalculator, ZombieControl);
         public static readonly AiPackageMapper AiPackageMapper = new();
         public static readonly CrazyControl CrazyControl = new(ZombieControl, Time, Spawning);
-        public static readonly CrazyAiPackage CrazyAiPackage = new(CrazyControl);
+        public static readonly CrazyAiPackage CrazyAiPackage = new(NoiseResponderControlFactory, CrazyControl);
         public static readonly CrazyDirector CrazyDirector = new(GroupManager, CrazyAiPackage, Spawning, ZombieControl, ZombieCreator);
         public static readonly Stats Stats = new(PlayerZoneManager, GroupManager, Ambient, ZombieCreator);
     }

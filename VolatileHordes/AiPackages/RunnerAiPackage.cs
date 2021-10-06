@@ -1,4 +1,5 @@
-﻿using VolatileHordes.Control;
+﻿using System;
+using VolatileHordes.Control;
 using VolatileHordes.Tracking;
 using VolatileHordes.Utility;
 
@@ -17,6 +18,7 @@ namespace VolatileHordes.AiPackages
         public void ApplyTo(ZombieGroup group)
         {
             _runnerControl.ApplyTo(group, 10, 80)
+                .Subscribe()
                 .DisposeWith(group);
         }
     }

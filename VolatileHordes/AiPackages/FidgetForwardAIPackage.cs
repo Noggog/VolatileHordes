@@ -23,6 +23,7 @@ namespace VolatileHordes.AiPackages
         public void ApplyTo(ZombieGroup group)
         {
             _luckyPlayerRetarget.ApplyTo(group, out var luckyOccurred)
+                .Subscribe()
                 .DisposeWith(group);
             _fidgetForward.ApplyTo(group, luckyOccurred)
                 .DisposeWith(group);

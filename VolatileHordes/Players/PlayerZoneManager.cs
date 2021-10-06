@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Reactive.Subjects;
 using UnityEngine;
-using VolatileHordes.GameAbstractions;
 using VolatileHordes.Director;
+using VolatileHordes.GameAbstractions;
 
-namespace VolatileHordes.Zones
+namespace VolatileHordes.Players
 {
     public class PlayerZoneManager
     {

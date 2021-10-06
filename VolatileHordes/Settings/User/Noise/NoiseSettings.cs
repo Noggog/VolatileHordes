@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace VolatileHordes.Settings.User
+namespace VolatileHordes.Settings.User.Noise
 {
     public class NoiseSettings
     {

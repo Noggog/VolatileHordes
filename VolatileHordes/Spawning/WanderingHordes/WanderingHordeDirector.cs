@@ -9,7 +9,7 @@ namespace VolatileHordes.Spawning.WanderingHordes
     public class WanderingHordeDirector
     {
         private readonly GroupManager _groupManager;
-        private readonly FidgetForwardAIPackage _roamAiPackage;
+        private readonly RoamAiPackage _roamAiPackage;
         private readonly WanderingHordeCalculator _hordeCalculator;
         private readonly SpawningPositions _spawningPositions;
         private readonly WanderingHordeSpawner _spawner;
@@ -18,7 +18,7 @@ namespace VolatileHordes.Spawning.WanderingHordes
 
         public WanderingHordeDirector(
             GroupManager groupManager,
-            FidgetForwardAIPackage roamAiPackage,
+            RoamAiPackage roamAiPackage,
             WanderingHordeCalculator hordeCalculator,
             SpawningPositions spawningPositions,
             WanderingHordeSpawner spawner,

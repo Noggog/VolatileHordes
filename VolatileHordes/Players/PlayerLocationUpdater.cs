@@ -1,6 +1,6 @@
 ﻿using System.Reactive.Linq;
 
-namespace VolatileHordes.Zones
+namespace VolatileHordes.Players
 {
     public class PlayerLocationUpdater
     {

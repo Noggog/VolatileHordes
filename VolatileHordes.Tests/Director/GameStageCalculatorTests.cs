@@ -2,8 +2,8 @@
 using NUnit.Framework;
 using VolatileHordes.Director;
 using VolatileHordes.GameAbstractions;
+using VolatileHordes.Players;
 using VolatileHordes.Settings.User.Director;
-using VolatileHordes.Zones;
 
 namespace VolatileHordes.Tests.Director
 {

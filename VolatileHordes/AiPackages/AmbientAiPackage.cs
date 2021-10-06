@@ -1,4 +1,5 @@
-﻿using VolatileHordes.Control;
+﻿using System;
+using VolatileHordes.Control;
 using VolatileHordes.Tracking;
 using VolatileHordes.Utility;
 
@@ -17,7 +18,8 @@ namespace VolatileHordes.AiPackages
         public void ApplyTo(ZombieGroup group)
         {
             var noiseControl = _noiseResponderControlFactory.Create();
-            noiseControl.ApplyTo(group, out _)
+            noiseControl.ApplyTo(group)
+                .Subscribe()
                 .DisposeWith(group);
         }
     }

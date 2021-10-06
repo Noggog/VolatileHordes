@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using VolatileHordes.Players;
 
-namespace VolatileHordes.Zones
+namespace VolatileHordes.Core.Services
 {
     public static class ZoneProcessing
     {

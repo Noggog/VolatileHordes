@@ -1,8 +1,8 @@
 ﻿using System.Drawing;
-using VolatileHordes.GameAbstractions;
 using VolatileHordes.Director;
+using VolatileHordes.GameAbstractions;
 
-namespace VolatileHordes.Zones
+namespace VolatileHordes.Players
 {
     public interface IPlayerZone
     {

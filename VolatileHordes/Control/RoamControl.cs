@@ -25,7 +25,7 @@ namespace VolatileHordes.Control
             _zombieControl = zombieControl;
         }
 
-        public IDisposable ApplyTo(
+        public IObservable<Unit> ApplyTo(
             ZombieGroup group,
             byte range, 
             TimeRange frequency,
@@ -52,7 +52,7 @@ namespace VolatileHordes.Control
                         );
             }
           
-            return signal.SubscribeAsync(async _ =>
+            return signal.DoAsync(async _ =>
                 {
                     if (group.Target == null)
                     {
@@ -69,8 +69,8 @@ namespace VolatileHordes.Control
 
                     Logger.Info("Sending group {0} to roam to {1}.", group, newTarget.Value);
                     await _zombieControl.SendGroupTowardsDelayed(group, newTarget.Value.ToPoint());
-                },
-                e => Logger.Error("{0} had update error {1}", nameof(RoamControl), e));
+                })
+                .Unit();
         }
     }
 }

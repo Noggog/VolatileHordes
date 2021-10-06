@@ -2,7 +2,7 @@
 using System.Drawing;
 using UnityEngine;
 using VolatileHordes.Director;
-using VolatileHordes.Zones;
+using VolatileHordes.Players;
 
 namespace VolatileHordes.Spawning
 {

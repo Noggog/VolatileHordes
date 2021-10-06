@@ -2,9 +2,9 @@ using System;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using VolatileHordes.Players;
 using VolatileHordes.Randomization;
 using VolatileHordes.Utility;
-using VolatileHordes.Zones;
 
 namespace VolatileHordes
 {
@@ -16,7 +16,7 @@ namespace VolatileHordes
 
         private readonly BehaviorSubject<DateTime> _updateTime;
 
-        private readonly IObservable<TimeSpan> _updateDeltas;
+        public IObservable<TimeSpan> UpdateDeltas { get; }
 
         public TimeManager(
             INowProvider nowProvider, 
@@ -27,7 +27,7 @@ namespace VolatileHordes
             _playerZoneManager = playerZoneManager;
             _randomSource = randomSource;
             _updateTime = new BehaviorSubject<DateTime>(_nowProvider.Now);
-            _updateDeltas = _updateTime
+            UpdateDeltas = _updateTime
                 .StartWith(DateTime.Now)
                 .Pairwise()
                 .Skip(1)
@@ -45,7 +45,7 @@ namespace VolatileHordes
 
         public IObservable<Unit> Interval(TimeSpan timeSpan, bool pauseIfNoPlayers = true)
         {
-            var source = _updateDeltas;
+            var source = UpdateDeltas;
             if (pauseIfNoPlayers)
             {
                 source = source

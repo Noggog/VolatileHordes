@@ -18,7 +18,7 @@ namespace VolatileHordes.Control
             _roamControl = roamControl;
         }
 
-        public IDisposable ApplyTo(ZombieGroup group, IObservable<Unit>? interrupt = null)
+        public IObservable<Unit> ApplyTo(ZombieGroup group, IObservable<Unit>? interrupt = null)
         {
             return _roamControl.ApplyTo(
                 group,

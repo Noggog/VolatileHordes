@@ -31,13 +31,13 @@ namespace VolatileHordes.Control
             _percent = new Percent(settings.ChancePerMinute);
         }
         
-        public IDisposable ApplyTo(ZombieGroup group, out IObservable<Unit> occurred)
+        public IObservable<Unit> ApplyTo(ZombieGroup group, out IObservable<Unit> occurred)
         {
             Logger.Info("Adding lucky player retarget AI to {0} at frequency per minute of {1}", group, _percent);
             var occurredSubj = new Subject<Unit>();
             occurred = occurredSubj;
             return _timeManager.Interval(TimeSpan.FromMinutes(1))
-                .SubscribeAsync(async () =>
+                .DoAsync(async () =>
                 {
                     if (group.Target == null)
                     {
@@ -58,8 +58,8 @@ namespace VolatileHordes.Control
                     occurredSubj.OnNext(Unit.Default);
                     
                     await _zombieControl.SendGroupTowardsDelayed(group, player.PlayerLocation);
-                },
-                    e => Logger.Error("{0} had update error {1}", nameof(LuckyPlayerRetarget), e));
+                })
+                .Unit();
         }
     }
 }

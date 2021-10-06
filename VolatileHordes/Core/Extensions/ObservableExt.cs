@@ -2,6 +2,7 @@ using System;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using VolatileHordes.Core.ObservableTransforms;
 
 namespace VolatileHordes
 {
@@ -65,6 +66,73 @@ namespace VolatileHordes
                 .Subscribe(
                     onNext: _ => { },
                     onError: onError);
+        }
+
+        public static IObservable<bool> TimedSignalFlowShutoff(this IObservable<Unit> obs, TimeSpan timeToTurnOff, TimeManager timeManager)
+        {
+            return Observable.Merge(
+                    obs.Select(x => false),
+                    timeManager.UpdateDeltas.Select(x => (TimeSpan?)x)
+                        .Merge(obs.Select(x => default(TimeSpan?)))
+                        .Scan(TimeSpan.Zero, (seed, val) =>
+                        {
+                            if (val == null) return TimeSpan.Zero;
+                            return seed + val.Value;
+                        })
+                        .Where(x => x > timeToTurnOff)
+                        .Select(x => true))
+                .DistinctUntilChanged();
+        }
+
+        public static IObservable<T> FlowSwitch<T>(this IObservable<T> source, IObservable<bool> flowSwitch)
+        {
+            return flowSwitch
+                .Select(on =>
+                {
+                    if (on)
+                    {
+                        return source;
+                    }
+                    else
+                    {
+                        return Observable.Empty<T>();
+                    }
+                })
+                .Switch();
+        }
+
+        public static IObservable<TOut> Compose<TIn, TOut>(this IObservable<TIn> source, 
+            IObservableTransformation<TIn, TOut> transformation)
+        {
+            return transformation.Transform(source);
+        }
+
+        public static IObservable<TOut> Compose<TIn, TOut, T1>(this IObservable<TIn> source, 
+            IObservableTransformation<TIn, TOut, T1> transformation, 
+            T1 param1)
+        {
+            return transformation.Transform(source, param1);
+        }
+
+        public static IObservable<TOut> Compose<TIn, TOut, T1, T2>(this IObservable<TIn> source, 
+            IObservableTransformation<TIn, TOut, T1, T2> transformation,
+            T1 param1, T2 param2)
+        {
+            return transformation.Transform(source, param1, param2);
+        }
+
+        public static IObservable<TOut> Compose<TIn, TOut, T1, T2, T3>(this IObservable<TIn> source, 
+            IObservableTransformation<TIn, TOut, T1, T2, T3> transformation,
+            T1 param1, T2 param2, T3 param3)
+        {
+            return transformation.Transform(source, param1, param2, param3);
+        }
+
+        public static IObservable<TOut> Compose<TIn, TOut, T1, T2, T3, T4>(this IObservable<TIn> source, 
+            IObservableTransformation<TIn, TOut, T1, T2, T3, T4> transformation,
+            T1 param1, T2 param2, T3 param3, T4 param4)
+        {
+            return transformation.Transform(source, param1, param2, param3, param4);
         }
     }
 }

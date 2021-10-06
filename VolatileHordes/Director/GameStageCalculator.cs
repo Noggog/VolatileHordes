@@ -1,4 +1,5 @@
 ﻿using UniLinq;
+using VolatileHordes.Players;
 using VolatileHordes.Settings.User.Director;
 
 namespace VolatileHordes.Director

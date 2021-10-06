@@ -36,28 +36,28 @@ namespace VolatileHordes
                 .Subscribe();
         }
 
-        public static IObservable<Unit> SelectTask<T>(this IObservable<T> source, Func<T, Task> task)
+        public static IObservable<Unit> DoAsync<T>(this IObservable<T> source, Func<T, Task> task)
         {
             return source
                 .Select(x => Observable.FromAsync(() => task(x)))
                 .Concat();
         }
 
-        public static IObservable<Unit> SelectTask<T>(this IObservable<T> source, Func<Task> task)
+        public static IObservable<Unit> DoAsync<T>(this IObservable<T> source, Func<Task> task)
         {
             return source
                 .Select(_ => Observable.FromAsync(task))
                 .Concat();
         }
 
-        public static IObservable<R> SelectTask<T, R>(this IObservable<T> source, Func<Task<R>> task)
+        public static IObservable<R> SelectAsync<T, R>(this IObservable<T> source, Func<Task<R>> task)
         {
             return source
                 .Select(_ => Observable.FromAsync(task))
                 .Concat();
         }
 
-        public static IObservable<R> SelectTask<T, R>(this IObservable<T> source, Func<T, Task<R>> task)
+        public static IObservable<R> SelectAsync<T, R>(this IObservable<T> source, Func<T, Task<R>> task)
         {
             return source
                 .Select(x => Observable.FromAsync(() => task(x)))
