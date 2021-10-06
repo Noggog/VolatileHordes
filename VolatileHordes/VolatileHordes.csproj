@@ -68,6 +68,7 @@
     <Compile Include="AiPackages\RoamAiPackage.cs" />
     <Compile Include="Core\Services\Stats.cs" />
     <Compile Include="Core\Services\ZoneProcessing.cs" />
+    <Compile Include="Director\BasicSpawnDirector.cs" />
     <Compile Include="Director\GameStageCalculator.cs" />
     <Compile Include="GameAbstractions\ILogger.cs" />
     <Compile Include="GameAbstractions\Zombie.cs" />
@@ -95,6 +96,7 @@
     <Compile Include="Spawning\Seeker\SeekerGroupCalculator.cs" />
     <Compile Include="Spawning\Seeker\SeekerGroupDirector.cs" />
     <Compile Include="Spawning\SingleRunnerDirector.cs" />
+    <Compile Include="Spawning\FidgetForwardDirector.cs" />
     <Compile Include="Spawning\ZombieGroupSpawn.cs" />
     <Compile Include="Tracking\AmbientZombieManager.cs" />
     <Compile Include="Tracking\GroupManager.cs" />
