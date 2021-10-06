@@ -77,7 +77,7 @@ namespace VolatileHordes.Control
             _noiseLostPerTick = noiseResponderSettings.NoiseLostPerTwoSeconds;
         }
         
-        public IDisposable ApplyTo(IZombieGroup group, out IObservable<Unit> occurred)
+        public IDisposable ApplyTo(ZombieGroup group, out IObservable<Unit> occurred)
         {
             occurred = _occurred;
             var compositeDisposable = new CompositeDisposable();
@@ -89,6 +89,7 @@ namespace VolatileHordes.Control
                 .DisposeWith(compositeDisposable);
             _noises.Noise.Subscribe(noise =>
                 {
+                    if (group.Empty) return;
                     var loc = group.GetLocationClosestTo(noise.Origin);
                     if (loc == null)
                     {

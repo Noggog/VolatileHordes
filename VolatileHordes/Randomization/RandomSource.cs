@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using VolatileHordes.Utility;
 
 namespace VolatileHordes.Randomization
@@ -31,7 +31,7 @@ namespace VolatileHordes.Randomization
 			return (float)(Random.NextDouble() * (max - min) + min);
 		}
 
-		public bool NextBool() => Random.Next(0, 1) == 0;
+		public bool NextBool() => Random.Next(0, 2) == 0;
 
 		public bool Chance(float c)
 		{

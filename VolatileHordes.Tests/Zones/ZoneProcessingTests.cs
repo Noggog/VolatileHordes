@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using NSubstitute;
+using VolatileHordes.GameAbstractions;
 using VolatileHordes.Zones;
 using Xunit;
 
@@ -208,14 +210,21 @@ namespace VolatileHordes.Tests.Zones
 
         public class GetConnectedSpawnRects
         {
-            public record SpawnTarget(RectangleF SpawnRectangle, int EntityId) : ISpawnTarget;
+            public record PlayerZone(RectangleF SpawnRectangle, IPlayer Player) : IPlayerZone;
+
+            private IPlayer GetPlayer(int id)
+            {
+                var ret = Substitute.For<IPlayer>();
+                ret.EntityId.Returns(id);
+                return ret;
+            }
             
             [Fact]
             public void Empty()
             {
                 var rect = new RectangleF(1, 1, 3, 3);
-                var conn = ZoneProcessing.GetConnectedSpawnRects(new SpawnTarget(rect, -3),
-                    new ISpawnTarget[0]);
+                var conn = ZoneProcessing.GetConnectedSpawnRects(new PlayerZone(rect, GetPlayer(-3)),
+                    new IPlayerZone[0]);
                 Assert.Equal(
                     conn.ToHashSet(),
                     new []{ rect }.ToHashSet());
@@ -225,11 +234,11 @@ namespace VolatileHordes.Tests.Zones
             public void Unconnected()
             {
                 var rect = new RectangleF(1, 1, 3, 3);
-                var conn = ZoneProcessing.GetConnectedSpawnRects(new SpawnTarget(rect, 1),
-                    new ISpawnTarget[]
+                var conn = ZoneProcessing.GetConnectedSpawnRects(new PlayerZone(rect, GetPlayer(1)),
+                    new IPlayerZone[]
                     {
-                        new SpawnTarget(
-                            new RectangleF(15, 15, 3, 3), 2)
+                        new PlayerZone(
+                            new RectangleF(15, 15, 3, 3), Substitute.For<IPlayer>())
                     });
                 Assert.Equal(
                     conn.ToHashSet(),
@@ -241,10 +250,10 @@ namespace VolatileHordes.Tests.Zones
             {
                 var rect = new RectangleF(1, 1, 3, 3);
                 var rect2 = new RectangleF(2, 2, 3, 3);
-                var conn = ZoneProcessing.GetConnectedSpawnRects(new SpawnTarget(rect, 1),
-                    new ISpawnTarget[]
+                var conn = ZoneProcessing.GetConnectedSpawnRects(new PlayerZone(rect, GetPlayer(1)),
+                    new IPlayerZone[]
                     {
-                        new SpawnTarget(rect2, 2)
+                        new PlayerZone(rect2, GetPlayer(2))
                     });
                 Assert.Equal(
                     conn.ToHashSet(),
@@ -257,11 +266,11 @@ namespace VolatileHordes.Tests.Zones
                 var rect = new RectangleF(1, 1, 3, 3);
                 var rect2 = new RectangleF(2, 2, 3, 3);
                 var rect3 = new RectangleF(4, 4, 3, 3);
-                var conn = ZoneProcessing.GetConnectedSpawnRects(new SpawnTarget(rect, 1),
-                    new ISpawnTarget[]
+                var conn = ZoneProcessing.GetConnectedSpawnRects(new PlayerZone(rect, GetPlayer(1)),
+                    new IPlayerZone[]
                     {
-                        new SpawnTarget(rect2, 2),
-                        new SpawnTarget(rect3, 3)
+                        new PlayerZone(rect2, GetPlayer(2)),
+                        new PlayerZone(rect3, GetPlayer(3))
                     });
                 Assert.Equal(
                     conn.ToHashSet(),

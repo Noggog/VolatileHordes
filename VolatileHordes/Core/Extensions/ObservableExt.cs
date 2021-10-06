@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
@@ -7,6 +7,11 @@ namespace VolatileHordes
 {
     public static class ObservableExt
     {
+        public static IObservable<TResult> SwitchMap<TSource, TResult>(this IObservable<TSource> source, Func<TSource, IObservable<TResult>> selector)
+        {
+            return source.Select(selector).Switch();
+        }
+
         public static IObservable<Unit> Unit<T>(this IObservable<T> source)
         {
             return source.Select(_ => System.Reactive.Unit.Default);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using UnityEngine;
+using VolatileHordes.Director;
 using VolatileHordes.Zones;
 
 namespace VolatileHordes.Spawning

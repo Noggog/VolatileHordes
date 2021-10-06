@@ -20,14 +20,11 @@ namespace VolatileHordes.Zones
 
         public void Update()
         {
-            var world = GameManager.Instance.World;
-            var players = world.Players.dict;
-
             for (int i = _zoneManager.Zones.Count - 1; i >= 0; i--)
             {
                 var ply = _zoneManager.Zones[i];
 
-                if (players.TryGetValue(ply.EntityId, out var ent))
+                if (ply.Player.TryGetEntity(out var ent))
                 {
                     _zoneManager.Zones[i] = _zoneManager.UpdatePlayer(ply, ent);
                 }
@@ -38,7 +35,7 @@ namespace VolatileHordes.Zones
                     _zoneManager.Zones.RemoveAt(i);
                     i--;
 
-                    Logger.Error("Player not in player list: {0}", ply.EntityId);
+                    Logger.Error("Player not in player list: {0}", ply.Player.EntityId);
                 }
             }
         }

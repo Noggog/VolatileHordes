@@ -2,11 +2,15 @@
 using System.Collections.Generic;
 using System.Reactive.Subjects;
 using UnityEngine;
+using VolatileHordes.GameAbstractions;
+using VolatileHordes.Director;
 
 namespace VolatileHordes.Zones
 {
     public class PlayerZoneManager
     {
+        private readonly IWorld _world;
+        private readonly GameStageCalculator _gameStageCalculator;
         static int ChunkViewDim = GamePrefs.GetInt(EnumGamePrefs.ServerMaxAllowedViewDistance);
 
         static Vector3 ChunkSize = new(16, 256, 16);
@@ -18,8 +22,12 @@ namespace VolatileHordes.Zones
         private BehaviorSubject<int> _playerCount = new(0);
         public IObservable<int> PlayerCountObservable => _playerCount;
 
-        public PlayerZoneManager()
+        public PlayerZoneManager(
+            IWorld world,
+            GameStageCalculator gameStageCalculator)
         {
+            _world = world;
+            _gameStageCalculator = gameStageCalculator;
             Bootstrapper.GameStarted.Subscribe(_ =>
             {
                 Logger.Info("Player Chunk View Dim: {0} - {1} - {2}", ChunkViewDim,
@@ -37,7 +45,7 @@ namespace VolatileHordes.Zones
                 switch (_respawnReason)
                 {
                     case RespawnType.NewGame:
-                    case RespawnType.LoadedGame:
+                    // case RespawnType.LoadedGame:
                     case RespawnType.EnterMultiplayer:
                     case RespawnType.JoinMultiplayer:
                         AddPlayer(entityId);
@@ -82,11 +90,13 @@ namespace VolatileHordes.Zones
             // So we have to check if the player is already here.
             foreach (var zone in Zones)
             {
-                if (zone.EntityId == entityId)
+                if (zone.Player.EntityId == entityId)
                     return;
             }
 
-            var area = new PlayerZone(entityId);
+            var area = new PlayerZone(
+                new PlayerGroup(_gameStageCalculator),
+                new Player(_world, entityId));
             
             Zones.Add(UpdatePlayer(area));
 
@@ -107,7 +117,7 @@ namespace VolatileHordes.Zones
 
         public PlayerZone UpdatePlayer(PlayerZone ply)
         {
-            if (ply.TryGetPlayer(out var ent))
+            if (ply.Player.TryGetEntity(out var ent))
             {
                 ply = UpdatePlayer(ply, ent);
             }
@@ -120,7 +130,7 @@ namespace VolatileHordes.Zones
             for (int i = 0; i < Zones.Count; i++)
             {
                 var ply = Zones[i] as PlayerZone;
-                if (ply.EntityId == entityId)
+                if (ply.Player.EntityId == entityId)
                 {
                     Logger.Info("Removed player: {0}", entityId);
                     Zones.RemoveAt(i);
@@ -137,9 +147,9 @@ namespace VolatileHordes.Zones
             foreach (var zone in Zones)
             {
                 string playerPos;
-                if (zone.TryGetPlayer(out var player))
+                if (zone.Player.TryGetEntity(out var entity))
                 {
-                    playerPos = player.GetPosition().ToString();
+                    playerPos = entity.GetPosition().ToString();
                 }
                 else
                 {

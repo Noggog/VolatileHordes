@@ -3,7 +3,7 @@ using VolatileHordes.Spawning;
 using VolatileHordes.Tracking;
 using VolatileHordes.Zones;
 
-namespace VolatileHordes
+namespace VolatileHordes.Core.Services
 {
     public class Stats
     {
@@ -27,14 +27,14 @@ namespace VolatileHordes
         public void Print(CommandSenderInfo sender)
         {
             var playerZone = _playerZoneManager.Zones
-                .FirstOrDefault(x => x.EntityId == sender.RemoteClientInfo.entityId);
-            if (playerZone == null || playerZone.TryGetPlayer(out var player))
+                .FirstOrDefault(x => x.Player.EntityId == sender.RemoteClientInfo.entityId);
+            if (playerZone == null || playerZone.Player.TryGetEntity(out var entity))
             {
                 Logger.Warning("No player found to print stats relative to.");
                 return;
             }
             _creator.PrintZombieStats();
-            var playerPt = player.position.ToPoint();
+            var playerPt = entity.position.ToPoint();
             foreach (var group in _groupManager.Groups)
             {
                 group.PrintRelativeTo(playerPt);

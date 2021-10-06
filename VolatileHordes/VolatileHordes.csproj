@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -40,18 +40,22 @@
   <ItemGroup>
     <Compile Include="AiPackages\AmbientAiPackage.cs" />
     <Compile Include="AiPackages\CrazyAiPackage.cs" />
+    <Compile Include="AiPackages\FidgetForwardAIPackage.cs" />
     <Compile Include="AiPackages\RunnerAiPackage.cs" />
     <Compile Include="AiPackages\SeekerAiPackage.cs" />
-    <Compile Include="BiomeData.cs" />
-    <Compile Include="Bootstrapper.cs" />
-    <Compile Include="Commands.cs" />
-    <Compile Include="Container.cs" />
+    <Compile Include="Core\Models\Angle\AngleType.cs" />
+    <Compile Include="Core\Models\Angle\Angle.cs" />
+    <Compile Include="Core\Services\BiomeData.cs" />
+    <Compile Include="Core\Services\Bootstrapper.cs" />
+    <Compile Include="Core\Services\Commands.cs" />
+    <Compile Include="Core\Container.cs" />
     <Compile Include="Control\CrazyControl.cs" />
     <Compile Include="Control\FidgetRoam.cs" />
     <Compile Include="Control\LuckyPlayerRetarget.cs" />
     <Compile Include="Control\NoiseResponderControl.cs" />
     <Compile Include="Control\PlayerSeekerControl.cs" />
     <Compile Include="Control\RoamControl.cs" />
+    <Compile Include="Control\FidgetForward.cs" />
     <Compile Include="Control\RoamFarOccasionally.cs" />
     <Compile Include="Control\RunnerControl.cs" />
     <Compile Include="Control\ZombieControl.cs" />
@@ -59,6 +63,9 @@
     <Compile Include="AiPackages\AiPackageMapper.cs" />
     <Compile Include="AiPackages\IAiPackage.cs" />
     <Compile Include="AiPackages\RoamAiPackage.cs" />
+    <Compile Include="Core\Services\Stats.cs" />
+    <Compile Include="Director\GameStageCalculator.cs" />
+    <Compile Include="Director\PlayerGroup.cs" />
     <Compile Include="GameAbstractions\ILogger.cs" />
     <Compile Include="GameAbstractions\Zombie.cs" />
     <Compile Include="GameAbstractions\Player.cs" />
@@ -72,6 +79,7 @@
     <Compile Include="Settings\User\Control\LuckyPlayerRetargetSettings.cs" />
     <Compile Include="Settings\User\Control\NoiseResponderSettings.cs" />
     <Compile Include="Settings\User\Control\RoamControlSettings.cs" />
+    <Compile Include="Settings\User\Director\DirectorSettings.cs" />
     <Compile Include="Settings\User\Noise\NoiseItem.cs" />
     <Compile Include="Settings\User\Noise\NoiseSettings.cs" />
     <Compile Include="Settings\User\UserSettings.cs" />
@@ -84,26 +92,26 @@
     <Compile Include="Spawning\Seeker\SeekerGroupDirector.cs" />
     <Compile Include="Spawning\SingleRunnerDirector.cs" />
     <Compile Include="Spawning\ZombieGroupSpawn.cs" />
-    <Compile Include="Stats.cs" />
     <Compile Include="Tracking\AmbientZombieManager.cs" />
     <Compile Include="Tracking\GroupManager.cs" />
     <Compile Include="Tracking\GroupReachedTarget.cs" />
     <Compile Include="Tracking\ZombieGroup.cs" />
-    <Compile Include="Utility\DisposableExt.cs" />
-    <Compile Include="Utility\DoubleExt.cs" />
-    <Compile Include="Utility\IDisposableBucket.cs" />
-    <Compile Include="Utility\INowProvider.cs" />
-    <Compile Include="Utility\ListExt.cs" />
-    <Compile Include="Utility\Percent.cs" />
-    <Compile Include="Utility\PointFExt.cs" />
-    <Compile Include="Utility\Signal.cs" />
-    <Compile Include="Utility\TaskExt.cs" />
-    <Compile Include="Utility\TimeRange.cs" />
-    <Compile Include="Utility\TimeSpanExt.cs" />
+    <Compile Include="Core\Extensions\ObjectExt.cs" />
+    <Compile Include="Core\Extensions\DisposableExt.cs" />
+    <Compile Include="Core\Models\IDisposableBucket.cs" />
+    <Compile Include="Core\Models\INowProvider.cs" />
+    <Compile Include="Core\Extensions\ListExt.cs" />
+    <Compile Include="Core\Services\PointService.cs" />
+    <Compile Include="Core\Extensions\SubjectExt.cs" />
+    <Compile Include="Core\Models\Percent.cs" />
+    <Compile Include="Core\Extensions\PointFExt.cs" />
+    <Compile Include="Core\Models\Signal.cs" />
+    <Compile Include="Core\Extensions\TaskExt.cs" />
+    <Compile Include="Core\Models\TimeRange.cs" />
+    <Compile Include="Core\Extensions\TimeSpanExt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Randomization\RandomExt.cs" />
     <Compile Include="Randomization\RandomSource.cs" />
-    <Compile Include="Spawning\GamestageCalculator.cs" />
     <Compile Include="Spawning\SpawningPositions.cs" />
     <Compile Include="Spawning\SpawnRowPerpendicular.cs" />
     <Compile Include="Spawning\SpawnTarget.cs" />
@@ -112,15 +120,15 @@
     <Compile Include="Spawning\WanderingHordes\WanderingHordeSpawner.cs" />
     <Compile Include="Spawning\WanderingHordes\WanderingHordeSettings.cs" />
     <Compile Include="Spawning\ZombieCreator.cs" />
-    <Compile Include="TimeManager.cs" />
-    <Compile Include="Utility\Constants.cs" />
-    <Compile Include="Utility\EnumerableExt.cs" />
-    <Compile Include="Utility\FloatExt.cs" />
-    <Compile Include="Utility\Logger.cs" />
-    <Compile Include="Utility\ObservableExt.cs" />
-    <Compile Include="Utility\RectangleExt.cs" />
-    <Compile Include="Utility\ValueTuple.cs" />
-    <Compile Include="Utility\VectorExt.cs" />
+    <Compile Include="Core\Services\TimeManager.cs" />
+    <Compile Include="Core\Constants.cs" />
+    <Compile Include="Core\Extensions\EnumerableExt.cs" />
+    <Compile Include="Core\Extensions\FloatExt.cs" />
+    <Compile Include="Core\Services\Logger.cs" />
+    <Compile Include="Core\Extensions\ObservableExt.cs" />
+    <Compile Include="Core\Extensions\RectangleExt.cs" />
+    <Compile Include="Core\Models\ValueTuple.cs" />
+    <Compile Include="Core\Extensions\VectorExt.cs" />
     <Compile Include="Zones\PlayerLocationUpdater.cs" />
     <Compile Include="Zones\PlayerZoneManager.cs" />
     <Compile Include="Zones\PlayerZone.cs" />

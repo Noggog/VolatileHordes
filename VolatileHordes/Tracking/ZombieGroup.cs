@@ -10,29 +10,7 @@ using VolatileHordes.Utility;
 
 namespace VolatileHordes.Tracking
 {
-    public interface IZombieGroup : IEnumerable<IZombie>
-    {
-        int Id { get; }
-        DateTime SpawnTime { get; }
-        int Count { get; }
-        PointF? Target { get; set; }
-        IAiPackage? AiPackage { get; }
-        void Add(IEnumerable<IZombie> zombies);
-        void Add(IZombie zombie);
-        void AddForDisposal(IDisposable disposable);
-        bool Remove(IZombie zombie);
-        void Dispose();
-        int NumAlive();
-        string? ToString();
-        bool ContainsZombie(IZombie zombie);
-        void Destroy();
-        PointF? GetGeneralLocation();
-        PointF? GetLocationClosestTo(PointF pt);
-        IObservable<PointF?> FollowTarget();
-        void PrintRelativeTo(PointF pt);
-    }
-
-    public class ZombieGroup : IDisposable, IDisposableBucket, IZombieGroup
+    public class ZombieGroup : IDisposable, IDisposableBucket, IEnumerable<IZombie>
     {
         private static int _nextId;
         public int Id { get; }
@@ -96,6 +74,8 @@ namespace VolatileHordes.Tracking
             .Select(z => z.GetEntity())
             .NotNull()
             .Count(e => !e.IsDead());
+
+        public bool Empty => NumAlive() == 0;
 
         public override string ToString()
         {
