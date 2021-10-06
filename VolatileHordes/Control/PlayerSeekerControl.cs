@@ -24,7 +24,7 @@ namespace VolatileHordes.Control
 
         public IObservable<Unit> ApplyTo(ZombieGroup group, TimeSpan frequency)
         {
-            Logger.Info("Adding Hunter AI to {0} at frequency {1}", group, frequency);
+            Logger.Info("Adding Seeker AI to {0} at frequency {1}", group, frequency);
             return _timeManager.Interval(frequency)
                 .Do(_ =>
                 {
