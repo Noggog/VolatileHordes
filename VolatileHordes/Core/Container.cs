@@ -52,7 +52,7 @@ namespace VolatileHordes
         public static readonly WanderingHordeCalculator WanderingHordeCalculator = new(UserSettings.WanderingHordeSettings, Random);
         public static readonly RoamControl RoamControl = new(Time, Spawning, ZombieControl);
         public static readonly FidgetRoam FidgetRoam = new(UserSettings.Control.FidgetRoam, RoamControl);
-        public static readonly FidgetForward FidgetForward = new(UserSettings.Control.FidgetRoam, Time, Spawning, ZombieControl, PointService, Random);
+        public static readonly FidgetForward FidgetForward = new(UserSettings.Control.FidgetRoam, Time, Spawning, ZombieControl, PointService, Random, World);
         public static readonly RoamFarOccasionally RoamFarOccasionally = new(UserSettings.Control.FarRoam,RoamControl);
         public static readonly LuckyPlayerRetarget LuckyPlayerRetarget = new(Time, Random, UserSettings.Control.LuckyPlayerRetarget, Spawning, ZombieControl);
         public static readonly FidgetForwardAIPackage FidgetForwardAIPackage = new(LuckyPlayerRetarget, FidgetForward);

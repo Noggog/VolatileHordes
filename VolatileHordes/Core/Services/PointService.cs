@@ -55,5 +55,16 @@ namespace VolatileHordes.Utility
         {
             return (angle + random.NextDouble() * amount * (1 - (random.NextBool() ? 2 : 0)));
         }
+
+        /**
+         * TODO: make the random area be a circle, not a box.
+         */
+        public PointF RandomlyAdjustPoint(PointF point, byte amount)
+        {
+            return new PointF(
+                (float)(point.X + random.NextDouble() * amount * (1 - (random.NextBool() ? 2 : 0))),
+                (float)(point.Y + random.NextDouble() * amount * (1 - (random.NextBool() ? 2 : 0)))
+            );
+        }
     }
 }
