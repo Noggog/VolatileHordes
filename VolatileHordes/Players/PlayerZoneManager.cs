@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using UnityEngine;
 using VolatileHordes.Director;
@@ -21,6 +22,12 @@ namespace VolatileHordes.Players
 
         private BehaviorSubject<int> _playerCount = new(0);
         public IObservable<int> PlayerCountObservable => _playerCount;
+
+        // TODO: figure out easiest way to merge observables at initialization
+        //private Subject<int> playerAdded = new();
+        //private Subject<int> playerRemoved = new();
+        //private Observable<List<int>> players =
+        //    Observable.Merge(playerAdded, playerRemoved)
 
         public PlayerZoneManager(
             IWorld world,
@@ -102,6 +109,7 @@ namespace VolatileHordes.Players
 
             Logger.Info("Added player {0}", entityId);
             _playerCount.OnNext(_playerCount.Value + 1);
+            //players.OnNext(entityId);
         }
 
         public PlayerZone UpdatePlayer(PlayerZone ply, EntityPlayer ent)
