@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using System.Reactive;
 using System.Reactive.Linq;
-using VolatileHordes.Randomization;
+using VolatileHordes.Probability;
 using VolatileHordes.Settings.User.Control;
 using VolatileHordes.Spawning;
 using VolatileHordes.Tracking;

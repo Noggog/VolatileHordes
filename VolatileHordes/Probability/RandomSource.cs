@@ -1,7 +1,7 @@
 using System;
 using VolatileHordes.Utility;
 
-namespace VolatileHordes.Randomization
+namespace VolatileHordes.Probability
 {
     public class RandomSource
     {

@@ -5,7 +5,7 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using VolatileHordes.Core.ObservableTransforms;
 using VolatileHordes.Noise;
-using VolatileHordes.Randomization;
+using VolatileHordes.Probability;
 using VolatileHordes.Settings.User.Control;
 using VolatileHordes.Tracking;
 using VolatileHordes.Utility;

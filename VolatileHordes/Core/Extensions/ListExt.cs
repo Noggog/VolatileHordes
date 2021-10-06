@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using VolatileHordes.Randomization;
+using VolatileHordes.Probability;
 
 namespace VolatileHordes
 {
@@ -23,6 +23,83 @@ namespace VolatileHordes
         public static IEnumerable<T> EnumerateFromRandomIndex<T>(this IReadOnlyList<T> list, RandomSource randomSource)
         {
             return EnumerateAllFromIndex(list, randomSource.Random.Next(list.Count - 1));
+        }
+        
+        public static int BinarySearch<T>(this IReadOnlyList<T> list, T value)
+        {
+            if (list.Count == 0) return ~0;
+            var comp = Comparer<T>.Default;
+            int low = 0;
+            int high = list.Count - 1;
+            while (low < high)
+            {
+                var index = low + (high - low) / 2;
+                var result = comp.Compare(list[index], value);
+                if (result == 0)
+                {
+                    return index;
+                }
+                else if (result < 0)
+                {
+                    low = index + 1;
+                }
+                else
+                {
+                    high = index - 1;
+                }
+            }
+            var c = comp.Compare(list[low], value);
+            if (c < 0)
+            {
+                low++;
+            }
+            else if (c == 0)
+            {
+                return low;
+            }
+            return ~low;
+        }
+
+        // IList does not implement IReadOnlyList
+        public static int BinarySearch<T>(this IList<T> list, T value)
+        {
+            if (list.Count == 0) return ~0;
+            var comp = Comparer<T>.Default;
+            int low = 0;
+            int high = list.Count - 1;
+            while (low < high)
+            {
+                var index = low + (high - low) / 2;
+                var result = comp.Compare(list[index], value);
+                if (result == 0)
+                {
+                    return index;
+                }
+                else if (result < 0)
+                {
+                    low = index + 1;
+                }
+                else
+                {
+                    high = index - 1;
+                }
+            }
+            var c = comp.Compare(list[low], value);
+            if (c < 0)
+            {
+                low++;
+            }
+            else if (c == 0)
+            {
+                return low;
+            }
+            return ~low;
+        }
+
+        // To avoid compiler confusion
+        public static int BinarySearch<T>(this List<T> list, T value)
+        {
+            return BinarySearch<T>((IReadOnlyList<T>)list, value);
         }
     }
     

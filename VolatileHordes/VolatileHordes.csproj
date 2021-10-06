@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -43,8 +43,15 @@
     <Compile Include="AiPackages\FidgetForwardAIPackage.cs" />
     <Compile Include="AiPackages\RunnerAiPackage.cs" />
     <Compile Include="AiPackages\SeekerAiPackage.cs" />
+    <Compile Include="Core\Containers\ISortedList.cs" />
+    <Compile Include="Core\Containers\ISortingListDictionary.cs" />
+    <Compile Include="Core\Containers\SortingList.cs" />
+    <Compile Include="Core\Containers\SortingListDictionary.cs" />
+    <Compile Include="Core\Extensions\PreSortedListExt.cs" />
     <Compile Include="Core\Models\Angle\AngleType.cs" />
     <Compile Include="Core\Models\Angle\Angle.cs" />
+    <Compile Include="Core\Models\RangeInt32.cs" />
+    <Compile Include="Core\Models\UDouble.cs" />
     <Compile Include="Core\ObservableTransforms\IObservableTransformation.cs" />
     <Compile Include="Core\ObservableTransforms\TemporaryAiShutoff.cs" />
     <Compile Include="Core\ObservableTransforms\TimedSignalFlowShutoff.cs" />
@@ -69,6 +76,7 @@
     <Compile Include="Core\Services\Stats.cs" />
     <Compile Include="Core\Services\ZoneProcessing.cs" />
     <Compile Include="Director\BasicSpawnDirector.cs" />
+    <Compile Include="Director\AmbientDirector.cs" />
     <Compile Include="Director\GameStageCalculator.cs" />
     <Compile Include="GameAbstractions\ILogger.cs" />
     <Compile Include="GameAbstractions\Zombie.cs" />
@@ -80,6 +88,7 @@
     <Compile Include="Noise\NoiseEvent.cs" />
     <Compile Include="Noise\NoiseManager.cs" />
     <Compile Include="Players\PlayerGroup.cs" />
+    <Compile Include="Probability\ProbabilityList.cs" />
     <Compile Include="Settings\User\Control\ControlSettings.cs" />
     <Compile Include="Settings\User\Control\LuckyPlayerRetargetSettings.cs" />
     <Compile Include="Settings\User\Control\NoiseResponderSettings.cs" />
@@ -116,8 +125,8 @@
     <Compile Include="Core\Models\TimeRange.cs" />
     <Compile Include="Core\Extensions\TimeSpanExt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Randomization\RandomExt.cs" />
-    <Compile Include="Randomization\RandomSource.cs" />
+    <Compile Include="Probability\RandomExt.cs" />
+    <Compile Include="Probability\RandomSource.cs" />
     <Compile Include="Spawning\SpawningPositions.cs" />
     <Compile Include="Spawning\SpawnRowPerpendicular.cs" />
     <Compile Include="Spawning\SpawnTarget.cs" />

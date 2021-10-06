@@ -5,7 +5,7 @@ using UnityEngine;
 using VolatileHordes.Core.Services;
 using VolatileHordes.GameAbstractions;
 using VolatileHordes.Players;
-using VolatileHordes.Randomization;
+using VolatileHordes.Probability;
 using VolatileHordes.Utility;
 
 namespace VolatileHordes.Spawning

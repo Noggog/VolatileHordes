@@ -6,7 +6,7 @@ using VolatileHordes.Director;
 using VolatileHordes.GameAbstractions;
 using VolatileHordes.Noise;
 using VolatileHordes.Players;
-using VolatileHordes.Randomization;
+using VolatileHordes.Probability;
 using VolatileHordes.Settings.User;
 using VolatileHordes.Spawning;
 using VolatileHordes.Spawning.Seeker;
