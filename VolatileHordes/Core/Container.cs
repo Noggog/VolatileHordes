@@ -63,5 +63,6 @@ namespace VolatileHordes
         public static readonly CrazyAiPackage CrazyAiPackage = new(NoiseResponderControlFactory, CrazyControl);
         public static readonly CrazyDirector CrazyDirector = new(GroupManager, CrazyAiPackage, Spawning, ZombieControl, ZombieCreator);
         public static readonly Stats Stats = new(PlayerZoneManager, GroupManager, Ambient, ZombieCreator);
+        public static readonly BasicSpawnDirector BasicSpawnDirector = new(Time);
     }
 }

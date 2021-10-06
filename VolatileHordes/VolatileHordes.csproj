@@ -68,6 +68,7 @@
     <Compile Include="AiPackages\RoamAiPackage.cs" />
     <Compile Include="Core\Services\Stats.cs" />
     <Compile Include="Core\Services\ZoneProcessing.cs" />
+    <Compile Include="Director\BasicSpawnDirector.cs" />
     <Compile Include="Director\GameStageCalculator.cs" />
     <Compile Include="GameAbstractions\ILogger.cs" />
     <Compile Include="GameAbstractions\Zombie.cs" />
