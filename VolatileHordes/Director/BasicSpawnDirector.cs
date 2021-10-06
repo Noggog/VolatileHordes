@@ -17,13 +17,13 @@ namespace VolatileHordes.Director
         private readonly GameStageCalculator _gameStageCalculator;
 
         public BasicSpawnDirector(
+            DirectorSwitch directorSwitch,
             TimeManager timeManager,
             RandomSource randomSource,
             WanderingHordeSpawner wanderingHordeSpawner,
             FidgetForwardSpawner fidgetForwardSpawner,
             PlayerZoneManager playerZoneManager,
-            GameStageCalculator gameStageCalculator
-        )
+            GameStageCalculator gameStageCalculator)
         {
             _timeManager = timeManager;
             _randomSource = randomSource;
@@ -31,24 +31,17 @@ namespace VolatileHordes.Director
             _fidgetForwardSpawner = fidgetForwardSpawner;
             _playerZoneManager = playerZoneManager;
             _gameStageCalculator = gameStageCalculator;
-        }
-
-        public void Start()
-        {
-            Logger.Temp("BasicSpawnDirector.start`Open");
-            _timeManager.IntervalWithVariance(
-                new TimeRange(TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(2)),
-                onNewInterval: timeSpan => Logger.Temp("Will emit in {0}", timeSpan)
-            )
-                .Subscribe(async x =>
+            
+            _timeManager.IntervalWithVariance(new TimeRange(TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(2)))
+                .FlowSwitch(directorSwitch.Enabled)
+                .SubscribeAsync(async _ =>
                 {
                     var spawnCount =
                         (int)
                         (6
-                        + _gameStageCalculator.GetGamestage(_playerZoneManager.Zones.First().Group).Log("gameStage")
-                        * 0.2);
+                         + _gameStageCalculator.GetGamestage(_playerZoneManager.Zones.First().Group).Log("gameStage")
+                         * 0.2);
 
-                    Logger.Temp("Spawning. spawnCount:{0}", spawnCount);
                     var randomNumber = _randomSource.Get(2);
 
                     switch (randomNumber)

@@ -53,6 +53,12 @@ namespace VolatileHordes
                     Container.RoamControl.Redirect.Fire();
                     break;
                 }
+                case "director":
+                {
+                    Container.DirectorSwitch.Enabled.OnNext(!Container.DirectorSwitch.Enabled.Value);
+                    Logger.Info("Turned directors {0}", Container.DirectorSwitch.Enabled.Value ? "on" : "off");
+                    break;
+                }
                 case "seeker":
                 {
                     Logger.Info("Artificially spawning a seeker squad");

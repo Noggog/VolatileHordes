@@ -77,6 +77,7 @@
     <Compile Include="Core\Services\ZoneProcessing.cs" />
     <Compile Include="Director\BasicSpawnDirector.cs" />
     <Compile Include="Director\AmbientDirector.cs" />
+    <Compile Include="Director\DirectorSwitch.cs" />
     <Compile Include="Director\GameStageCalculator.cs" />
     <Compile Include="GameAbstractions\ILogger.cs" />
     <Compile Include="GameAbstractions\Zombie.cs" />

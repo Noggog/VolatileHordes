@@ -11,6 +11,7 @@ namespace VolatileHordes.Director
         private readonly CrazyAiPackage _crazyAiPackage;
 
         public AmbientDirector(
+            DirectorSwitch directorSwitch,
             RandomSource randomSource,
             CrazyAiPackage crazyAiPackage,
             RunnerAiPackage runnerAiPackage,
@@ -19,6 +20,7 @@ namespace VolatileHordes.Director
             _randomSource = randomSource;
             _crazyAiPackage = crazyAiPackage;
             ambientZombieManager.GroupTracked
+                .FlowSwitch(directorSwitch.Enabled)
                 .Subscribe(AmbientZombieSpawned);
         }
 

@@ -64,6 +64,7 @@ namespace VolatileHordes
         public static readonly CrazyAiPackage CrazyAiPackage = new(NoiseResponderControlFactory, CrazyControl);
         public static readonly CrazySpawner CrazySpawner = new(GroupManager, CrazyAiPackage, Spawning, ZombieControl, ZombieCreator);
         public static readonly Stats Stats = new(PlayerZoneManager, GroupManager, Ambient, ZombieCreator);
-        public static readonly BasicSpawnDirector BasicSpawnDirector = new(Time, Random, WanderingHordeSpawner, FidgetForwardSpawner, PlayerZoneManager, GamestageCalculator);
+        public static readonly DirectorSwitch DirectorSwitch = new(UserSettings.Director);
+        public static readonly BasicSpawnDirector BasicSpawnDirector = new(DirectorSwitch, Time, Random, WanderingHordeSpawner, FidgetForwardSpawner, PlayerZoneManager, GamestageCalculator);
     }
 }
