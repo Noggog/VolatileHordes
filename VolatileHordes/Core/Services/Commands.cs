@@ -38,11 +38,11 @@ namespace VolatileHordes
                     Logger.Info("Artificially spawning a wandering horde");
                     if (paramList.Count > 1 && int.TryParse(paramList[1], out var size))
                     {
-                        await Container.WanderingHordeDirector.Spawn(size);
+                        await Container.WanderingHordeSpawner.Spawn(size);
                     }
                     else
                     {
-                        await Container.WanderingHordeDirector.Spawn();
+                        await Container.WanderingHordeSpawner.Spawn();
                     }
                     
                     break;
@@ -56,19 +56,19 @@ namespace VolatileHordes
                 case "seeker":
                 {
                     Logger.Info("Artificially spawning a seeker squad");
-                    Container.SeekerGroupDirector.Spawn();
+                    Container.SeekerGroupSpawner.Spawn();
                     break;
                 }
                 case "runner":
                 {
                     Logger.Info("Artificially spawning a runner");
-                    Container.SingleRunnerDirector.Spawn(nearPlayer: true);
+                    Container.SingleRunnerSpawner.Spawn(nearPlayer: true);
                     break;
                 }
                 case "crazy":
                 {
                     Logger.Info("Artificially spawning a crazy");
-                    Container.CrazyDirector.Spawn(nearPlayer: true);
+                    Container.CrazySpawner.Spawn(nearPlayer: true);
                     break;
                 }
                 case "wipe":

@@ -10,25 +10,25 @@ namespace VolatileHordes.Director
     public class BasicSpawnDirector
     {
         private readonly TimeManager _timeManager;
-        private readonly WanderingHordeDirector _wanderingHordeDirector;
+        private readonly WanderingHordeSpawner _wanderingHordeSpawner;
         private readonly RandomSource _randomSource;
-        private readonly FidgetForwardDirector _fidgetForwardDirector;
+        private readonly FidgetForwardSpawner _fidgetForwardSpawner;
         private readonly PlayerZoneManager _playerZoneManager;
         private readonly GameStageCalculator _gameStageCalculator;
 
         public BasicSpawnDirector(
             TimeManager timeManager,
             RandomSource randomSource,
-            WanderingHordeDirector wanderingHordeDirector,
-            FidgetForwardDirector fidgetForwardDirector,
+            WanderingHordeSpawner wanderingHordeSpawner,
+            FidgetForwardSpawner fidgetForwardSpawner,
             PlayerZoneManager playerZoneManager,
             GameStageCalculator gameStageCalculator
         )
         {
             _timeManager = timeManager;
             _randomSource = randomSource;
-            _wanderingHordeDirector = wanderingHordeDirector;
-            _fidgetForwardDirector = fidgetForwardDirector;
+            _wanderingHordeSpawner = wanderingHordeSpawner;
+            _fidgetForwardSpawner = fidgetForwardSpawner;
             _playerZoneManager = playerZoneManager;
             _gameStageCalculator = gameStageCalculator;
         }
@@ -54,10 +54,10 @@ namespace VolatileHordes.Director
                     switch (randomNumber)
                     {
                         case 0:
-                            await _wanderingHordeDirector.Spawn(spawnCount);
+                            await _wanderingHordeSpawner.Spawn(spawnCount);
                             break;
                         case 1:
-                            await _fidgetForwardDirector.Spawn(spawnCount);
+                            await _fidgetForwardSpawner.Spawn(spawnCount);
                             break;
                         default:
                             throw new Exception($"Unhandled case:{randomNumber}");

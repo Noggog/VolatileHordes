@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -101,11 +101,11 @@
     <Compile Include="Settings\World\Zombies\ZombieGroupState.cs" />
     <Compile Include="Settings\World\Zombies\ZombieState.cs" />
     <Compile Include="Spawning\AmbientSpawner.cs" />
-    <Compile Include="Spawning\CrazyDirector.cs" />
+    <Compile Include="Spawning\CrazySpawner.cs" />
     <Compile Include="Spawning\Seeker\SeekerGroupCalculator.cs" />
-    <Compile Include="Spawning\Seeker\SeekerGroupDirector.cs" />
-    <Compile Include="Spawning\SingleRunnerDirector.cs" />
-    <Compile Include="Spawning\FidgetForwardDirector.cs" />
+    <Compile Include="Spawning\Seeker\SeekerGroupSpawner.cs" />
+    <Compile Include="Spawning\SingleRunnerSpawner.cs" />
+    <Compile Include="Spawning\FidgetForwardSpawner.cs" />
     <Compile Include="Spawning\ZombieGroupSpawn.cs" />
     <Compile Include="Tracking\AmbientZombieManager.cs" />
     <Compile Include="Tracking\GroupManager.cs" />
@@ -131,8 +131,8 @@
     <Compile Include="Spawning\SpawnRowPerpendicular.cs" />
     <Compile Include="Spawning\SpawnTarget.cs" />
     <Compile Include="Spawning\WanderingHordes\WanderingHordeCalculator.cs" />
-    <Compile Include="Spawning\WanderingHordes\WanderingHordeDirector.cs" />
     <Compile Include="Spawning\WanderingHordes\WanderingHordeSpawner.cs" />
+    <Compile Include="Spawning\WanderingHordes\WanderingHordePlacer.cs" />
     <Compile Include="Spawning\WanderingHordes\WanderingHordeSettings.cs" />
     <Compile Include="Spawning\ZombieCreator.cs" />
     <Compile Include="Core\Services\TimeManager.cs" />

@@ -1,38 +1,56 @@
-﻿using System;
-using System.Drawing;
-using System.Reactive.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using VolatileHordes.AiPackages;
+using VolatileHordes.Control;
+using VolatileHordes.Director;
 using VolatileHordes.Tracking;
 
 namespace VolatileHordes.Spawning.WanderingHordes
 {
     public class WanderingHordeSpawner
     {
-        private const byte NumPerRow = 5;
-        private const double SecondDelay = 2;
-        private const float Spacing = 2;
-        private readonly TimeManager _time;
-        private readonly SpawnRowPerpendicular _spawnRow;
+        private readonly GroupManager _groupManager;
+        private readonly RoamAiPackage _roamAiPackage;
+        private readonly WanderingHordeCalculator _hordeCalculator;
+        private readonly SpawningPositions _spawningPositions;
+        private readonly WanderingHordePlacer _placer;
+        private readonly GameStageCalculator _gameStageCalculator;
+        private readonly ZombieControl _control;
 
         public WanderingHordeSpawner(
-            TimeManager time,
-            SpawnRowPerpendicular spawnRow)
+            GroupManager groupManager,
+            RoamAiPackage roamAiPackage,
+            WanderingHordeCalculator hordeCalculator,
+            SpawningPositions spawningPositions,
+            WanderingHordePlacer placer,
+            GameStageCalculator gameStageCalculator,
+            ZombieControl control)
         {
-            _time = time;
-            _spawnRow = spawnRow;
+            _groupManager = groupManager;
+            _roamAiPackage = roamAiPackage;
+            _hordeCalculator = hordeCalculator;
+            _spawningPositions = spawningPositions;
+            _placer = placer;
+            _gameStageCalculator = gameStageCalculator;
+            _control = control;
         }
-        
-        public async Task SpawnHorde(PointF pos, PointF target, int size, ZombieGroup group)
+
+        public async Task Spawn(int? size = null)
         {
-            var rows = size / NumPerRow;
-            await _time.Interval(TimeSpan.FromSeconds(SecondDelay))
-                .Take(rows)
-                .Do(_ =>
-                {
-                    var numToSpawn = checked((byte)Math.Min(size, NumPerRow));
-                    size -= numToSpawn;
-                    _spawnRow.Spawn(pos, target, numToSpawn, Spacing, group);
-                });
+            var spawnTarget = _spawningPositions.GetRandomTarget();
+            if (spawnTarget == null) return;
+
+            var gameStage = _gameStageCalculator.GetGamestage(spawnTarget.Player.Group);
+
+            int noHorde = 0;
+            size ??= _hordeCalculator.GetHordeSize(gameStage, ref noHorde);
+
+            using var groupSpawn = _groupManager.NewGroup(_roamAiPackage);
+            
+            Logger.Info("Spawning horde {0} of size {1} at {2}", groupSpawn.Group.Id, size, spawnTarget);
+            
+            await _placer.SpawnHorde(spawnTarget.SpawnPoint.ToPoint(), spawnTarget.TriggerOrigin, size.Value, groupSpawn.Group);
+
+            _control.SendGroupTowards(groupSpawn.Group, spawnTarget.TriggerOrigin);
         }
     }
 }

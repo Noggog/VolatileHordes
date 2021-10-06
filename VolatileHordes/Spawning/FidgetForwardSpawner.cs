@@ -6,32 +6,32 @@ using VolatileHordes.Tracking;
 
 namespace VolatileHordes.Spawning.WanderingHordes
 {
-    public class WanderingHordeDirector
+    public class FidgetForwardSpawner
     {
         private readonly GroupManager _groupManager;
-        private readonly RoamAiPackage _roamAiPackage;
         private readonly WanderingHordeCalculator _hordeCalculator;
         private readonly SpawningPositions _spawningPositions;
-        private readonly WanderingHordeSpawner _spawner;
+        private readonly WanderingHordePlacer _placer;
         private readonly GameStageCalculator _gameStageCalculator;
         private readonly ZombieControl _control;
+        private readonly FidgetForwardAIPackage fidgetForwardAIPackage;
 
-        public WanderingHordeDirector(
+        public FidgetForwardSpawner(
             GroupManager groupManager,
-            RoamAiPackage roamAiPackage,
+            FidgetForwardAIPackage fidgetForwardAIPackage,
             WanderingHordeCalculator hordeCalculator,
             SpawningPositions spawningPositions,
-            WanderingHordeSpawner spawner,
+            WanderingHordePlacer placer,
             GameStageCalculator gameStageCalculator,
             ZombieControl control)
         {
             _groupManager = groupManager;
-            _roamAiPackage = roamAiPackage;
             _hordeCalculator = hordeCalculator;
             _spawningPositions = spawningPositions;
-            _spawner = spawner;
+            _placer = placer;
             _gameStageCalculator = gameStageCalculator;
             _control = control;
+            this.fidgetForwardAIPackage = fidgetForwardAIPackage;
         }
 
         public async Task Spawn(int? size = null)
@@ -44,11 +44,11 @@ namespace VolatileHordes.Spawning.WanderingHordes
             int noHorde = 0;
             size ??= _hordeCalculator.GetHordeSize(gameStage, ref noHorde);
 
-            using var groupSpawn = _groupManager.NewGroup(_roamAiPackage);
+            using var groupSpawn = _groupManager.NewGroup(fidgetForwardAIPackage);
             
             Logger.Info("Spawning horde {0} of size {1} at {2}", groupSpawn.Group.Id, size, spawnTarget);
             
-            await _spawner.SpawnHorde(spawnTarget.SpawnPoint.ToPoint(), spawnTarget.TriggerOrigin, size.Value, groupSpawn.Group);
+            await _placer.SpawnHorde(spawnTarget.SpawnPoint.ToPoint(), spawnTarget.TriggerOrigin, size.Value, groupSpawn.Group);
 
             _control.SendGroupTowards(groupSpawn.Group, spawnTarget.TriggerOrigin);
         }
