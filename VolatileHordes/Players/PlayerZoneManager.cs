@@ -23,12 +23,6 @@ namespace VolatileHordes.Players
         private BehaviorSubject<int> _playerCount = new(0);
         public IObservable<int> PlayerCountObservable => _playerCount;
 
-        // TODO: figure out easiest way to merge observables at initialization
-        //private Subject<int> playerAdded = new();
-        //private Subject<int> playerRemoved = new();
-        //private Observable<List<int>> players =
-        //    Observable.Merge(playerAdded, playerRemoved)
-
         public PlayerZoneManager(
             IWorld world,
             GameStageCalculator gameStageCalculator)
