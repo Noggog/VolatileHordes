@@ -57,8 +57,8 @@ namespace VolatileHordes
         public static readonly LuckyPlayerRetarget LuckyPlayerRetarget = new(Time, Random, UserSettings.Control.LuckyPlayerRetarget, Spawning, ZombieControl);
         public static readonly FidgetForwardAIPackage FidgetForwardAIPackage = new(LuckyPlayerRetarget, FidgetForward);
         public static readonly RoamAiPackage RoamAiPackage = new(FidgetRoam, NoiseResponderControlFactory, RoamFarOccasionally, LuckyPlayerRetarget);
-        public static readonly WanderingHordeSpawner WanderingHordeSpawner = new(GroupManager, RoamAiPackage, WanderingHordeCalculator, Spawning, WanderingHordePlacer, GamestageCalculator, ZombieControl);
-        public static readonly FidgetForwardSpawner FidgetForwardSpawner = new(GroupManager, FidgetForwardAIPackage, WanderingHordeCalculator, Spawning, WanderingHordePlacer, GamestageCalculator, ZombieControl);
+        public static readonly WanderingHordeSpawner WanderingHordeSpawner = new(GroupManager, RoamAiPackage, Spawning, WanderingHordePlacer, ZombieControl);
+        public static readonly FidgetForwardSpawner FidgetForwardSpawner = new(GroupManager, FidgetForwardAIPackage, Spawning, WanderingHordePlacer, ZombieControl);
         public static readonly AiPackageMapper AiPackageMapper = new();
         public static readonly CrazyControl CrazyControl = new(ZombieControl, Time, Spawning);
         public static readonly CrazyAiPackage CrazyAiPackage = new(NoiseResponderControlFactory, CrazyControl);

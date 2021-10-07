@@ -35,16 +35,13 @@ namespace VolatileHordes
                 }
                 case "wander":
                 {
-                    Logger.Info("Artificially spawning a wandering horde");
                     if (paramList.Count > 1 && int.TryParse(paramList[1], out var size))
                     {
+                        Logger.Info("Artificially spawning a wandering horde of size {0}", size);
                         await Container.WanderingHordeSpawner.Spawn(size);
                     }
-                    else
-                    {
-                        await Container.WanderingHordeSpawner.Spawn();
-                    }
                     
+                    Logger.Info("Need to supply desired horde size");
                     break;
                 }
                 case "redirect":
