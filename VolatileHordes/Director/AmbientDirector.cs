@@ -1,5 +1,6 @@
 ﻿using System;
 using VolatileHordes.AiPackages;
+using VolatileHordes.Core.Models;
 using VolatileHordes.Probability;
 using VolatileHordes.Tracking;
 
@@ -8,7 +9,7 @@ namespace VolatileHordes.Director
     public class AmbientDirector
     {
         private readonly RandomSource _randomSource;
-        private readonly CrazyAiPackage _crazyAiPackage;
+        private readonly ProbabilityList<IAiPackage?> _packages = new();
 
         public AmbientDirector(
             DirectorSwitch directorSwitch,
@@ -18,7 +19,9 @@ namespace VolatileHordes.Director
             AmbientZombieManager ambientZombieManager)
         {
             _randomSource = randomSource;
-            _crazyAiPackage = crazyAiPackage;
+            _packages.Add(crazyAiPackage, new UDouble(0.25d));
+            _packages.Add(runnerAiPackage, new UDouble(0.25d));
+            _packages.Add(null, new UDouble(1d));
             ambientZombieManager.GroupTracked
                 .FlowSwitch(directorSwitch.Enabled)
                 .Subscribe(AmbientZombieSpawned);
@@ -26,9 +29,17 @@ namespace VolatileHordes.Director
 
         private void AmbientZombieSpawned(ZombieGroup group)
         {
-            if (_randomSource.Chance(0.25f))
+            Logger.Verbose("Analyzing which package to give ambient zombie {0}", group.Id);
+            var package = _packages.Get(_randomSource);
+            if (package == null)
             {
-                group.ApplyPackage(_crazyAiPackage);
+                Logger.Verbose("Applying nothing to ambient zombie {0}", group.Id);
+                group.Dispose();
+            }
+            else
+            {
+                Logger.Debug("Applying {0} to ambient zombie {1}", package.GetType().Name, group.Id);
+                group.ApplyPackage(package);
             }
         }
     }

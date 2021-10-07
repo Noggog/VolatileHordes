@@ -66,5 +66,6 @@ namespace VolatileHordes
         public static readonly Stats Stats = new(PlayerZoneManager, GroupManager, Ambient, ZombieCreator);
         public static readonly DirectorSwitch DirectorSwitch = new(UserSettings.Director);
         public static readonly BasicSpawnDirector BasicSpawnDirector = new(DirectorSwitch, Time, Random, WanderingHordeSpawner, FidgetForwardSpawner, PlayerZoneManager, GamestageCalculator);
+        public static readonly AmbientDirector AmbientDirector = new(DirectorSwitch, Random, CrazyAiPackage, RunnerAiPackage, Ambient);
     }
 }
