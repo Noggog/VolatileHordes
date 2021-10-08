@@ -40,7 +40,7 @@ namespace VolatileHordes.Director
         {
             Logger.Temp("BasicSpawnDirector.start`Open");
             timeManager.IntervalWithVariance(
-                new TimeRange(TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(2)),
+                new TimeRange(TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(10)),
                 onNewInterval: timeSpan => Logger.Temp("Will emit in {0}", timeSpan)
             )
                 .Subscribe(async x =>
