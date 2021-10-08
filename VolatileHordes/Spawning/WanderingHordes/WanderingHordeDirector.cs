@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using VolatileHordes.AiPackages;
 using VolatileHordes.Control;
 using VolatileHordes.Director;
@@ -15,6 +16,7 @@ namespace VolatileHordes.Spawning.WanderingHordes
         private readonly WanderingHordeSpawner _spawner;
         private readonly GameStageCalculator _gameStageCalculator;
         private readonly ZombieControl _control;
+        private readonly TimeManager timeManager;
 
         public WanderingHordeDirector(
             GroupManager groupManager,
@@ -23,7 +25,8 @@ namespace VolatileHordes.Spawning.WanderingHordes
             SpawningPositions spawningPositions,
             WanderingHordeSpawner spawner,
             GameStageCalculator gameStageCalculator,
-            ZombieControl control)
+            ZombieControl control,
+            TimeManager timeManager)
         {
             _groupManager = groupManager;
             _roamAiPackage = roamAiPackage;
@@ -32,6 +35,7 @@ namespace VolatileHordes.Spawning.WanderingHordes
             _spawner = spawner;
             _gameStageCalculator = gameStageCalculator;
             _control = control;
+            this.timeManager = timeManager;
         }
 
         public async Task Spawn(int? size = null)
@@ -51,6 +55,10 @@ namespace VolatileHordes.Spawning.WanderingHordes
             await _spawner.SpawnHorde(spawnTarget.SpawnPoint.ToPoint(), spawnTarget.TriggerOrigin, size.Value, groupSpawn.Group);
 
             _control.SendGroupTowards(groupSpawn.Group, spawnTarget.TriggerOrigin);
+
+            // Duct-tape solution so that zombies don't overpopulate
+            timeManager.Timer(TimeSpan.FromMinutes(10))
+                .Subscribe(x => groupSpawn.Group.Destroy());
         }
     }
 }
