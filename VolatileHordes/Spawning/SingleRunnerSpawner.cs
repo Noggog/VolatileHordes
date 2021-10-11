@@ -1,26 +1,26 @@
-﻿using VolatileHordes.AiPackages;
+using VolatileHordes.AiPackages;
 using VolatileHordes.Control;
 using VolatileHordes.Tracking;
 
 namespace VolatileHordes.Spawning
 {
-    public class CrazyDirector
+    public class SingleRunnerSpawner
     {
         private readonly GroupManager _groupManager;
-        private readonly CrazyAiPackage _crazyAiPackage;
+        private readonly RunnerAiPackage _runnerAiPackage;
         private readonly SpawningPositions _spawningPositions;
         private readonly ZombieControl _control;
         private readonly ZombieCreator _zombieCreator;
 
-        public CrazyDirector(
+        public SingleRunnerSpawner(
             GroupManager groupManager,
-            CrazyAiPackage crazyAiPackage,
+            RunnerAiPackage runnerAiPackage,
             SpawningPositions spawningPositions,
             ZombieControl control,
             ZombieCreator zombieCreator)
         {
             _groupManager = groupManager;
-            _crazyAiPackage = crazyAiPackage;
+            _runnerAiPackage = runnerAiPackage;
             _spawningPositions = spawningPositions;
             _control = control;
             _zombieCreator = zombieCreator;
@@ -42,10 +42,10 @@ namespace VolatileHordes.Spawning
                 return;
             }
             
-            using var groupSpawn = _groupManager.NewGroup(_crazyAiPackage);
+            using var groupSpawn = _groupManager.NewGroup(_runnerAiPackage);
             _zombieCreator.CreateZombie(spawnTarget.SpawnPoint.ToPoint(), groupSpawn.Group);
             
-            _control.SendGroupTowards(groupSpawn.Group, targetPos.Value.ToPoint());
+            _control.SendGroupTowards(groupSpawn.Group, targetPos.Value.ToPoint(), withTargetRandomness: false);
         }
     }
 }

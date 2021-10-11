@@ -1,5 +1,5 @@
 ﻿using VolatileHordes.Players;
-using VolatileHordes.Randomization;
+using VolatileHordes.Probability;
 
 namespace VolatileHordes.Spawning.Seeker
 {

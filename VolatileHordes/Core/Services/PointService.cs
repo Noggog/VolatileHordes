@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using VolatileHordes.Core;
 using VolatileHordes.Core.Models;
-using VolatileHordes.Randomization;
+using VolatileHordes.Probability;
 
 namespace VolatileHordes.Utility
 {

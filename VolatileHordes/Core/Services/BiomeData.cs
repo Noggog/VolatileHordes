@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using VolatileHordes.Randomization;
+using VolatileHordes.Probability;
 
 namespace VolatileHordes
 {

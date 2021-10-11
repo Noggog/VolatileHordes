@@ -1,40 +1,42 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VolatileHordes.Players;
-using VolatileHordes.Randomization;
+using VolatileHordes.Probability;
 using VolatileHordes.Spawning.WanderingHordes;
-using VolatileHordes.Utility;
 
 namespace VolatileHordes.Director
 {
     public class BasicSpawnDirector
     {
-        private readonly TimeManager timeManager;
-        private readonly WanderingHordeDirector wanderingHordeDirector;
-        private readonly RandomSource randomSource;
-        private readonly FidgetForwardDirector fidgetForwardDirector;
-        private readonly PlayerZoneManager playerZoneManager;
-        private readonly GameStageCalculator gameStageCalculator;
+        private readonly TimeManager _timeManager;
+        private readonly WanderingHordeSpawner _wanderingHordeSpawner;
+        private readonly RandomSource _randomSource;
+        private readonly FidgetForwardSpawner _fidgetForwardSpawner;
+        private readonly PlayerZoneManager _playerZoneManager;
+        private readonly GameStageCalculator _gameStageCalculator;
 
         public BasicSpawnDirector(
+            DirectorSwitch directorSwitch,
             TimeManager timeManager,
             RandomSource randomSource,
-            WanderingHordeDirector wanderingHordeDirector,
-            FidgetForwardDirector fidgetForwardDirector,
+            WanderingHordeSpawner wanderingHordeSpawner,
+            FidgetForwardSpawner fidgetForwardSpawner,
             PlayerZoneManager playerZoneManager,
-            GameStageCalculator gameStageCalculator
-        )
+            GameStageCalculator gameStageCalculator)
         {
-            this.timeManager = timeManager;
-            this.randomSource = randomSource;
-            this.wanderingHordeDirector = wanderingHordeDirector;
-            this.fidgetForwardDirector = fidgetForwardDirector;
-            this.playerZoneManager = playerZoneManager;
-            this.gameStageCalculator = gameStageCalculator;
-        }
+            _timeManager = timeManager;
+            _randomSource = randomSource;
+            _wanderingHordeSpawner = wanderingHordeSpawner;
+            _fidgetForwardSpawner = fidgetForwardSpawner;
+            _playerZoneManager = playerZoneManager;
+            _gameStageCalculator = gameStageCalculator;
+            
+            _timeManager.IntervalWithVariance(new TimeRange(TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(2)))
+                .FlowSwitch(directorSwitch.Enabled)
+                .SubscribeAsync(async _ =>
+                    {
+                        var zone = _playerZoneManager.Zones.FirstOrDefault();
+                        if (zone == null) return;
 
         public void start()
         {
@@ -45,27 +47,27 @@ namespace VolatileHordes.Director
             )
                 .Subscribe(async x =>
                 {
-                    var spawnCount =
-                        (int)
-                        (6
-                        + gameStageCalculator.GetGamestage(playerZoneManager.Zones.First().Group).Log("gameStage")
-                        * 0.2);
+                        var spawnCount =
+                            (int)
+                            (6
+                             + _gameStageCalculator.GetGamestage(zone.Group)
+                             * 0.2);
 
-                    Logger.Temp("Spawning. spawnCount:{0}", spawnCount);
-                    var randomNumber = randomSource.Get(2);
+                        var randomNumber = _randomSource.Get(2);
 
-                    switch (randomNumber)
-                    {
-                        case 0:
-                            await wanderingHordeDirector.Spawn(spawnCount);
-                            break;
-                        case 1:
-                            await fidgetForwardDirector.Spawn(spawnCount);
-                            break;
-                        default:
-                            throw new Exception($"Unhandled case:{randomNumber}");
-                    }
-                });
+                        switch (randomNumber)
+                        {
+                            case 0:
+                                await _wanderingHordeSpawner.Spawn(spawnCount);
+                                break;
+                            case 1:
+                                await _fidgetForwardSpawner.Spawn(spawnCount);
+                                break;
+                            default:
+                                throw new Exception($"Unhandled case:{randomNumber}");
+                        }
+                    },
+                    e => Logger.Error("{0} had update error {1}", nameof(BasicSpawnDirector), e));
         }
     }
 }

@@ -1,30 +1,31 @@
 ﻿using System.Threading.Tasks;
 using VolatileHordes.AiPackages;
 using VolatileHordes.Control;
+using VolatileHordes.Director;
 using VolatileHordes.Tracking;
 
 namespace VolatileHordes.Spawning.WanderingHordes
 {
-    public class WanderingHordeSpawner
+    public class FidgetForwardSpawner
     {
         private readonly GroupManager _groupManager;
-        private readonly RoamAiPackage _roamAiPackage;
         private readonly SpawningPositions _spawningPositions;
         private readonly WanderingHordePlacer _placer;
         private readonly ZombieControl _control;
+        private readonly FidgetForwardAIPackage fidgetForwardAIPackage;
 
-        public WanderingHordeSpawner(
+        public FidgetForwardSpawner(
             GroupManager groupManager,
-            RoamAiPackage roamAiPackage,
+            FidgetForwardAIPackage fidgetForwardAIPackage,
             SpawningPositions spawningPositions,
             WanderingHordePlacer placer,
             ZombieControl control)
         {
             _groupManager = groupManager;
-            _roamAiPackage = roamAiPackage;
             _spawningPositions = spawningPositions;
             _placer = placer;
             _control = control;
+            this.fidgetForwardAIPackage = fidgetForwardAIPackage;
         }
 
         public async Task Spawn(int size)
@@ -32,7 +33,7 @@ namespace VolatileHordes.Spawning.WanderingHordes
             var spawnTarget = _spawningPositions.GetRandomTarget();
             if (spawnTarget == null) return;
 
-            using var groupSpawn = _groupManager.NewGroup(_roamAiPackage);
+            using var groupSpawn = _groupManager.NewGroup(fidgetForwardAIPackage);
             
             Logger.Info("Spawning horde {0} of size {1} at {2}", groupSpawn.Group.Id, size, spawnTarget);
             
