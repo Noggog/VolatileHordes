@@ -65,7 +65,7 @@
     <Compile Include="Control\NoiseResponderControl.cs" />
     <Compile Include="Control\PlayerSeekerControl.cs" />
     <Compile Include="Control\RoamControl.cs" />
-    <Compile Include="Control\FidgetForward.cs" />
+    <Compile Include="Control\FidgetForwardControl.cs" />
     <Compile Include="Control\RoamFarOccasionally.cs" />
     <Compile Include="Control\RunnerControl.cs" />
     <Compile Include="Control\ZombieControl.cs" />

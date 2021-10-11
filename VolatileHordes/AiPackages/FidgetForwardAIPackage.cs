@@ -8,14 +8,14 @@ namespace VolatileHordes.AiPackages
     public class FidgetForwardAIPackage : IAiPackage
     {
         private readonly LuckyPlayerRetarget _luckyPlayerRetarget;
-        private readonly FidgetForward _fidgetForward;
+        private readonly FidgetForwardControl _fidgetForwardControl;
 
         public FidgetForwardAIPackage(
             LuckyPlayerRetarget luckyPlayerRetarget,
-            FidgetForward fidgetForward)
+            FidgetForwardControl fidgetForwardControl)
         {
             _luckyPlayerRetarget = luckyPlayerRetarget;
-            _fidgetForward = fidgetForward;
+            _fidgetForwardControl = fidgetForwardControl;
         }
 
         public AiPackageEnum TypeEnum => AiPackageEnum.FidgetForward;
@@ -25,7 +25,7 @@ namespace VolatileHordes.AiPackages
             _luckyPlayerRetarget.ApplyTo(group, out var luckyOccurred)
                 .Subscribe()
                 .DisposeWith(group);
-            _fidgetForward.ApplyTo(group, luckyOccurred)
+            _fidgetForwardControl.ApplyTo(group, luckyOccurred)
                 .DisposeWith(group);
         }
     }

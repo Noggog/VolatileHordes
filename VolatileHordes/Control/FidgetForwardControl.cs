@@ -13,7 +13,7 @@ namespace VolatileHordes.Control
     /**
      * Fidgets in a way where the direction can only change by a certain number of degrees at each fidget.
      */
-    public class FidgetForward
+    public class FidgetForwardControl
     {
         private readonly RoamControlSettings settings;
         private readonly TimeManager timeManager;
@@ -22,7 +22,7 @@ namespace VolatileHordes.Control
         private readonly PointService pointService;
         private readonly RandomSource randomSource;
 
-        public FidgetForward(
+        public FidgetForwardControl(
             RoamControlSettings settings,
             TimeManager timeManager,
             SpawningPositions spawningPositions,
@@ -88,7 +88,7 @@ namespace VolatileHordes.Control
                     Logger.Info("Sending group {0} to roam to {1}.", group, newTarget);
                     await zombieControl.SendGroupTowardsDelayed(group, newTarget);
                 },
-                e => Logger.Error("{0} had update error {1}", nameof(FidgetForward), e));
+                e => Logger.Error("{0} had update error {1}", nameof(FidgetForwardControl), e));
         }
     }
 }

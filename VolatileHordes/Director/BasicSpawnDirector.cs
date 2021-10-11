@@ -31,7 +31,7 @@ namespace VolatileHordes.Director
             _playerZoneManager = playerZoneManager;
             _gameStageCalculator = gameStageCalculator;
             
-            _timeManager.IntervalWithVariance(new TimeRange(TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(2)))
+            _timeManager.IntervalWithVariance(new TimeRange(TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(20)))
                 .FlowSwitch(directorSwitch.Enabled)
                 .SubscribeAsync(async _ =>
                     {
