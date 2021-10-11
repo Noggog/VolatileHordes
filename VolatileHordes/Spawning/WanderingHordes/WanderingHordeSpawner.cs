@@ -7,14 +7,14 @@ namespace VolatileHordes.Spawning.WanderingHordes
 {
     public class WanderingHordeSpawner
     {
-        private readonly GroupManager _groupManager;
+        private readonly ZombieGroupManager _groupManager;
         private readonly RoamAiPackage _roamAiPackage;
         private readonly SpawningPositions _spawningPositions;
         private readonly WanderingHordePlacer _placer;
         private readonly ZombieControl _control;
 
         public WanderingHordeSpawner(
-            GroupManager groupManager,
+            ZombieGroupManager groupManager,
             RoamAiPackage roamAiPackage,
             SpawningPositions spawningPositions,
             WanderingHordePlacer placer,

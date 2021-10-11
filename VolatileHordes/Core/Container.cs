@@ -28,7 +28,7 @@ namespace VolatileHordes
         public static readonly TimeManager Time = new(new NowProvider(), PlayerZoneManager, Random);
         public static readonly PlayerLocationUpdater PlayerLocationUpdater = new(PlayerZoneManager, Time);
         public static readonly SpawningPositions Spawning = new(World, PlayerZoneManager, Random);
-        public static readonly GroupManager GroupManager = new(Time, PlayerZoneManager);
+        public static readonly ZombieGroupManager ZombieGroupManager = new(Time, PlayerZoneManager);
         public static readonly ZombieControl ZombieControl = new(Spawning, Time, Random);
         public static readonly NoiseManager NoiseManager = new(Time, UserSettings.Noise);
         public static readonly ILogger Logger = new LoggerWrapper();
@@ -36,17 +36,17 @@ namespace VolatileHordes
         public static readonly TemporaryAiShutoff TemporaryAiShutoff = new(TimedSignalFlowShutoff);
         public static readonly NoiseResponderControlFactory NoiseResponderControlFactory = new(Random, ZombieControl, NoiseManager, TemporaryAiShutoff, UserSettings.Control.NoiseResponder, Logger);
         public static readonly AmbientAiPackage AmbientAiPackage = new(NoiseResponderControlFactory);
-        public static readonly AmbientZombieManager Ambient = new(World, GroupManager, AmbientAiPackage);
+        public static readonly AmbientZombieManager Ambient = new(World, ZombieGroupManager, AmbientAiPackage);
         public static readonly ZombieCreator ZombieCreator = new(World, Ambient, Biome);
         public static readonly AmbientSpawner AmbientSpawner = new(ZombieCreator, Spawning);
         public static readonly PlayerSeekerControl SeekerControl = new(Time, Spawning, ZombieControl);
         public static readonly SeekerAiPackage SeekerAiPackage = new(SeekerControl);
-        public static readonly GroupReachedTarget GroupReachedTarget = new(Time);
+        public static readonly ZombieGroupReachedTarget GroupReachedTarget = new(Time);
         public static readonly RunnerControl RunnerControl = new(ZombieControl, Time, Spawning, GroupReachedTarget);
         public static readonly RunnerAiPackage RunnerAiPackage = new(RunnerControl);
-        public static readonly SingleRunnerSpawner SingleRunnerSpawner = new(GroupManager, RunnerAiPackage, Spawning, ZombieControl, ZombieCreator);
+        public static readonly SingleRunnerSpawner SingleRunnerSpawner = new(ZombieGroupManager, RunnerAiPackage, Spawning, ZombieControl, ZombieCreator);
         public static readonly SeekerGroupCalculator SeekerCalculator = new(Random);
-        public static readonly SeekerGroupSpawner SeekerGroupSpawner = new(GroupManager, SeekerCalculator, Spawning, SeekerAiPackage, ZombieCreator, ZombieControl);
+        public static readonly SeekerGroupSpawner SeekerGroupSpawner = new(ZombieGroupManager, SeekerCalculator, Spawning, SeekerAiPackage, ZombieCreator, ZombieControl);
         public static readonly SpawnRowPerpendicular SpawnRowPerpendicular = new(ZombieCreator, ZombieControl);
         public static readonly WanderingHordePlacer WanderingHordePlacer = new(Time, SpawnRowPerpendicular);
         public static readonly WanderingHordeCalculator WanderingHordeCalculator = new(UserSettings.WanderingHordeSettings, Random);
@@ -57,15 +57,15 @@ namespace VolatileHordes
         public static readonly LuckyPlayerRetarget LuckyPlayerRetarget = new(Time, Random, UserSettings.Control.LuckyPlayerRetarget, Spawning, ZombieControl);
         public static readonly FidgetForwardAIPackage FidgetForwardAIPackage = new(LuckyPlayerRetarget, FidgetForward);
         public static readonly RoamAiPackage RoamAiPackage = new(FidgetRoam, NoiseResponderControlFactory, RoamFarOccasionally, LuckyPlayerRetarget);
-        public static readonly WanderingHordeSpawner WanderingHordeSpawner = new(GroupManager, RoamAiPackage, Spawning, WanderingHordePlacer, ZombieControl);
-        public static readonly FidgetForwardSpawner FidgetForwardSpawner = new(GroupManager, FidgetForwardAIPackage, Spawning, WanderingHordePlacer, ZombieControl);
+        public static readonly WanderingHordeSpawner WanderingHordeSpawner = new(ZombieGroupManager, RoamAiPackage, Spawning, WanderingHordePlacer, ZombieControl);
+        public static readonly FidgetForwardSpawner FidgetForwardSpawner = new(ZombieGroupManager, FidgetForwardAIPackage, Spawning, WanderingHordePlacer, ZombieControl);
         public static readonly AiPackageMapper AiPackageMapper = new();
         public static readonly CrazyControl CrazyControl = new(ZombieControl, Time, Spawning);
         public static readonly CrazyAiPackage CrazyAiPackage = new(NoiseResponderControlFactory, CrazyControl);
-        public static readonly CrazySpawner CrazySpawner = new(GroupManager, CrazyAiPackage, Spawning, ZombieControl, ZombieCreator);
-        public static readonly Stats Stats = new(PlayerZoneManager, GroupManager, Ambient, ZombieCreator);
+        public static readonly CrazySpawner CrazySpawner = new(ZombieGroupManager, CrazyAiPackage, Spawning, ZombieControl, ZombieCreator);
+        public static readonly Stats Stats = new(PlayerZoneManager, ZombieGroupManager, Ambient, ZombieCreator);
         public static readonly DirectorSwitch DirectorSwitch = new(UserSettings.Director);
         public static readonly BasicSpawnDirector BasicSpawnDirector = new(DirectorSwitch, Time, Random, WanderingHordeSpawner, FidgetForwardSpawner, PlayerZoneManager, GamestageCalculator);
-        public static readonly AmbientDirector AmbientDirector = new(DirectorSwitch, Random, CrazyAiPackage, RunnerAiPackage, Ambient);
+        public static readonly AmbientDirector AmbientDirector = new(DirectorSwitch, Random, CrazyAiPackage, RunnerAiPackage, ZombieGroupManager);
     }
 }

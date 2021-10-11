@@ -8,13 +8,13 @@ namespace VolatileHordes.Core.Services
     public class Stats
     {
         private readonly PlayerZoneManager _playerZoneManager;
-        private readonly GroupManager _groupManager;
+        private readonly ZombieGroupManager _groupManager;
         private readonly AmbientZombieManager _ambientZombieManager;
         private readonly ZombieCreator _creator;
 
         public Stats(
             PlayerZoneManager playerZoneManager,
-            GroupManager groupManager,
+            ZombieGroupManager groupManager,
             AmbientZombieManager ambientZombieManager,
             ZombieCreator creator)
         {
@@ -43,7 +43,7 @@ namespace VolatileHordes.Core.Services
             }
             _creator.PrintZombieStats();
             var playerPt = entity.position.ToPoint();
-            foreach (var group in _groupManager.Groups)
+            foreach (var group in _groupManager.NormalGroups)
             {
                 group.PrintRelativeTo(playerPt);
             }

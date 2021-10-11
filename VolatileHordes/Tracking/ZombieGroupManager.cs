@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reactive.Subjects;
+using UniLinq;
 using VolatileHordes.AiPackages;
 using VolatileHordes.GameAbstractions;
 using VolatileHordes.Players;
@@ -7,29 +9,35 @@ using VolatileHordes.Spawning;
 
 namespace VolatileHordes.Tracking
 {
-    public class GroupManager
+    public class ZombieGroupManager
     {
         private readonly PlayerZoneManager _playerZoneManager;
-        private readonly List<ZombieGroup> _groups = new();
+        private readonly List<ZombieGroup> _normalGroups = new();
         private static readonly TimeSpan StaleGroupTime = TimeSpan.FromMinutes(15);
 
-        public IReadOnlyList<ZombieGroup> Groups => _groups;
+        public IReadOnlyList<ZombieGroup> NormalGroups => _normalGroups;
+        public Dictionary<int, ZombieGroup> AmbientGroups { get; } = new();
+
+        private Subject<ZombieGroup> _ambientGroupTracked = new();
+        public IObservable<ZombieGroup> AmbientGroupTracked => _ambientGroupTracked;
+
+        public IEnumerable<ZombieGroup> AllGroups => NormalGroups.Concat(AmbientGroups.Values);
 
         public bool Paused => !_playerZoneManager.HasPlayers();
 
-        public GroupManager(
+        public ZombieGroupManager(
             TimeManager timeManager,
             PlayerZoneManager playerZoneManager)
         {
             _playerZoneManager = playerZoneManager;
             timeManager.Interval(TimeSpan.FromSeconds(30))
                 .Subscribe(CleanGroups,
-                    onError: e => Logger.Error("{0} had update error {1}", nameof(GroupManager), e));
+                    onError: e => Logger.Error("{0} had update error {1}", nameof(ZombieGroupManager), e));
         }
 
         public bool ContainsZombie(IZombie zombie)
         {
-            foreach (var zombieGroup in _groups)
+            foreach (var zombieGroup in _normalGroups)
             {
                 if (zombieGroup.ContainsZombie(zombie))
                 {
@@ -48,7 +56,7 @@ namespace VolatileHordes.Tracking
             {
                 Logger.Info("Applying AI {0} to group {1}", package.GetType().Name, zombieGroup.Id);
             }
-            _groups.Add(zombieGroup);
+            _normalGroups.Add(zombieGroup);
             return new ZombieGroupSpawn(zombieGroup);
         }
 
@@ -56,16 +64,16 @@ namespace VolatileHordes.Tracking
         {
             if (Paused) return;
             var now = DateTime.Now;
-            for (int i = _groups.Count - 1; i >= 0; i--)
+            for (int i = _normalGroups.Count - 1; i >= 0; i--)
             {
-                var g = _groups[i];
+                var g = _normalGroups[i];
                 if (now - g.SpawnTime < StaleGroupTime) continue;
                 var count = g.NumAlive();
                 if (count == 0)
                 {
                     Logger.Info("Cleaning {0}.", g);
-                    var group = _groups[i];
-                    _groups.RemoveAt(i);
+                    var group = _normalGroups[i];
+                    _normalGroups.RemoveAt(i);
                     group.Dispose();
                 }
             }
@@ -73,12 +81,18 @@ namespace VolatileHordes.Tracking
 
         public void DestroyAll()
         {
-            foreach (var zombieGroup in _groups)
+            foreach (var zombieGroup in _normalGroups)
             {
                 zombieGroup.Destroy();
                 zombieGroup.Dispose();
             }
-            _groups.Clear();
+            _normalGroups.Clear();
+        }
+
+        public void TrackAsAmbient(ZombieGroup group)
+        {
+            AmbientGroups[group.Id] = group;
+            _ambientGroupTracked.OnNext(group);
         }
     }
 }

@@ -6,14 +6,14 @@ namespace VolatileHordes.Spawning
 {
     public class SingleRunnerSpawner
     {
-        private readonly GroupManager _groupManager;
+        private readonly ZombieGroupManager _groupManager;
         private readonly RunnerAiPackage _runnerAiPackage;
         private readonly SpawningPositions _spawningPositions;
         private readonly ZombieControl _control;
         private readonly ZombieCreator _zombieCreator;
 
         public SingleRunnerSpawner(
-            GroupManager groupManager,
+            ZombieGroupManager groupManager,
             RunnerAiPackage runnerAiPackage,
             SpawningPositions spawningPositions,
             ZombieControl control,

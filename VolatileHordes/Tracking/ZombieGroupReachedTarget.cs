@@ -5,11 +5,11 @@ using VolatileHordes.Utility;
 
 namespace VolatileHordes.Tracking
 {
-    public class GroupReachedTarget
+    public class ZombieGroupReachedTarget
     {
         private readonly TimeManager _timeManager;
 
-        public GroupReachedTarget(
+        public ZombieGroupReachedTarget(
             TimeManager timeManager)
         {
             _timeManager = timeManager;

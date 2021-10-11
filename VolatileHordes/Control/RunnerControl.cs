@@ -11,13 +11,13 @@ namespace VolatileHordes.Control
         private readonly ZombieControl _control;
         private readonly TimeManager _timeManager;
         private readonly SpawningPositions _spawningPositions;
-        private readonly GroupReachedTarget _groupReachedTarget;
+        private readonly ZombieGroupReachedTarget _groupReachedTarget;
 
         public RunnerControl(
             ZombieControl control,
             TimeManager timeManager,
             SpawningPositions spawningPositions,
-            GroupReachedTarget groupReachedTarget)
+            ZombieGroupReachedTarget groupReachedTarget)
         {
             _control = control;
             _timeManager = timeManager;

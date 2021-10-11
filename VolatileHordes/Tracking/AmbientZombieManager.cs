@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Reactive.Subjects;
+﻿using System.Drawing;
 using UniLinq;
 using VolatileHordes.AiPackages;
 using VolatileHordes.GameAbstractions;
@@ -11,19 +8,14 @@ namespace VolatileHordes.Tracking
     public class AmbientZombieManager
     {
         private readonly IWorld _world;
-        private readonly GroupManager _groupManager;
+        private readonly ZombieGroupManager _groupManager;
         private readonly AmbientAiPackage _aiPackage;
-
-        public Dictionary<int, ZombieGroup> Groups { get; } = new();
-
-        private Subject<ZombieGroup> _groupTracked = new();
-        public IObservable<ZombieGroup> GroupTracked => _groupTracked;
 
         public bool AllowAmbient { get; set; } = true;
 
         public AmbientZombieManager(
             IWorld world,
-            GroupManager groupManager,
+            ZombieGroupManager groupManager,
             AmbientAiPackage aiPackage)
         {
             _world = world;
@@ -36,7 +28,7 @@ namespace VolatileHordes.Tracking
             var zombie = new Zombie(_world, entityId);
             if (_groupManager.ContainsZombie(zombie)) return;
             Logger.Verbose("Ambiently tracking zombie {0}", entityId);
-            if (Groups.TryGetValue(entityId, out var group))
+            if (_groupManager.AmbientGroups.TryGetValue(entityId, out var group))
             {
                 Logger.Warning("Zombie {0} already ambiently tracked", entityId);
                 return;
@@ -57,16 +49,15 @@ namespace VolatileHordes.Tracking
             group = new ZombieGroup(_aiPackage);
             _aiPackage.ApplyTo(group);
             group.Add(zombie);
-            Groups[entityId] = group;
-            _groupTracked.OnNext(group);
+            _groupManager.TrackAsAmbient(group);
         }
 
         private bool TryRemove(int entityId)
         {
-            if (Groups.TryGetValue(entityId, out var group))
+            if (_groupManager.AmbientGroups.TryGetValue(entityId, out var group))
             {
                 group.Dispose();
-                Groups.Remove(entityId);
+                _groupManager.AmbientGroups.Remove(entityId);
                 return true;
             }
 
@@ -91,7 +82,7 @@ namespace VolatileHordes.Tracking
 
         public void DestroyAll()
         {
-            foreach (var g in Groups.Values.ToArray())
+            foreach (var g in _groupManager.AmbientGroups.Values.ToArray())
             {
                 g.Destroy();
             }
@@ -99,7 +90,7 @@ namespace VolatileHordes.Tracking
 
         public void PrintRelativeTo(PointF pt)
         {
-            foreach (var g in Groups.Values)
+            foreach (var g in _groupManager.AmbientGroups.Values)
             {
                 g.PrintRelativeTo(pt);
             }

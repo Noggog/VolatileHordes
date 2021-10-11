@@ -8,14 +8,14 @@ namespace VolatileHordes.Spawning.WanderingHordes
 {
     public class FidgetForwardSpawner
     {
-        private readonly GroupManager _groupManager;
+        private readonly ZombieGroupManager _groupManager;
         private readonly SpawningPositions _spawningPositions;
         private readonly WanderingHordePlacer _placer;
         private readonly ZombieControl _control;
         private readonly FidgetForwardAIPackage fidgetForwardAIPackage;
 
         public FidgetForwardSpawner(
-            GroupManager groupManager,
+            ZombieGroupManager groupManager,
             FidgetForwardAIPackage fidgetForwardAIPackage,
             SpawningPositions spawningPositions,
             WanderingHordePlacer placer,
