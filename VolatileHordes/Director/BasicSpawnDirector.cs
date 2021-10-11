@@ -38,6 +38,15 @@ namespace VolatileHordes.Director
                         var zone = _playerZoneManager.Zones.FirstOrDefault();
                         if (zone == null) return;
 
+        public void start()
+        {
+            Logger.Temp("BasicSpawnDirector.start`Open");
+            timeManager.IntervalWithVariance(
+                new TimeRange(TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(20)),
+                onNewInterval: timeSpan => Logger.Temp("Will emit in {0}", timeSpan)
+            )
+                .Subscribe(async x =>
+                {
                         var spawnCount =
                             (int)
                             (6

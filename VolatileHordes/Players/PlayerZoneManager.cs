@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using UniLinq;
 using UnityEngine;
 using VolatileHordes.Director;
 using VolatileHordes.GameAbstractions;
@@ -19,15 +20,10 @@ namespace VolatileHordes.Players
         static Vector3 SpawnBlockBox = new(VisibleBox.x - 32, VisibleBox.y - 32, VisibleBox.z - 32);
 
         public List<PlayerZone> Zones { get; } = new();
+        public IEnumerable<IPlayer> Players => Zones.Select(x => x.Player);
 
         private BehaviorSubject<int> _playerCount = new(0);
         public IObservable<int> PlayerCountObservable => _playerCount;
-
-        // TODO: figure out easiest way to merge observables at initialization
-        //private Subject<int> playerAdded = new();
-        //private Subject<int> playerRemoved = new();
-        //private Observable<List<int>> players =
-        //    Observable.Merge(playerAdded, playerRemoved)
 
         public PlayerZoneManager(
             IWorld world,
