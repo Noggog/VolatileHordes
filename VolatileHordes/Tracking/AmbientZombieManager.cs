@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Reactive.Subjects;
@@ -18,6 +18,8 @@ namespace VolatileHordes.Tracking
 
         private Subject<ZombieGroup> _groupTracked = new();
         public IObservable<ZombieGroup> GroupTracked => _groupTracked;
+
+        public bool AllowAmbient { get; set; } = true;
 
         public AmbientZombieManager(
             IWorld world,
@@ -45,6 +47,13 @@ namespace VolatileHordes.Tracking
                 Logger.Debug("Zombie {0} is a sleeper and won't be tracked", entityId);
                 return;
             }
+
+            if (!AllowAmbient)
+            {
+                zombie.Destroy();
+                return;
+            }
+            
             group = new ZombieGroup(_aiPackage);
             _aiPackage.ApplyTo(group);
             group.Add(zombie);
