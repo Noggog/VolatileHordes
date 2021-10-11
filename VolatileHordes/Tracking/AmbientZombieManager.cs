@@ -32,6 +32,13 @@ namespace VolatileHordes.Tracking
             if (Groups.TryGetValue(entityId, out var group))
             {
                 Logger.Warning("Zombie {0} already ambiently tracked", entityId);
+                return;
+            }
+
+            if (zombie.IsSleeper)
+            {
+                Logger.Debug("Zombie {0} is a sleeper and won't be tracked", entityId);
+                return;
             }
             group = new ZombieGroup(_aiPackage);
             _aiPackage.ApplyTo(group);
