@@ -57,14 +57,14 @@ namespace VolatileHordes
         public static readonly LuckyPlayerRetarget LuckyPlayerRetarget = new(Time, Random, UserSettings.Control.LuckyPlayerRetarget, Spawning, ZombieControl);
         public static readonly FidgetForwardAIPackage FidgetForwardAIPackage = new(LuckyPlayerRetarget, FidgetForwardControl);
         public static readonly RoamAiPackage RoamAiPackage = new(FidgetRoam, NoiseResponderControlFactory, RoamFarOccasionally, LuckyPlayerRetarget);
+        public static readonly WanderingHordeSpawner WanderingHordeSpawner = new(ZombieGroupManager, RoamAiPackage, Spawning, WanderingHordePlacer, ZombieControl);
+        public static readonly FidgetForwardSpawner FidgetForwardSpawner = new(ZombieGroupManager, FidgetForwardAIPackage, WanderingHordeCalculator, Spawning, WanderingHordePlacer, GamestageCalculator, ZombieControl, Time);
         public static readonly AiPackageMapper AiPackageMapper = new();
         public static readonly CrazyControl CrazyControl = new(ZombieControl, Time, Spawning);
         public static readonly CrazyAiPackage CrazyAiPackage = new(NoiseResponderControlFactory, CrazyControl);
         public static readonly CrazySpawner CrazySpawner = new(ZombieGroupManager, CrazyAiPackage, Spawning, ZombieControl, ZombieCreator);
         public static readonly Stats Stats = new(PlayerZoneManager, ZombieGroupManager, Ambient, ZombieCreator);
         public static readonly DirectorSwitch DirectorSwitch = new(UserSettings.Director);
-        public static readonly FidgetForwardSpawner FidgetForwardSpawner = new(ZombieGroupManager, FidgetForwardAIPackage, Spawning, WanderingHordePlacer, ZombieControl);
-        public static readonly WanderingHordeSpawner WanderingHordeSpawner = new(ZombieGroupManager, RoamAiPackage, Spawning, WanderingHordePlacer, ZombieControl);
         public static readonly BasicSpawnDirector BasicSpawnDirector = new(DirectorSwitch, Time, Random, WanderingHordeSpawner, FidgetForwardSpawner, PlayerZoneManager, GamestageCalculator);
         public static readonly AmbientDirector AmbientDirector = new(DirectorSwitch, Random, CrazyAiPackage, RunnerAiPackage, ZombieGroupManager);
     }
