@@ -26,9 +26,17 @@ namespace VolatileHordes.Core.Services
 
         public void Print(CommandSenderInfo sender)
         {
-            var playerZone = _playerZoneManager.Zones
-                .FirstOrDefault(x => x.Player.EntityId == sender.RemoteClientInfo.entityId);
-            if (playerZone == null || playerZone.Player.TryGetEntity(out var entity))
+            PlayerZone playerZone;
+            if (sender.RemoteClientInfo == null)
+            {
+                playerZone = _playerZoneManager.Zones.FirstOrDefault();
+            }
+            else
+            {
+                playerZone = _playerZoneManager.Zones
+                    .FirstOrDefault(x => x.Player.EntityId == sender.RemoteClientInfo.entityId);
+            }
+            if (playerZone == null || !playerZone.Player.TryGetEntity(out var entity))
             {
                 Logger.Warning("No player found to print stats relative to.");
                 return;
