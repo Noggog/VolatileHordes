@@ -37,7 +37,7 @@ namespace VolatileHordes
         public static readonly NoiseResponderControlFactory NoiseResponderControlFactory = new(Random, ZombieControl, NoiseManager, TemporaryAiShutoff, UserSettings.Control.NoiseResponder, Logger);
         public static readonly AmbientAiPackage AmbientAiPackage = new(NoiseResponderControlFactory);
         public static readonly AmbientZombieManager Ambient = new(World, GroupManager, AmbientAiPackage);
-        public static readonly ZombieCreator ZombieCreator = new(World, Spawning, Ambient, Biome);
+        public static readonly ZombieCreator ZombieCreator = new(World, Ambient, Biome);
         public static readonly AmbientSpawner AmbientSpawner = new(ZombieCreator, Spawning);
         public static readonly PlayerSeekerControl SeekerControl = new(Time, Spawning, ZombieControl);
         public static readonly SeekerAiPackage SeekerAiPackage = new(SeekerControl);
