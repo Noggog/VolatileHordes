@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using VolatileHordes.AiPackages;
 using VolatileHordes.Control;
 using VolatileHordes.Director;
@@ -28,7 +28,7 @@ namespace VolatileHordes.Spawning.WanderingHordes
             this.fidgetForwardAIPackage = fidgetForwardAIPackage;
         }
 
-        public async Task Spawn(int size)
+        public async Task Spawn(ushort size)
         {
             var spawnTarget = _spawningPositions.GetRandomTarget();
             if (spawnTarget == null) return;
