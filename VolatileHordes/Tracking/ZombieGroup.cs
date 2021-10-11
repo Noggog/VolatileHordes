@@ -25,6 +25,8 @@ namespace VolatileHordes.Tracking
 
         public int Count => _zombies.Count;
 
+        public IEnumerable<IZombie> Zombies => _zombies.Values;
+
         public PointF? Target
         {
             get => _target.Value;

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -65,7 +65,7 @@
     <Compile Include="Control\NoiseResponderControl.cs" />
     <Compile Include="Control\PlayerSeekerControl.cs" />
     <Compile Include="Control\RoamControl.cs" />
-    <Compile Include="Control\FidgetForward.cs" />
+    <Compile Include="Control\FidgetForwardControl.cs" />
     <Compile Include="Control\RoamFarOccasionally.cs" />
     <Compile Include="Control\RunnerControl.cs" />
     <Compile Include="Control\ZombieControl.cs" />
@@ -109,8 +109,8 @@
     <Compile Include="Spawning\FidgetForwardSpawner.cs" />
     <Compile Include="Spawning\ZombieGroupSpawn.cs" />
     <Compile Include="Tracking\AmbientZombieManager.cs" />
-    <Compile Include="Tracking\GroupManager.cs" />
-    <Compile Include="Tracking\GroupReachedTarget.cs" />
+    <Compile Include="Tracking\ZombieGroupManager.cs" />
+    <Compile Include="Tracking\ZombieGroupReachedTarget.cs" />
     <Compile Include="Tracking\ZombieGroup.cs" />
     <Compile Include="Core\Extensions\ObjectExt.cs" />
     <Compile Include="Core\Extensions\DisposableExt.cs" />

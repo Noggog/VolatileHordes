@@ -77,7 +77,7 @@ namespace VolatileHordes
                 case "wipe":
                 {
                     Logger.Info("Wiping all tracked zombies");
-                    Container.GroupManager.DestroyAll();
+                    Container.ZombieGroupManager.DestroyAll();
                     if (paramList.Count > 1 && paramList[1].EqualsCaseInsensitive("all"))
                     {
                         Logger.Info("Wiping all ambient zombies");
@@ -92,6 +92,14 @@ namespace VolatileHordes
                 }
                 case "ambient":
                 {
+                    if (paramList.Count > 1
+                        && paramList[1].EqualsCaseInsensitive("allow"))
+                    {
+                        Container.Ambient.AllowAmbient = !Container.Ambient.AllowAmbient;
+                        Logger.Info("Turning ambient zombies {0}", Container.Ambient.AllowAmbient ? "on" : "off");
+                        return;
+                    }
+                    Logger.Info("Spawning some ambient zombies");
                     Container.AmbientSpawner.Spawn();
                     break;
                 }

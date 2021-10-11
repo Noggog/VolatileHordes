@@ -22,7 +22,7 @@ namespace VolatileHordes.Settings.World
         {
             Logger.Info("Saving state to {0}", StateFilePath);
             var state = new WorldState();
-            state.ZombieGroups = Container.GroupManager.Groups
+            state.ZombieGroups = Container.ZombieGroupManager.NormalGroups
                 .Select(g => ZombieGroupState.GetSettings(g))
                 .NotNull()
                 .ToArray();

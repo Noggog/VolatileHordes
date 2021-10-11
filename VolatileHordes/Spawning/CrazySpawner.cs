@@ -6,14 +6,14 @@ namespace VolatileHordes.Spawning
 {
     public class CrazySpawner
     {
-        private readonly GroupManager _groupManager;
+        private readonly ZombieGroupManager _groupManager;
         private readonly CrazyAiPackage _crazyAiPackage;
         private readonly SpawningPositions _spawningPositions;
         private readonly ZombieControl _control;
         private readonly ZombieCreator _zombieCreator;
 
         public CrazySpawner(
-            GroupManager groupManager,
+            ZombieGroupManager groupManager,
             CrazyAiPackage crazyAiPackage,
             SpawningPositions spawningPositions,
             ZombieControl control,

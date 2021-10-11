@@ -6,7 +6,7 @@ namespace VolatileHordes.Spawning.Seeker
 {
     public class SeekerGroupSpawner
     {
-        private readonly GroupManager _groupManager;
+        private readonly ZombieGroupManager _groupManager;
         private readonly SeekerGroupCalculator _calculator;
         private readonly SpawningPositions _spawningPositions;
         private readonly SeekerAiPackage _seekerAiPackage;
@@ -14,7 +14,7 @@ namespace VolatileHordes.Spawning.Seeker
         private readonly ZombieControl _control;
 
         public SeekerGroupSpawner(
-            GroupManager groupManager,
+            ZombieGroupManager groupManager,
             SeekerGroupCalculator calculator,
             SpawningPositions spawningPositions,
             SeekerAiPackage seekerAiPackage,
