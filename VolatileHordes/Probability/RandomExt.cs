@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace VolatileHordes.Randomization
+namespace VolatileHordes.Probability
 {
     public static class RandomExt
     {

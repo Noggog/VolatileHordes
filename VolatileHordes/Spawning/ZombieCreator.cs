@@ -8,7 +8,6 @@ namespace VolatileHordes.Spawning
     public class ZombieCreator
     {
         private readonly IWorld _world;
-        private readonly SpawningPositions _spawningPositions;
         private readonly AmbientZombieManager _ambientZombieManager;
         private readonly BiomeData _biomeData;
         private static readonly int MaxAliveZombies = GamePrefs.GetInt(EnumGamePrefs.MaxSpawnedZombies);
@@ -18,12 +17,10 @@ namespace VolatileHordes.Spawning
 
         public ZombieCreator(
             IWorld world,
-            SpawningPositions spawningPositions,
             AmbientZombieManager ambientZombieManager,
             BiomeData biomeData)
         {
             _world = world;
-            _spawningPositions = spawningPositions;
             _ambientZombieManager = ambientZombieManager;
             _biomeData = biomeData;
         }

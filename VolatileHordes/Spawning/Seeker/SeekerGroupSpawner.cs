@@ -4,7 +4,7 @@ using VolatileHordes.Tracking;
 
 namespace VolatileHordes.Spawning.Seeker
 {
-    public class SeekerGroupDirector
+    public class SeekerGroupSpawner
     {
         private readonly GroupManager _groupManager;
         private readonly SeekerGroupCalculator _calculator;
@@ -13,7 +13,7 @@ namespace VolatileHordes.Spawning.Seeker
         private readonly ZombieCreator _zombieCreator;
         private readonly ZombieControl _control;
 
-        public SeekerGroupDirector(
+        public SeekerGroupSpawner(
             GroupManager groupManager,
             SeekerGroupCalculator calculator,
             SpawningPositions spawningPositions,

@@ -53,7 +53,7 @@ namespace VolatileHordes
                 .Concat()
                 .Subscribe(
                     onNext: _ => { },
-                    onError: onError);
+                    onError: onError ?? (_ => { }));
         }
 
         public static IDisposable SubscribeAsync<T>(this IObservable<T> source, 
@@ -65,7 +65,7 @@ namespace VolatileHordes
                 .Concat()
                 .Subscribe(
                     onNext: _ => { },
-                    onError: onError);
+                    onError: onError ?? (_ => { }));
         }
 
         public static IObservable<bool> TimedSignalFlowShutoff(this IObservable<Unit> obs, TimeSpan timeToTurnOff, TimeManager timeManager)

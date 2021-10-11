@@ -31,7 +31,7 @@ namespace VolatileHordes.Tracking
             set => _target.OnNext(value);
         }
         
-        public IAiPackage? AiPackage { get; }
+        public IAiPackage? AiPackage { get; private set; }
         
         public ZombieGroup(IAiPackage? package)
         {
@@ -55,6 +55,14 @@ namespace VolatileHordes.Tracking
         public void AddForDisposal(IDisposable disposable)
         {
             _behaviors.Add(disposable);
+        }
+
+        public void ApplyPackage(IAiPackage package)
+        {
+            AiPackage = package;
+            Dispose();
+            _behaviors.Clear();
+            package.ApplyTo(this);
         }
 
         public bool Remove(IZombie zombie)

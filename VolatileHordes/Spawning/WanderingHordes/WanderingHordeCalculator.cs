@@ -1,5 +1,5 @@
 ﻿using System;
-using VolatileHordes.Randomization;
+using VolatileHordes.Probability;
 
 namespace VolatileHordes.Spawning.WanderingHordes
 {

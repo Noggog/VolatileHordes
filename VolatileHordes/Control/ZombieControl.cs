@@ -4,7 +4,7 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using UniLinq;
 using VolatileHordes.GameAbstractions;
-using VolatileHordes.Randomization;
+using VolatileHordes.Probability;
 using VolatileHordes.Spawning;
 using VolatileHordes.Tracking;
 

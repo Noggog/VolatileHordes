@@ -35,16 +35,13 @@ namespace VolatileHordes
                 }
                 case "wander":
                 {
-                    Logger.Info("Artificially spawning a wandering horde");
                     if (paramList.Count > 1 && int.TryParse(paramList[1], out var size))
                     {
-                        await Container.WanderingHordeDirector.Spawn(size);
-                    }
-                    else
-                    {
-                        await Container.WanderingHordeDirector.Spawn();
+                        Logger.Info("Artificially spawning a wandering horde of size {0}", size);
+                        await Container.WanderingHordeSpawner.Spawn(size);
                     }
                     
+                    Logger.Info("Need to supply desired horde size");
                     break;
                 }
                 case "redirect":
@@ -53,22 +50,28 @@ namespace VolatileHordes
                     Container.RoamControl.Redirect.Fire();
                     break;
                 }
+                case "director":
+                {
+                    Container.DirectorSwitch.Enabled.OnNext(!Container.DirectorSwitch.Enabled.Value);
+                    Logger.Info("Turned directors {0}", Container.DirectorSwitch.Enabled.Value ? "on" : "off");
+                    break;
+                }
                 case "seeker":
                 {
                     Logger.Info("Artificially spawning a seeker squad");
-                    Container.SeekerGroupDirector.Spawn();
+                    Container.SeekerGroupSpawner.Spawn();
                     break;
                 }
                 case "runner":
                 {
                     Logger.Info("Artificially spawning a runner");
-                    Container.SingleRunnerDirector.Spawn(nearPlayer: true);
+                    Container.SingleRunnerSpawner.Spawn(nearPlayer: true);
                     break;
                 }
                 case "crazy":
                 {
                     Logger.Info("Artificially spawning a crazy");
-                    Container.CrazyDirector.Spawn(nearPlayer: true);
+                    Container.CrazySpawner.Spawn(nearPlayer: true);
                     break;
                 }
                 case "wipe":

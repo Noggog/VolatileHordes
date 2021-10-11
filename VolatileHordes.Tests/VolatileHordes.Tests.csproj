@@ -108,6 +108,7 @@
         <Compile Include="AiPackages\EnumCompleteness.cs" />
         <Compile Include="Director\GameStageCalculatorTests.cs" />
         <Compile Include="IsExternalInit.cs" />
+        <Compile Include="Probability\ProbabilityList.cs" />
         <Compile Include="RxTests.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
         <Compile Include="Utility\ListExtTests.cs" />

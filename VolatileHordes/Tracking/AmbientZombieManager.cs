@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Reactive.Subjects;
 using UniLinq;
 using VolatileHordes.AiPackages;
 using VolatileHordes.GameAbstractions;
@@ -13,6 +15,9 @@ namespace VolatileHordes.Tracking
         private readonly AmbientAiPackage _aiPackage;
 
         public Dictionary<int, ZombieGroup> Groups { get; } = new();
+
+        private Subject<ZombieGroup> _groupTracked = new();
+        public IObservable<ZombieGroup> GroupTracked => _groupTracked;
 
         public AmbientZombieManager(
             IWorld world,
@@ -37,6 +42,7 @@ namespace VolatileHordes.Tracking
             _aiPackage.ApplyTo(group);
             group.Add(zombie);
             Groups[entityId] = group;
+            _groupTracked.OnNext(group);
         }
 
         private bool TryRemove(int entityId)
