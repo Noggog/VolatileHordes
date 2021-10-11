@@ -3,16 +3,13 @@ using VolatileHordes.GameAbstractions;
 
 namespace VolatileHordes.Hooks
 {
-    [HarmonyPatch(typeof(World))]
-    [HarmonyPatch("SpawnEntityInWorld")]
+    [HarmonyPatch(typeof(AIDirector))]
+    [HarmonyPatch("AddZombie")]
     class AddZombieSpawnTracking
     {
-        static bool Prefix(Entity _entity)
+        static bool Prefix(EntityEnemy _zombie)
         {
-            if (_entity is EntityZombie zombie)
-            {
-                Container.Ambient.ZombieSpawned(zombie.entityId);
-            }
+            Container.Ambient.ZombieSpawned(_zombie.entityId);
             return true;
         }
     }
