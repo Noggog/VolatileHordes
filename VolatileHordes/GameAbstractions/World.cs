@@ -2,6 +2,7 @@
 using System.Drawing;
 using UniLinq;
 using UnityEngine;
+using VolatileHordes.Utility;
 
 namespace VolatileHordes.GameAbstractions
 {
@@ -16,6 +17,7 @@ namespace VolatileHordes.GameAbstractions
         Chunk? GetChunkAt(PointF pt);
         Entity? GetEntity(int id);
         Vector3 GetWorldVector(PointF pt);
+        EntityPlayer? GetClosestPlayer(PointF pt);
     }
 
     public class WorldWrapper : IWorld
@@ -54,6 +56,11 @@ namespace VolatileHordes.GameAbstractions
         {
             int height = GetTerrainHeight(pt);
             return pt.WithHeight(height + 1);
+        }
+
+        public EntityPlayer? GetClosestPlayer(PointF pt)
+        {
+            return World.GetClosestPlayer(GetWorldVector(pt), float.MaxValue, _isDead: false);
         }
     }
 }
