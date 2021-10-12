@@ -35,18 +35,16 @@ namespace VolatileHordes.Spawning
 
             if (number == 1) return;
 
-            var numPerSide = number / 2.0f;
+            var numPerSide = Mathf.Floor(number / 2.0f);
 
             var perpendicular = Perpendicular(spawnLocation, target);
 
-            var numToSpawn = Mathf.Ceil(numPerSide);
-            for (int i = 1; i <= numToSpawn; i++)
+            for (int i = 1; i <= numPerSide; i++)
             {
                 _zombieCreator.CreateZombie((spawnLocation.WithHeight(0) + perpendicular * spacing * i).ToPoint(), group);
             }
             
-            numToSpawn = Mathf.Floor(numPerSide);
-            for (int i = 1; i <= numToSpawn; i++)
+            for (int i = 1; i <= numPerSide; i++)
             {
                 _zombieCreator.CreateZombie((spawnLocation.WithHeight(0) + perpendicular * spacing * i * -1).ToPoint(), group);
             }
