@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
@@ -8,7 +8,7 @@ namespace VolatileHordes.Spawning.WanderingHordes
 {
     public class WanderingHordePlacer
     {
-        private const byte NumPerRow = 5;
+        private const double NumPerRow = 5;
         private const double SecondDelay = 2;
         private const float Spacing = 2;
         private readonly TimeManager _time;
@@ -24,7 +24,7 @@ namespace VolatileHordes.Spawning.WanderingHordes
         
         public async Task SpawnHorde(PointF pos, PointF target, int size, ZombieGroup group)
         {
-            var rows = size / NumPerRow;
+            var rows = (int)Math.Ceiling(size / NumPerRow);
             await _time.Interval(TimeSpan.FromSeconds(SecondDelay))
                 .Take(rows)
                 .Do(_ =>
