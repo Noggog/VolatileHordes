@@ -79,6 +79,7 @@ namespace VolatileHordes.Tracking
                 }
             }
 
+            List<int>? list = null;
             foreach (var group in AmbientGroups.Values)
             {
                 if (now - group.SpawnTime < StaleGroupTime) continue;
@@ -86,8 +87,20 @@ namespace VolatileHordes.Tracking
                 if (count == 0)
                 {
                     Logger.Info("Cleaning {0}.", group);
-                    AmbientGroups.Remove(group.Id);
+                    if (list == null)
+                    {
+                        list = new();
+                    }
+                    list.Add(group.Id);
                     group.Dispose();
+                }
+            }
+
+            if (list != null)
+            {
+                foreach (var id in list)
+                {
+                    AmbientGroups.Remove(id);
                 }
             }
         }
