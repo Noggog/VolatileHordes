@@ -60,7 +60,7 @@ namespace VolatileHordes.Tracking
             return new ZombieGroupSpawn(zombieGroup);
         }
 
-        private void CleanGroups()
+        public void CleanGroups()
         {
             if (Paused) return;
             var now = DateTime.Now;

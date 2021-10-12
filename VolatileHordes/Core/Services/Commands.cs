@@ -83,6 +83,8 @@ namespace VolatileHordes
                         Logger.Info("Wiping all ambient zombies");
                         Container.Ambient.DestroyAll();
                     }
+                    
+                    Container.ZombieGroupManager.CleanGroups();
                     break;
                 }
                 case "players":
