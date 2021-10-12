@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using VolatileHordes.AiPackages;
 using VolatileHordes.Control;
 using VolatileHordes.Director;
@@ -12,6 +12,7 @@ namespace VolatileHordes.Spawning.WanderingHordes
         private readonly SpawningPositions _spawningPositions;
         private readonly WanderingHordePlacer _placer;
         private readonly ZombieControl _control;
+        private readonly LimitManager _limitManager;
         private readonly FidgetForwardAIPackage fidgetForwardAIPackage;
 
         public FidgetForwardSpawner(
@@ -19,12 +20,14 @@ namespace VolatileHordes.Spawning.WanderingHordes
             FidgetForwardAIPackage fidgetForwardAIPackage,
             SpawningPositions spawningPositions,
             WanderingHordePlacer placer,
-            ZombieControl control)
+            ZombieControl control,
+            LimitManager limitManager)
         {
             _groupManager = groupManager;
             _spawningPositions = spawningPositions;
             _placer = placer;
             _control = control;
+            _limitManager = limitManager;
             this.fidgetForwardAIPackage = fidgetForwardAIPackage;
         }
 
@@ -34,6 +37,8 @@ namespace VolatileHordes.Spawning.WanderingHordes
             if (spawnTarget == null) return;
 
             using var groupSpawn = _groupManager.NewGroup(fidgetForwardAIPackage);
+            
+            size = _limitManager.GetAllowedLimit(size);
             
             Logger.Info("Spawning horde {0} of size {1} at {2}", groupSpawn.Group.Id, size, spawnTarget);
             

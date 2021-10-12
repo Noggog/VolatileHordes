@@ -10,17 +10,20 @@ namespace VolatileHordes.Tracking
         private readonly IWorld _world;
         private readonly ZombieGroupManager _groupManager;
         private readonly AmbientAiPackage _aiPackage;
+        private readonly LimitManager _limitManager;
 
         public bool AllowAmbient { get; set; } = true;
 
         public AmbientZombieManager(
             IWorld world,
             ZombieGroupManager groupManager,
-            AmbientAiPackage aiPackage)
+            AmbientAiPackage aiPackage,
+            LimitManager limitManager)
         {
             _world = world;
             _groupManager = groupManager;
             _aiPackage = aiPackage;
+            _limitManager = limitManager;
         }
         
         public void ZombieSpawned(int entityId)
@@ -50,6 +53,8 @@ namespace VolatileHordes.Tracking
             _aiPackage.ApplyTo(group);
             group.Add(zombie);
             _groupManager.TrackAsAmbient(group);
+            
+            _limitManager.CheckLimit().FireAndForget(ex => Log.Error("Exception while checking limit: {0}", ex));
         }
 
         private bool TryRemove(int entityId)

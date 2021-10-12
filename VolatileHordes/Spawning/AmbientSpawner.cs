@@ -1,4 +1,6 @@
-﻿namespace VolatileHordes.Spawning
+﻿using System.Threading.Tasks;
+
+namespace VolatileHordes.Spawning
 {
     public class AmbientSpawner
     {
@@ -13,7 +15,7 @@
             _spawningPositions = spawningPositions;
         }
 
-        public void Spawn()
+        public async Task Spawn()
         {
             var zone = _spawningPositions.GetRandomZone();
             if (zone == null) return;
@@ -21,7 +23,7 @@
             {
                 var pos = _spawningPositions.GetRandomPosition(zone.SpawnRectangle);
                 if (pos == null) continue;
-                _creator.CreateZombie(pos.Value.ToPoint(), null);
+                await _creator.CreateZombie(pos.Value.ToPoint(), null);
             }
         }
     }

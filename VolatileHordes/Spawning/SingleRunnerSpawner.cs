@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using VolatileHordes.AiPackages;
 using VolatileHordes.Control;
 using VolatileHordes.Tracking;
@@ -26,7 +27,7 @@ namespace VolatileHordes.Spawning
             _zombieCreator = zombieCreator;
         }
         
-        public void Spawn(bool nearPlayer = false)
+        public async Task Spawn(bool nearPlayer = false)
         {
             var spawnTarget = _spawningPositions.GetRandomTarget(nearPlayer);
             if (spawnTarget == null)
@@ -43,7 +44,7 @@ namespace VolatileHordes.Spawning
             }
             
             using var groupSpawn = _groupManager.NewGroup(_runnerAiPackage);
-            _zombieCreator.CreateZombie(spawnTarget.SpawnPoint.ToPoint(), groupSpawn.Group);
+            await _zombieCreator.CreateZombie(spawnTarget.SpawnPoint.ToPoint(), groupSpawn.Group);
             
             _control.SendGroupTowards(groupSpawn.Group, targetPos.Value.ToPoint(), withTargetRandomness: false);
         }

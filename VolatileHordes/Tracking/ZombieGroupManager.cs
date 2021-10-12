@@ -105,7 +105,7 @@ namespace VolatileHordes.Tracking
             }
         }
 
-        public void DestroyAll()
+        public void DestroyNormal()
         {
             foreach (var zombieGroup in _normalGroups)
             {
