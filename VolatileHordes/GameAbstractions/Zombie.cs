@@ -6,6 +6,7 @@ namespace VolatileHordes.GameAbstractions
     public interface IZombie
     {
         int Id { get; }
+        bool Destroyed { get; }
         bool SendTowards(PointF pt);
         EntityZombie? GetEntity();
         public void Destroy();
@@ -19,6 +20,7 @@ namespace VolatileHordes.GameAbstractions
     {
         private readonly IWorld _world;
         public int Id { get; }
+        public bool Destroyed { get; private set; }
 
         public Zombie(
             IWorld world,
@@ -37,9 +39,9 @@ namespace VolatileHordes.GameAbstractions
 
         public void Destroy()
         {
-            var entity = GetEntity();
-            if (entity == null) return;
+            if (Destroyed) return;
             _world.DestroyZombie(this);
+            Destroyed = true;
         }
 
         public bool SendTowards(PointF pt)
