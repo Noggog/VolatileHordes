@@ -63,6 +63,7 @@ namespace VolatileHordes.Tracking
         public void CleanGroups()
         {
             if (Paused) return;
+            
             var now = DateTime.Now;
             for (int i = _normalGroups.Count - 1; i >= 0; i--)
             {
@@ -74,6 +75,18 @@ namespace VolatileHordes.Tracking
                     Logger.Info("Cleaning {0}.", g);
                     var group = _normalGroups[i];
                     _normalGroups.RemoveAt(i);
+                    group.Dispose();
+                }
+            }
+
+            foreach (var group in AmbientGroups.Values)
+            {
+                if (now - group.SpawnTime < StaleGroupTime) continue;
+                var count = group.NumAlive();
+                if (count == 0)
+                {
+                    Logger.Info("Cleaning {0}.", group);
+                    AmbientGroups.Remove(group.Id);
                     group.Dispose();
                 }
             }
