@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+using System.Drawing;
 using System.Threading.Tasks;
 using UnityEngine;
 using VolatileHordes.GameAbstractions;
@@ -71,16 +71,16 @@ namespace VolatileHordes.Spawning
                 return null;
             }
     
-            var classId = _biomeData.GetZombieClass(
-                chunk, 
-                (int)spawnLocation.X,
-                (int)spawnLocation.Y);
-            if (classId == -1)
-            {
+            // var classId = _biomeData.GetZombieClass(
+            //     chunk, 
+            //     (int)spawnLocation.X,
+            //     (int)spawnLocation.Y);
+            // if (classId == -1)
+            // {
                 int lastClassId = -1;
-                classId = EntityGroups.GetRandomFromGroup("ZombiesAll", ref lastClassId);
-                Logger.Debug("Used fallback for zombie class!");
-            }
+                var classId = EntityGroups.GetRandomFromGroup("ZombiesAll", ref lastClassId);
+                // Logger.Debug("Used fallback for zombie class!");
+            // }
             
             await _limitManager.CreateRoomFor(1);
             
