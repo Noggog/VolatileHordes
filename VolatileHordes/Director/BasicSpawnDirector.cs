@@ -2,13 +2,14 @@
 using System.Linq;
 using VolatileHordes.Players;
 using VolatileHordes.Probability;
+using VolatileHordes.Spawning;
 using VolatileHordes.Spawning.WanderingHordes;
 
 namespace VolatileHordes.Director
 {
     public class BasicSpawnDirector
     {
-        private readonly TimeManager timeManager;
+        private readonly TimeManager _timeManager;
         private readonly WanderingHordeSpawner _wanderingHordeSpawner;
         private readonly RandomSource _randomSource;
         private readonly FidgetForwardSpawner _fidgetForwardSpawner;
@@ -24,13 +25,19 @@ namespace VolatileHordes.Director
             PlayerZoneManager playerZoneManager,
             GameStageCalculator gameStageCalculator)
         {
-            this.timeManager = timeManager;
+            _timeManager = timeManager;
             _randomSource = randomSource;
             _wanderingHordeSpawner = wanderingHordeSpawner;
             _fidgetForwardSpawner = fidgetForwardSpawner;
             _playerZoneManager = playerZoneManager;
             _gameStageCalculator = gameStageCalculator;
-        }
+            
+            _timeManager.IntervalWithVariance(new TimeRange(TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(20)))
+                .FlowSwitch(directorSwitch.Enabled)
+                .SubscribeAsync(async _ =>
+                    {
+                        var zone = _playerZoneManager.Zones.FirstOrDefault();
+                        if (zone == null) return;
 
                         var spawnCount = checked((ushort)(
                             (6
