@@ -26,6 +26,8 @@ namespace VolatileHordes.Settings.User
 
         public DirectorSettings Director { get; set; } = new();
 
+        public LimitSettings Limits { get; set; } = new();
+
         public LogLevel LogLevel { get; set; } = LogLevel.Information;
 
         public static UserSettings Load()

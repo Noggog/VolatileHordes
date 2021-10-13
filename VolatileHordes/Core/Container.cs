@@ -36,7 +36,7 @@ namespace VolatileHordes
         public static readonly TemporaryAiShutoff TemporaryAiShutoff = new(TimedSignalFlowShutoff);
         public static readonly NoiseResponderControlFactory NoiseResponderControlFactory = new(Random, ZombieControl, NoiseManager, TemporaryAiShutoff, UserSettings.Control.NoiseResponder, Logger);
         public static readonly AmbientAiPackage AmbientAiPackage = new(NoiseResponderControlFactory);
-        public static readonly LimitManager LimitManager = new(World, Time, ZombieGroupManager);
+        public static readonly LimitManager LimitManager = new(World, Time, ZombieGroupManager, UserSettings.Limits);
         public static readonly AmbientZombieManager Ambient = new(World, ZombieGroupManager, AmbientAiPackage, LimitManager);
         public static readonly ZombieCreator ZombieCreator = new(World, Ambient, Biome, LimitManager);
         public static readonly AmbientSpawner AmbientSpawner = new(ZombieCreator, Spawning, LimitManager);

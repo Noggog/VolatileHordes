@@ -95,6 +95,7 @@
     <Compile Include="Settings\User\Control\NoiseResponderSettings.cs" />
     <Compile Include="Settings\User\Control\RoamControlSettings.cs" />
     <Compile Include="Settings\User\Director\DirectorSettings.cs" />
+    <Compile Include="Settings\User\LimitSettings.cs" />
     <Compile Include="Settings\User\Noise\NoiseItem.cs" />
     <Compile Include="Settings\User\Noise\NoiseSettings.cs" />
     <Compile Include="Settings\User\UserSettings.cs" />
