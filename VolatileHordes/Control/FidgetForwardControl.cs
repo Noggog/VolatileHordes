@@ -17,7 +17,6 @@ namespace VolatileHordes.Control
     {
         private readonly RoamControlSettings settings;
         private readonly TimeManager timeManager;
-        private readonly SpawningPositions spawningPositions;
         private readonly ZombieControl zombieControl;
         private readonly PointService pointService;
         private readonly RandomSource randomSource;
@@ -25,14 +24,12 @@ namespace VolatileHordes.Control
         public FidgetForwardControl(
             RoamControlSettings settings,
             TimeManager timeManager,
-            SpawningPositions spawningPositions,
             ZombieControl zombieControl,
             PointService pointService,
             RandomSource randomSource)
         {
             this.settings = settings;
             this.timeManager = timeManager;
-            this.spawningPositions = spawningPositions;
             this.zombieControl = zombieControl;
             this.pointService = pointService;
             this.randomSource = randomSource;
@@ -46,10 +43,10 @@ namespace VolatileHordes.Control
         }
 
         public IDisposable ApplyTo(
-        ZombieGroup group,
-        byte range,
-        TimeRange frequency,
-        IObservable<Unit>? restart = null)
+            ZombieGroup group,
+            byte range,
+            TimeRange frequency,
+            IObservable<Unit>? restart = null)
         {
             PointF? oldTarget = null;
 
