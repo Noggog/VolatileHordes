@@ -10,18 +10,18 @@ namespace VolatileHordes.Core.Services
         private readonly PlayerZoneManager _playerZoneManager;
         private readonly ZombieGroupManager _groupManager;
         private readonly AmbientZombieManager _ambientZombieManager;
-        private readonly ZombieCreator _creator;
+        private readonly LimitManager _limits;
 
         public Stats(
             PlayerZoneManager playerZoneManager,
             ZombieGroupManager groupManager,
             AmbientZombieManager ambientZombieManager,
-            ZombieCreator creator)
+            LimitManager limits)
         {
             _playerZoneManager = playerZoneManager;
             _groupManager = groupManager;
             _ambientZombieManager = ambientZombieManager;
-            _creator = creator;
+            _limits = limits;
         }
 
         public void Print(CommandSenderInfo sender)
@@ -41,7 +41,7 @@ namespace VolatileHordes.Core.Services
                 Logger.Warning("No player found to print stats relative to.");
                 return;
             }
-            _creator.PrintZombieStats();
+            _limits.PrintZombieStats();
             var playerPt = entity.position.ToPoint();
             foreach (var group in _groupManager.NormalGroups)
             {

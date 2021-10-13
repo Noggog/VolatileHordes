@@ -60,15 +60,15 @@ namespace VolatileHordes.Tracking
             return new ZombieGroupSpawn(zombieGroup);
         }
 
-        private void CleanGroups()
+        public void CleanGroups()
         {
             if (Paused) return;
+            
             var now = DateTime.Now;
             for (int i = _normalGroups.Count - 1; i >= 0; i--)
             {
                 var g = _normalGroups[i];
-                if (now - g.SpawnTime < StaleGroupTime) continue;
-                var count = g.NumAlive();
+                var count = g.NumNotDespawned();
                 if (count == 0)
                 {
                     Logger.Info("Cleaning {0}.", g);
@@ -77,9 +77,33 @@ namespace VolatileHordes.Tracking
                     group.Dispose();
                 }
             }
+
+            List<int>? list = null;
+            foreach (var group in AmbientGroups.Values)
+            {
+                var count = group.NumNotDespawned();
+                if (count == 0)
+                {
+                    Logger.Info("Cleaning {0}.", group);
+                    if (list == null)
+                    {
+                        list = new();
+                    }
+                    list.Add(group.Id);
+                    group.Dispose();
+                }
+            }
+
+            if (list != null)
+            {
+                foreach (var id in list)
+                {
+                    AmbientGroups.Remove(id);
+                }
+            }
         }
 
-        public void DestroyAll()
+        public void DestroyNormal()
         {
             foreach (var zombieGroup in _normalGroups)
             {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading.Tasks;
 using UnityEngine;
 using VolatileHordes.Control;
 using VolatileHordes.GameAbstractions;
@@ -27,28 +28,26 @@ namespace VolatileHordes.Spawning
             return Vector3.Cross(lineToTarget, Vector3.up).normalized;
         }
         
-        public void Spawn(PointF spawnLocation, PointF target, byte number, float spacing, ZombieGroup group)
+        public async Task Spawn(PointF spawnLocation, PointF target, byte number, float spacing, ZombieGroup group)
         {
             if (number == 0) return;
 
-            _zombieCreator.CreateZombie(spawnLocation, group);
+            await _zombieCreator.CreateZombie(spawnLocation, group);
 
             if (number == 1) return;
 
-            var numPerSide = number / 2.0f;
+            var numPerSide = Mathf.Floor(number / 2.0f);
 
             var perpendicular = Perpendicular(spawnLocation, target);
 
-            var numToSpawn = Mathf.Ceil(numPerSide);
-            for (int i = 1; i <= numToSpawn; i++)
+            for (int i = 1; i <= numPerSide; i++)
             {
-                _zombieCreator.CreateZombie((spawnLocation.WithHeight(0) + perpendicular * spacing * i).ToPoint(), group);
+                await _zombieCreator.CreateZombie((spawnLocation.WithHeight(0) + perpendicular * spacing * i).ToPoint(), group);
             }
             
-            numToSpawn = Mathf.Floor(numPerSide);
-            for (int i = 1; i <= numToSpawn; i++)
+            for (int i = 1; i <= numPerSide; i++)
             {
-                _zombieCreator.CreateZombie((spawnLocation.WithHeight(0) + perpendicular * spacing * i * -1).ToPoint(), group);
+                await _zombieCreator.CreateZombie((spawnLocation.WithHeight(0) + perpendicular * spacing * i * -1).ToPoint(), group);
             }
             
             _control.SendGroupTowards(group, target);

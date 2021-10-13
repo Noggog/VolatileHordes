@@ -6,11 +6,13 @@ namespace VolatileHordes.GameAbstractions
     public interface IZombie
     {
         int Id { get; }
+        bool Destroyed { get; }
         bool SendTowards(PointF pt);
         EntityZombie? GetEntity();
         public void Destroy();
         PointF? GetPosition();
         bool IsAlive { get; }
+        bool IsDespawned { get; }
         bool IsSleeper { get; }
         void PrintRelativeTo(PointF pt);
     }
@@ -19,6 +21,7 @@ namespace VolatileHordes.GameAbstractions
     {
         private readonly IWorld _world;
         public int Id { get; }
+        public bool Destroyed { get; private set; }
 
         public Zombie(
             IWorld world,
@@ -33,13 +36,14 @@ namespace VolatileHordes.GameAbstractions
         public PointF? GetPosition() => GetEntity()?.GetPosition().ToPoint();
 
         public bool IsAlive => !GetEntity()?.bDead ?? false;
+        public bool IsDespawned => GetEntity()?.IsDespawned ?? true;
         public bool IsSleeper => GetEntity()?.IsSleeper ?? false;
 
         public void Destroy()
         {
-            var entity = GetEntity();
-            if (entity == null) return;
+            if (Destroyed) return;
             _world.DestroyZombie(this);
+            Destroyed = true;
         }
 
         public bool SendTowards(PointF pt)

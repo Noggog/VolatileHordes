@@ -2,6 +2,7 @@ using System;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Threading.Tasks;
 using VolatileHordes.Players;
 using VolatileHordes.Probability;
 using VolatileHordes.Utility;
@@ -97,6 +98,11 @@ namespace VolatileHordes
                 .Concat()
                 .Take(1)
                 .Repeat();
+        }
+
+        public async Task Delay(TimeSpan span, bool pauseIfNoPlayers = true)
+        {
+            await Timer(span, pauseIfNoPlayers);
         }
     }
 }

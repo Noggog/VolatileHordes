@@ -35,13 +35,15 @@ namespace VolatileHordes
                 }
                 case "wander":
                 {
-                    if (paramList.Count > 1 && int.TryParse(paramList[1], out var size))
+                    if (paramList.Count > 1 && ushort.TryParse(paramList[1], out var size))
                     {
                         Logger.Info("Artificially spawning a wandering horde of size {0}", size);
                         await Container.WanderingHordeSpawner.Spawn(size);
                     }
-                    
-                    Logger.Info("Need to supply desired horde size");
+                    else
+                    {
+                        Logger.Info("Need to supply desired horde size");
+                    }
                     break;
                 }
                 case "redirect":
@@ -59,30 +61,32 @@ namespace VolatileHordes
                 case "seeker":
                 {
                     Logger.Info("Artificially spawning a seeker squad");
-                    Container.SeekerGroupSpawner.Spawn();
+                    await Container.SeekerGroupSpawner.Spawn();
                     break;
                 }
                 case "runner":
                 {
                     Logger.Info("Artificially spawning a runner");
-                    Container.SingleRunnerSpawner.Spawn(nearPlayer: true);
+                    await Container.SingleRunnerSpawner.Spawn(nearPlayer: true);
                     break;
                 }
                 case "crazy":
                 {
                     Logger.Info("Artificially spawning a crazy");
-                    Container.CrazySpawner.Spawn(nearPlayer: true);
+                    await Container.CrazySpawner.Spawn(nearPlayer: true);
                     break;
                 }
                 case "wipe":
                 {
                     Logger.Info("Wiping all tracked zombies");
-                    Container.ZombieGroupManager.DestroyAll();
+                    Container.ZombieGroupManager.DestroyNormal();
                     if (paramList.Count > 1 && paramList[1].EqualsCaseInsensitive("all"))
                     {
                         Logger.Info("Wiping all ambient zombies");
                         Container.Ambient.DestroyAll();
                     }
+                    
+                    Container.ZombieGroupManager.CleanGroups();
                     break;
                 }
                 case "players":
@@ -90,17 +94,33 @@ namespace VolatileHordes
                     Container.PlayerZoneManager.Print();
                     break;
                 }
+                case "destroy":
+                {
+                    if (paramList.Count > 1 && ushort.TryParse(paramList[1], out var size))
+                    {
+                        Logger.Info("Artificially destroying size {0}", size);
+                        Container.LimitManager.PrintZombieStats();
+                        await Container.LimitManager.Destroy(size);
+                        Logger.Info("Finished artificially destroying size {0}", size);
+                        Container.LimitManager.PrintZombieStats();
+                    }
+                    else
+                    {
+                        Logger.Info("Need to supply amount to destroy");
+                    }
+                    break;
+                }
                 case "ambient":
                 {
                     if (paramList.Count > 1
-                        && paramList[1].EqualsCaseInsensitive("allow"))
+                        && paramList[1].EqualsCaseInsensitive("enable"))
                     {
                         Container.Ambient.AllowAmbient = !Container.Ambient.AllowAmbient;
                         Logger.Info("Turning ambient zombies {0}", Container.Ambient.AllowAmbient ? "on" : "off");
                         return;
                     }
                     Logger.Info("Spawning some ambient zombies");
-                    Container.AmbientSpawner.Spawn();
+                    await Container.AmbientSpawner.Spawn();
                     break;
                 }
                 default:

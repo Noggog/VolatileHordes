@@ -32,23 +32,10 @@ namespace VolatileHordes.Director
             _gameStageCalculator = gameStageCalculator;
         }
 
-        public void start()
-        {
-            var zone = _playerZoneManager.Zones.FirstOrDefault();
-            if (zone == null) return;
-
-            Logger.Temp("BasicSpawnDirector.start`Open");
-            timeManager.IntervalWithVariance(
-                new TimeRange(TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(20)),
-                onNewInterval: timeSpan => Logger.Temp("Will emit in {0}", timeSpan)
-            )
-                .Subscribe(async x =>
-                {
-                        var spawnCount =
-                            (int)
+                        var spawnCount = checked((ushort)(
                             (6
                              + _gameStageCalculator.GetGamestage(zone.Group)
-                             * 0.2);
+                             * 0.2)));
 
                         var randomNumber = _randomSource.Get(2);
 

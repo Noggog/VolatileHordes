@@ -16,6 +16,7 @@ namespace VolatileHordes.Spawning.WanderingHordes
         private readonly WanderingHordePlacer wanderingHordePlacer;
         private readonly GameStageCalculator _gameStageCalculator;
         private readonly ZombieControl _control;
+        private readonly LimitManager _limitManager;
         private readonly FidgetForwardAIPackage fidgetForwardAIPackage;
         private readonly TimeManager timeManager;
 
@@ -24,10 +25,9 @@ namespace VolatileHordes.Spawning.WanderingHordes
             FidgetForwardAIPackage fidgetForwardAIPackage,
             WanderingHordeCalculator hordeCalculator,
             SpawningPositions spawningPositions,
-            WanderingHordePlacer wanderingHordePlacer,
-            GameStageCalculator gameStageCalculator,
+            WanderingHordePlacer placer,
             ZombieControl control,
-            TimeManager timeManager)
+            LimitManager limitManager)
         {
             _groupManager = groupManager;
             _hordeCalculator = hordeCalculator;
@@ -35,11 +35,12 @@ namespace VolatileHordes.Spawning.WanderingHordes
             this.wanderingHordePlacer = wanderingHordePlacer;
             _gameStageCalculator = gameStageCalculator;
             _control = control;
+            _limitManager = limitManager;
             this.fidgetForwardAIPackage = fidgetForwardAIPackage;
             this.timeManager = timeManager;
         }
 
-        public async Task Spawn(int? size = null)
+        public async Task Spawn(ushort size)
         {
             var spawnTarget = _spawningPositions.GetRandomTarget();
             if (spawnTarget == null) return;
@@ -50,7 +51,9 @@ namespace VolatileHordes.Spawning.WanderingHordes
             size ??= _hordeCalculator.GetHordeSize(gameStage, ref noHorde);
 
             using var groupSpawn = _groupManager.NewGroup(fidgetForwardAIPackage);
-
+            
+            size = _limitManager.GetAllowedLimit(size);
+            
             Logger.Info("Spawning horde {0} of size {1} at {2}", groupSpawn.Group.Id, size, spawnTarget);
 
             await wanderingHordePlacer.SpawnHorde(spawnTarget.SpawnPoint.ToPoint(), spawnTarget.TriggerOrigin, size.Value, groupSpawn.Group);

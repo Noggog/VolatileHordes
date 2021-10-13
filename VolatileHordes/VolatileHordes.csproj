@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -95,6 +95,7 @@
     <Compile Include="Settings\User\Control\NoiseResponderSettings.cs" />
     <Compile Include="Settings\User\Control\RoamControlSettings.cs" />
     <Compile Include="Settings\User\Director\DirectorSettings.cs" />
+    <Compile Include="Settings\User\LimitSettings.cs" />
     <Compile Include="Settings\User\Noise\NoiseItem.cs" />
     <Compile Include="Settings\User\Noise\NoiseSettings.cs" />
     <Compile Include="Settings\User\UserSettings.cs" />
@@ -111,6 +112,7 @@
     <Compile Include="Tracking\AmbientZombieManager.cs" />
     <Compile Include="Tracking\ZombieGroupManager.cs" />
     <Compile Include="Tracking\ZombieGroupReachedTarget.cs" />
+    <Compile Include="Tracking\LimitManager.cs" />
     <Compile Include="Tracking\ZombieGroup.cs" />
     <Compile Include="Core\Extensions\ObjectExt.cs" />
     <Compile Include="Core\Extensions\DisposableExt.cs" />

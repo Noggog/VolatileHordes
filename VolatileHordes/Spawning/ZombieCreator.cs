@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+using System.Drawing;
+using System.Threading.Tasks;
 using UnityEngine;
 using VolatileHordes.GameAbstractions;
 using VolatileHordes.Tracking;
@@ -10,31 +11,18 @@ namespace VolatileHordes.Spawning
         private readonly IWorld _world;
         private readonly AmbientZombieManager _ambientZombieManager;
         private readonly BiomeData _biomeData;
-        private static readonly int MaxAliveZombies = GamePrefs.GetInt(EnumGamePrefs.MaxSpawnedZombies);
-        private static readonly int MaxSpawnedZombies = (int)(MaxAliveZombies * 0.5);
-
-        public int CurrentlyActiveZombies => GameStats.GetInt(EnumGameStats.EnemyCount);
+        private readonly LimitManager _limitManager;
 
         public ZombieCreator(
             IWorld world,
             AmbientZombieManager ambientZombieManager,
-            BiomeData biomeData)
+            BiomeData biomeData,
+            LimitManager limitManager)
         {
             _world = world;
             _ambientZombieManager = ambientZombieManager;
             _biomeData = biomeData;
-        }
-
-        public bool CanSpawnZombie()
-        {
-            if (CurrentlyActiveZombies + 1 >= MaxSpawnedZombies)
-                return false;
-            return true;
-        }
-
-        public void PrintZombieStats()
-        {
-            Logger.Info("Currently {0} zombies. {1}% of total. {2}% of allowed", CurrentlyActiveZombies, (100.0f * CurrentlyActiveZombies / MaxAliveZombies), (100.0f * CurrentlyActiveZombies / MaxSpawnedZombies));
+            _limitManager = limitManager;
         }
         
         public bool IsSpawnProtected(Vector3 pos)
@@ -66,14 +54,8 @@ namespace VolatileHordes.Spawning
             return true;
         }
         
-        public IZombie? CreateZombie(PointF spawnLocation, ZombieGroup? group)
+        public async Task<IZombie?> CreateZombie(PointF spawnLocation, ZombieGroup? group)
         {
-            if (!CanSpawnZombie())
-            {
-                Logger.Warning("Too many zombies already.");
-                return null;
-            }
-
             Chunk? chunk = _world.GetChunkAt(spawnLocation);
             if (chunk == null)
             {
@@ -89,16 +71,18 @@ namespace VolatileHordes.Spawning
                 return null;
             }
     
-            var classId = _biomeData.GetZombieClass(
-                chunk, 
-                (int)spawnLocation.X,
-                (int)spawnLocation.Y);
-            if (classId == -1)
-            {
+            // var classId = _biomeData.GetZombieClass(
+            //     chunk, 
+            //     (int)spawnLocation.X,
+            //     (int)spawnLocation.Y);
+            // if (classId == -1)
+            // {
                 int lastClassId = -1;
-                classId = EntityGroups.GetRandomFromGroup("ZombiesAll", ref lastClassId);
-                Logger.Debug("Used fallback for zombie class!");
-            }
+                var classId = EntityGroups.GetRandomFromGroup("ZombiesAll", ref lastClassId);
+                // Logger.Debug("Used fallback for zombie class!");
+            // }
+            
+            await _limitManager.CreateRoomFor(1);
             
             if (EntityFactory.CreateEntity(classId, worldSpawn) is not EntityZombie zombieEnt)
             {
