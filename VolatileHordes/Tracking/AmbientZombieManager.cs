@@ -45,6 +45,7 @@ namespace VolatileHordes.Tracking
 
             if (!AllowAmbient)
             {
+                Logger.Debug("Blocking ambient zombie {0} from spawning due to ambient not allowed", entityId);
                 zombie.Destroy();
                 return;
             }

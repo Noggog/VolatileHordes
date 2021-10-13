@@ -94,6 +94,22 @@ namespace VolatileHordes
                     Container.PlayerZoneManager.Print();
                     break;
                 }
+                case "destroy":
+                {
+                    if (paramList.Count > 1 && ushort.TryParse(paramList[1], out var size))
+                    {
+                        Logger.Info("Artificially destroying size {0}", size);
+                        Container.LimitManager.PrintZombieStats();
+                        await Container.LimitManager.Destroy(size);
+                        Logger.Info("Finished artificially destroying size {0}", size);
+                        Container.LimitManager.PrintZombieStats();
+                    }
+                    else
+                    {
+                        Logger.Info("Need to supply amount to destroy");
+                    }
+                    break;
+                }
                 case "ambient":
                 {
                     if (paramList.Count > 1

@@ -17,8 +17,6 @@ namespace VolatileHordes.Tracking
 
         private readonly List<IDisposable> _behaviors = new();
         
-        public DateTime SpawnTime { get; } = DateTime.Now;
-
         private readonly Dictionary<int, IZombie> _zombies = new();
 
         private readonly BehaviorSubject<PointF?> _target = new(null);
@@ -80,12 +78,17 @@ namespace VolatileHordes.Tracking
             }
         }
 
+        public int NumNotDespawned() => _zombies.Values
+            .Select(z => z.GetEntity())
+            .NotNull()
+            .Count(e => !e.IsDespawned);
+
         public int NumAlive() => _zombies.Values
             .Select(z => z.GetEntity())
             .NotNull()
             .Count(e => !e.IsDead());
 
-        public bool Empty => NumAlive() == 0;
+        public bool Empty => NumNotDespawned() == 0;
 
         public override string ToString()
         {

@@ -68,8 +68,7 @@ namespace VolatileHordes.Tracking
             for (int i = _normalGroups.Count - 1; i >= 0; i--)
             {
                 var g = _normalGroups[i];
-                if (now - g.SpawnTime < StaleGroupTime) continue;
-                var count = g.NumAlive();
+                var count = g.NumNotDespawned();
                 if (count == 0)
                 {
                     Logger.Info("Cleaning {0}.", g);
@@ -82,8 +81,7 @@ namespace VolatileHordes.Tracking
             List<int>? list = null;
             foreach (var group in AmbientGroups.Values)
             {
-                if (now - group.SpawnTime < StaleGroupTime) continue;
-                var count = group.NumAlive();
+                var count = group.NumNotDespawned();
                 if (count == 0)
                 {
                     Logger.Info("Cleaning {0}.", group);

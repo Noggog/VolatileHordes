@@ -1,15 +1,14 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using UniLinq;
 using VolatileHordes.GameAbstractions;
-using VolatileHordes.Spawning;
-using VolatileHordes.Utility;
 
 namespace VolatileHordes.Tracking
 {
     public class LimitManager
     {
         private readonly IWorld _world;
+        private readonly TimeManager _timeManager;
         private readonly ZombieGroupManager _groupManager;
         private static readonly int GameMaximumZombies = GamePrefs.GetInt(EnumGamePrefs.MaxSpawnedZombies);
         private static readonly int DesiredMaximumZombies = (int)(GameMaximumZombies * 0.5);
@@ -18,9 +17,11 @@ namespace VolatileHordes.Tracking
 
         public LimitManager(
             IWorld world,
+            TimeManager timeManager,
             ZombieGroupManager groupManager)
         {
             _world = world;
+            _timeManager = timeManager;
             _groupManager = groupManager;
         }
 
@@ -34,7 +35,8 @@ namespace VolatileHordes.Tracking
             var above = CurrentlyActiveZombies - DesiredMaximumZombies;
             if (above > 0)
             {
-                await CreateRoomFor(checked((ushort)above));
+                Logger.Debug("Was {0} active zombies with a desired max of {1}.  Deleting {2} to get below limit", CurrentlyActiveZombies, DesiredMaximumZombies, above);
+                await Destroy(checked((ushort)above));
             }
         }
 
@@ -62,9 +64,14 @@ namespace VolatileHordes.Tracking
 
         public async Task Destroy(ushort count)
         {
-            Logger.Debug("Destroying farthest {0} zombies", count);
-            foreach (var zombie in _groupManager.AllGroups
+            var allZombies = _groupManager.AllGroups
                 .SelectMany(group => group.Zombies)
+                .ToArray();
+            var aliveZombies = allZombies
+                .Where(zombie => !zombie.IsDespawned && zombie.IsAlive)
+                .ToArray();
+            Logger.Debug("Destroying farthest {0} zombies of {1}/{2}", count, aliveZombies.Length, allZombies.Length);
+            foreach (var zombie in allZombies
                 .OrderByDescending(zombie =>
                 {
                     if (zombie.Destroyed) return default(float?);
@@ -82,7 +89,7 @@ namespace VolatileHordes.Tracking
                 zombie.Destroy();
             }
 
-            await Task.Delay(100);
+            await _timeManager.Delay(TimeSpan.FromMilliseconds(3000), pauseIfNoPlayers: false);
         }
     }
 }

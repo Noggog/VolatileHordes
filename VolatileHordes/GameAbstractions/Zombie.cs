@@ -12,6 +12,7 @@ namespace VolatileHordes.GameAbstractions
         public void Destroy();
         PointF? GetPosition();
         bool IsAlive { get; }
+        bool IsDespawned { get; }
         bool IsSleeper { get; }
         void PrintRelativeTo(PointF pt);
     }
@@ -35,6 +36,7 @@ namespace VolatileHordes.GameAbstractions
         public PointF? GetPosition() => GetEntity()?.GetPosition().ToPoint();
 
         public bool IsAlive => !GetEntity()?.bDead ?? false;
+        public bool IsDespawned => GetEntity()?.IsDespawned ?? true;
         public bool IsSleeper => GetEntity()?.IsSleeper ?? false;
 
         public void Destroy()
