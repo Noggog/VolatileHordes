@@ -97,9 +97,8 @@ namespace VolatileHordes.Players
                     return;
             }
 
-            var area = new PlayerZone(
-                new PlayerGroup(_gameStageCalculator),
-                new Player(_world, entityId));
+            var player = new Player(_world, entityId);
+            var area = player.PlayerZone;
             
             Zones.Add(UpdatePlayer(area));
 

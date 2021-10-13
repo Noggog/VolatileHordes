@@ -39,10 +39,7 @@ namespace VolatileHordes.Director
                         var zone = _playerZoneManager.Zones.FirstOrDefault();
                         if (zone == null) return;
 
-                        var spawnCount = checked((ushort)(
-                            (6
-                             + _gameStageCalculator.GetGamestage(zone.Group)
-                             * 0.2)));
+                        var spawnCount = (ushort)6; // TODO: Calculate based on GameStage
 
                         var randomNumber = _randomSource.Get(2);
 

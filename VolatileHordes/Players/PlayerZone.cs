@@ -23,8 +23,6 @@ namespace VolatileHordes.Players
         public PointF PlayerLocation => Center;
         
         public IPlayer Player { get; }
-        
-        public PlayerGroup Group { get; }
 
         public RectangleF SpawnRectangle => new(
             x: MinsSpawnBlock.X,
@@ -32,11 +30,8 @@ namespace VolatileHordes.Players
             width: MaxsSpawnBlock.X - MinsSpawnBlock.X,
             height: MaxsSpawnBlock.Y - MinsSpawnBlock.Y);
 
-        public PlayerZone(
-            PlayerGroup group,
-            IPlayer player)
+        public PlayerZone(IPlayer player)
         {
-            Group = group;
             Player = player;
         }
     }

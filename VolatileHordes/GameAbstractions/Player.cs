@@ -1,12 +1,14 @@
 ﻿using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
+using VolatileHordes.Players;
 
 namespace VolatileHordes.GameAbstractions
 {
     public interface IPlayer
     {
         int EntityId { get; }
+        public PlayerZone PlayerZone { get; }
         EntityPlayer? TryGetEntity();
         bool TryGetEntity(out EntityPlayer player);
         IEnumerable<Vector3> Bedrolls { get; }
@@ -17,6 +19,7 @@ namespace VolatileHordes.GameAbstractions
     {
         private readonly IWorld _world;
         public int EntityId { get; }
+        public PlayerZone PlayerZone { get; }
 
         public IEnumerable<Vector3> Bedrolls => GetBedrolls();
 
@@ -26,6 +29,8 @@ namespace VolatileHordes.GameAbstractions
         {
             _world = world;
             EntityId = id;
+
+            this.PlayerZone = new PlayerZone(this);
         }
 
         private IEnumerable<Vector3> GetBedrolls()
