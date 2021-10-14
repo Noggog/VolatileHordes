@@ -16,5 +16,10 @@ namespace VolatileHordes
         {
             return new Vector3(pt.X, height, pt.Y);
         }
+        
+        // public static Rectangle ToRectangle(this Vector2i vec)
+        // {
+        //     return new Rectangle(vec.x, vec.y);
+        // }
     }
 }

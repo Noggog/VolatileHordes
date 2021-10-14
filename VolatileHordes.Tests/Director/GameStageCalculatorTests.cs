@@ -1,9 +1,9 @@
 ﻿using NSubstitute;
 using NUnit.Framework;
-using VolatileHordes.Director;
+using VolatileHordes.Allocation;
 using VolatileHordes.GameAbstractions;
 using VolatileHordes.Players;
-using VolatileHordes.Settings.User.Director;
+using VolatileHordes.Settings.User.Allocation;
 
 namespace VolatileHordes.Tests.Director
 {
@@ -19,7 +19,7 @@ namespace VolatileHordes.Tests.Director
         [Test]
         public void Empty()
         {
-            var calc = new GameStageCalculator(new DirectorSettings());
+            var calc = new GameStageCalculator(new AllocationSettings());
             var group = new PlayerGroup(calc);
             Assert.True(calc.GetGamestage(group).EqualsWithin(0));
         }
@@ -27,7 +27,7 @@ namespace VolatileHordes.Tests.Director
         [Test]
         public void Single()
         {
-            var calc = new GameStageCalculator(new DirectorSettings());
+            var calc = new GameStageCalculator(new AllocationSettings());
             var group = new PlayerGroup(calc);
             group.Players.Add(new PlayerZone(group, GetPlayer(3)));
             Assert.True(calc.GetGamestage(group).EqualsWithin(3));
@@ -36,7 +36,7 @@ namespace VolatileHordes.Tests.Director
         [Test]
         public void Multiple()
         {
-            var calc = new GameStageCalculator(new DirectorSettings());
+            var calc = new GameStageCalculator(new AllocationSettings());
             var group = new PlayerGroup(calc);
             group.Players.Add(new PlayerZone(group, GetPlayer(5)));
             group.Players.Add(new PlayerZone(group, GetPlayer(1)));

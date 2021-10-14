@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using VolatileHordes.Director;
+using VolatileHordes.Allocation;
 
 namespace VolatileHordes.Players
 {

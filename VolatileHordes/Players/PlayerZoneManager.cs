@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using UniLinq;
 using UnityEngine;
-using VolatileHordes.Director;
+using VolatileHordes.Allocation;
 using VolatileHordes.GameAbstractions;
 
 namespace VolatileHordes.Players

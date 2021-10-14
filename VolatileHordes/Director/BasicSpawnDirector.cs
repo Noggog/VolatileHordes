@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using VolatileHordes.Allocation;
 using VolatileHordes.Players;
 using VolatileHordes.Probability;
 using VolatileHordes.Spawning;
