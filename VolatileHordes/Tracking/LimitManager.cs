@@ -45,7 +45,7 @@ namespace VolatileHordes.Tracking
 
         public ushort GetAllowedLimit(ushort desired)
         {
-            var amount = Math.Min(desired, _desiredMaximumZombies - CurrentlyActiveZombies);
+            var amount = Math.Max(0, Math.Min(desired, _desiredMaximumZombies - CurrentlyActiveZombies));
             var ret = checked((ushort)amount);
             if (ret != desired)
             {
