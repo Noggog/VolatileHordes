@@ -89,6 +89,7 @@
     <Compile Include="Noise\NoiseEvent.cs" />
     <Compile Include="Noise\NoiseManager.cs" />
     <Compile Include="Players\PlayerGroup.cs" />
+    <Compile Include="Players\PlayerGroupProvider.cs" />
     <Compile Include="Probability\ProbabilityList.cs" />
     <Compile Include="Settings\User\Control\ControlSettings.cs" />
     <Compile Include="Settings\User\Control\LuckyPlayerRetargetSettings.cs" />
