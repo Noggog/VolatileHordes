@@ -12,7 +12,6 @@ namespace VolatileHordes.Players
     public class PlayerZoneManager
     {
         private readonly IWorld _world;
-        private readonly GameStageCalculator _gameStageCalculator;
         static int ChunkViewDim = GamePrefs.GetInt(EnumGamePrefs.ServerMaxAllowedViewDistance);
 
         static Vector3 ChunkSize = new(16, 256, 16);
@@ -26,11 +25,9 @@ namespace VolatileHordes.Players
         public IObservable<int> PlayerCountObservable => _playerCount;
 
         public PlayerZoneManager(
-            IWorld world,
-            GameStageCalculator gameStageCalculator)
+            IWorld world)
         {
             _world = world;
-            _gameStageCalculator = gameStageCalculator;
             Bootstrapper.GameStarted.Subscribe(_ =>
             {
                 Logger.Info("Player Chunk View Dim: {0} - {1} - {2}", ChunkViewDim,
@@ -96,12 +93,8 @@ namespace VolatileHordes.Players
                 if (zone.Player.EntityId == entityId)
                     return;
             }
-
-            var area = new PlayerZone(
-                new PlayerGroup(_gameStageCalculator),
-                new Player(_world, entityId));
             
-            Zones.Add(UpdatePlayer(area));
+            Zones.Add(UpdatePlayer(new PlayerZone(new Player(_world, entityId))));
 
             Logger.Info("Added player {0}", entityId);
             _playerCount.OnNext(_playerCount.Value + 1);
