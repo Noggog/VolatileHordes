@@ -71,7 +71,7 @@ namespace VolatileHordes.Tracking
                 var count = g.NumNotDespawned();
                 if (count == 0)
                 {
-                    Logger.Info("Cleaning {0}.", g);
+                    Logger.Debug("Cleaning {0}.", g);
                     var group = _normalGroups[i];
                     _normalGroups.RemoveAt(i);
                     group.Dispose();
@@ -84,7 +84,7 @@ namespace VolatileHordes.Tracking
                 var count = group.NumNotDespawned();
                 if (count == 0)
                 {
-                    Logger.Info("Cleaning {0}.", group);
+                    Logger.Debug("Cleaning {0}.", group);
                     if (list == null)
                     {
                         list = new();
