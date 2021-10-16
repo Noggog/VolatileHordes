@@ -44,6 +44,7 @@
     <Compile Include="AiPackages\RunnerAiPackage.cs" />
     <Compile Include="AiPackages\SeekerAiPackage.cs" />
     <Compile Include="Allocation\AllocationBuckets.cs" />
+    <Compile Include="Allocation\AllocationManager.cs" />
     <Compile Include="Allocation\GameStageCalculator.cs" />
     <Compile Include="Core\Containers\ISortedList.cs" />
     <Compile Include="Core\Containers\ISortingListDictionary.cs" />
