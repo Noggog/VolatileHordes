@@ -41,7 +41,7 @@ namespace VolatileHordes.Players
             List<PlayerGroup> GroupPlayersTogether(IEnumerable<PlayerZone> playerZones)
             {
                 var playerZoneGroups = new List<List<PlayerZone>>();
-                void extractMatches(PlayerZone playerZoneI)
+                void ExtractMatches(PlayerZone playerZoneI)
                 {
                     playerZoneGroups.Last().Add(playerZoneI);
                     foreach (var playerZoneJ in playerZones)
@@ -49,7 +49,7 @@ namespace VolatileHordes.Players
                         if (playerZoneGroups.SelectMany(x => x).Contains(playerZoneJ))
                             continue;
                         if (playerZoneI.SpawnRectangle.IntersectsWith(playerZoneJ.SpawnRectangle))
-                            extractMatches(playerZoneJ);
+                            ExtractMatches(playerZoneJ);
                     }
                 }
                 foreach (var playerZoneI in playerZones)
@@ -57,7 +57,7 @@ namespace VolatileHordes.Players
                     if (playerZoneGroups.SelectMany(x => x).Contains(playerZoneI))
                         continue;
                     playerZoneGroups.Add(new List<PlayerZone>());
-                    extractMatches(playerZoneI);
+                    ExtractMatches(playerZoneI);
                 }
                 return playerZoneGroups.Select(x => new PlayerGroup(gameStageCalculator, x.Select(y => y.Player).ToList())).ToList();
             }
