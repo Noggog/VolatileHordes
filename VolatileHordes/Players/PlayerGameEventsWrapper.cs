@@ -36,7 +36,7 @@ namespace VolatileHordes.Players
         }
 
         // # Internal
-        static int GetPlayerEntityId(ClientInfo? _cInfo)
+        private static int GetPlayerEntityId(ClientInfo? _cInfo)
         {
             if (_cInfo != null)
                 return _cInfo.entityId;
