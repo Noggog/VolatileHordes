@@ -11,7 +11,7 @@ namespace VolatileHordes.Players
     {
         public IObservable<IEnumerable<Player>> players;
         public IObservable<IEnumerable<PlayerZone>> playerZones;
-        public IObservable<IEnumerable<PlayerGroup>> playerGroups;
+        public IObservable<IEnumerable<PlayerParty>> playerGroups;
         public PlayerGroupProvider(
             PlayerGameEventsWrapper playerGameEventsWrapper,
             IWorld world,
@@ -35,39 +35,10 @@ namespace VolatileHordes.Players
             players = playerIDs.Select(x => x.Select(x => new Player(world, x)));
             playerZones = players.Select(x => x.Select(x => new PlayerZone(x)));
 
-            /**
-             * Recursively collects groups of players that are close together.
-             */
-            List<PlayerGroup> GroupPlayersTogether(IEnumerable<PlayerZone> playerZones)
-            {
-                var playerZoneGroups = new List<List<PlayerZone>>();
-                void ExtractMatches(PlayerZone playerZoneI)
-                {
-                    playerZoneGroups.Last().Add(playerZoneI);
-                    foreach (var playerZoneJ in playerZones)
-                    {
-                        if (playerZoneGroups.SelectMany(x => x).Contains(playerZoneJ))
-                            continue;
-                        if (playerZoneI.SpawnRectangle.IntersectsWith(playerZoneJ.SpawnRectangle))
-                            ExtractMatches(playerZoneJ);
-                    }
-                }
-                foreach (var playerZoneI in playerZones)
-                {
-                    if (playerZoneGroups.SelectMany(x => x).Contains(playerZoneI))
-                        continue;
-                    playerZoneGroups.Add(new List<PlayerZone>());
-                    ExtractMatches(playerZoneI);
-                }
-                return playerZoneGroups.Select(x => new PlayerGroup(gameStageCalculator, x.Select(y => y.Player).ToList())).ToList();
-            }
+
 
             playerGroups =
-                Observable.CombineLatest(
-                    playerZones,
-                    timeManager.Interval(TimeSpan.FromSeconds(30)),
-                    (playerZones, _) => GroupPlayersTogether(playerZones)
-                );
+                playerZones.Select();
         }
     }
 }
