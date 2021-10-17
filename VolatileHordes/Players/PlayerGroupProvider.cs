@@ -34,18 +34,18 @@ namespace VolatileHordes.Players
             players = playerIDs.Select(x => x.Select(x => new Player(world, x)));
             playerZones = players.Select(x => x.Select(x => new PlayerZone(x)));
 
+            /**
+             * Recursively collects groups of players that are close together.
+             */
             List<PlayerGroup> GroupPlayersTogether(IEnumerable<PlayerZone> playerZones)
             {
                 var playerZoneGroups = new List<List<PlayerZone>>();
-                List<PlayerZone> currentPlayerZoneGroup;
-                var foundPlayers = new List<PlayerZone>();
                 void extractMatches(PlayerZone playerZoneI)
                 {
-                    foundPlayers.Add(playerZoneI);
-                    currentPlayerZoneGroup.Add(playerZoneI);
+                    playerZoneGroups.Last().Add(playerZoneI);
                     foreach (var playerZoneJ in playerZones)
                     {
-                        if (foundPlayers.Contains(playerZoneJ))
+                        if (playerZoneGroups.SelectMany(x => x).Contains(playerZoneJ))
                             continue;
                         if (playerZoneI.SpawnRectangle.IntersectsWith(playerZoneJ.SpawnRectangle))
                             extractMatches(playerZoneJ);
@@ -53,10 +53,9 @@ namespace VolatileHordes.Players
                 }
                 foreach (var playerZoneI in playerZones)
                 {
-                    if (foundPlayers.Contains(playerZoneI))
+                    if (playerZoneGroups.SelectMany(x => x).Contains(playerZoneI))
                         continue;
-                    currentPlayerZoneGroup = new List<PlayerZone>();
-                    playerZoneGroups.Add(currentPlayerZoneGroup);
+                    playerZoneGroups.Add(new List<PlayerZone>());
                     extractMatches(playerZoneI);
                 }
                 return playerZoneGroups.Select(x => new PlayerGroup(gameStageCalculator, x.Select(y => y.Player).ToList())).ToList();
