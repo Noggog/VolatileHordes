@@ -1,5 +1,6 @@
 ﻿using NSubstitute;
 using NUnit.Framework;
+using System.Collections.Generic;
 using VolatileHordes.Director;
 using VolatileHordes.GameAbstractions;
 using VolatileHordes.Players;
@@ -20,7 +21,7 @@ namespace VolatileHordes.Tests.Director
         public void Empty()
         {
             var calc = new GameStageCalculator(new DirectorSettings());
-            var group = new PlayerGroup(calc);
+            var group = new PlayerGroup(calc, new List<IPlayer>());
             Assert.True(calc.GetGamestage(group).EqualsWithin(0));
         }
         
@@ -28,8 +29,7 @@ namespace VolatileHordes.Tests.Director
         public void Single()
         {
             var calc = new GameStageCalculator(new DirectorSettings());
-            var group = new PlayerGroup(calc);
-            group.Players.Add(new PlayerZone(GetPlayer(3)));
+            var group = new PlayerGroup(calc, new List<IPlayer> { GetPlayer(3) });
             Assert.True(calc.GetGamestage(group).EqualsWithin(3));
         }
         
@@ -37,9 +37,7 @@ namespace VolatileHordes.Tests.Director
         public void Multiple()
         {
             var calc = new GameStageCalculator(new DirectorSettings());
-            var group = new PlayerGroup(calc);
-            group.Players.Add(new PlayerZone(GetPlayer(5)));
-            group.Players.Add(new PlayerZone(GetPlayer(1)));
+            var group = new PlayerGroup(calc, new List<IPlayer> { GetPlayer(5), GetPlayer(1) });
             Assert.True(calc.GetGamestage(group).EqualsWithin(5.2f));
         }
     }
