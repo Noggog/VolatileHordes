@@ -15,8 +15,7 @@ namespace VolatileHordes.Players
         public PlayerGroupProvider(
             PlayerGameEventsWrapper playerGameEventsWrapper,
             IWorld world,
-            GameStageCalculator gameStageCalculator,
-            TimeManager timeManager
+            GameStageCalculator gameStageCalculator
         )
         {
             var playerIDs =
@@ -30,15 +29,17 @@ namespace VolatileHordes.Players
                         acc.Add(x.Item2);
                     else
                         acc.Remove(x.Item2);
-                    return acc;
+                    return acc.ToList();
                 });
-            players = playerIDs.Select(x => x.Select(x => new Player(world, x)));
-            playerZones = players.Select(x => x.Select(x => new PlayerZone(x)));
-
-
-
+            players =
+                playerIDs.Select(x => x.Select(x => new Player(world, x)))
+                .Replay(1).RefCount();
+            playerZones =
+                players.Select(x => x.Select(x => new PlayerZone(x)))
+                .Replay(1).RefCount();
             playerGroups =
-                playerZones.Select();
+                playerZones.Select(x => new List<PlayerParty> { new PlayerParty(gameStageCalculator, x.Select(x => x.Player).ToList()) })
+                .Replay(1).RefCount();
         }
     }
 }
