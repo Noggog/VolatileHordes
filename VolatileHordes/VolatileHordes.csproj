@@ -90,7 +90,7 @@
     <Compile Include="Noise\NoiseManager.cs" />
     <Compile Include="Players\PlayerGameEventsWrapper.cs" />
     <Compile Include="Players\PlayerParty.cs" />
-    <Compile Include="Players\PlayerGroupProvider.cs" />
+    <Compile Include="Players\PlayerPartiesProvider.cs" />
     <Compile Include="Probability\ProbabilityList.cs" />
     <Compile Include="Settings\User\Control\ControlSettings.cs" />
     <Compile Include="Settings\User\Control\LuckyPlayerRetargetSettings.cs" />

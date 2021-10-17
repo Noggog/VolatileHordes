@@ -7,10 +7,10 @@ using VolatileHordes.GameAbstractions;
 
 namespace VolatileHordes.Players
 {
-    public class PlayerGroupProvider
+    public class PlayerPartiesProvider
     {
         public List<PlayerParty> playerParties = new();
-        public PlayerGroupProvider(
+        public PlayerPartiesProvider(
             PlayerGameEventsWrapper playerGameEventsWrapper,
             IWorld world,
             GameStageCalculator gameStageCalculator
