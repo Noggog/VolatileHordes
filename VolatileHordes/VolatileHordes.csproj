@@ -88,6 +88,7 @@
     <Compile Include="Hooks\ZombieSpawnTracking.cs" />
     <Compile Include="Noise\NoiseEvent.cs" />
     <Compile Include="Noise\NoiseManager.cs" />
+    <Compile Include="Players\PlayerGameEventsWrapper.cs" />
     <Compile Include="Players\PlayerGroup.cs" />
     <Compile Include="Players\PlayerGroupProvider.cs" />
     <Compile Include="Probability\ProbabilityList.cs" />
