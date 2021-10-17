@@ -15,7 +15,7 @@ namespace VolatileHordes.Director
         
         public float GetGamestage(PlayerParty group)
         {
-            var gameStages = group.players
+            var gameStages = group.players.Values
                 .Select(x => x.TryGameStage() ?? default(int?))
                 .NotNull()
                 .ToArray();
