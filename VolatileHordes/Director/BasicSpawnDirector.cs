@@ -4,6 +4,7 @@ using VolatileHordes.Players;
 using VolatileHordes.Probability;
 using VolatileHordes.Spawning;
 using VolatileHordes.Spawning.WanderingHordes;
+using VolatileHordes.Utility;
 
 namespace VolatileHordes.Director
 {
@@ -13,7 +14,6 @@ namespace VolatileHordes.Director
         private readonly WanderingHordeSpawner _wanderingHordeSpawner;
         private readonly RandomSource _randomSource;
         private readonly FidgetForwardSpawner _fidgetForwardSpawner;
-        private readonly PlayerZoneManager _playerZoneManager;
         private readonly GameStageCalculator _gameStageCalculator;
 
         public BasicSpawnDirector(
@@ -22,24 +22,26 @@ namespace VolatileHordes.Director
             RandomSource randomSource,
             WanderingHordeSpawner wanderingHordeSpawner,
             FidgetForwardSpawner fidgetForwardSpawner,
-            PlayerZoneManager playerZoneManager,
-            GameStageCalculator gameStageCalculator)
+            GameStageCalculator gameStageCalculator,
+            PlayerPartiesProvider playerPartiesProvider)
         {
             _timeManager = timeManager;
             _randomSource = randomSource;
             _wanderingHordeSpawner = wanderingHordeSpawner;
             _fidgetForwardSpawner = fidgetForwardSpawner;
-            _playerZoneManager = playerZoneManager;
             _gameStageCalculator = gameStageCalculator;
-            
+
+
             _timeManager.IntervalWithVariance(new TimeRange(TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(20)))
                 .FlowSwitch(directorSwitch.Enabled)
                 .SubscribeAsync(async _ =>
                     {
-                        var zone = _playerZoneManager.Zones.FirstOrDefault();
-                        if (zone == null) return;
-
-                        var spawnCount = (ushort)6; // TODO: Calculate based on GameStage
+                        var spawnCount =
+                            playerPartiesProvider.playerParties
+                                .First()
+                                .GameStage
+                                .Let(x => 6 + 0.1 * x)
+                                .Let(x => (ushort)x);
 
                         var randomNumber = _randomSource.Get(2);
 
