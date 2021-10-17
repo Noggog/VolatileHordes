@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reactive.Linq;
 using VolatileHordes.Director;
 using VolatileHordes.GameAbstractions;
+using VolatileHordes.Utility;
 
 namespace VolatileHordes.Players
 {
@@ -31,9 +32,12 @@ namespace VolatileHordes.Players
                     else
                         acc.Remove(x.Item2);
                     return acc;
-                });
-            players = playerIDs.Select(x => x.Select(x => new Player(world, x)));
-            playerZones = players.Select(x => x.Select(x => new PlayerZone(x)));
+                })
+                .Also(x => x.Subscribe(x => Logger.Temp("playerIDs:{0}", x)));
+            players = playerIDs.Select(x => x.Select(x => new Player(world, x)))
+                .Also(x => x.Subscribe(x => Logger.Temp("players:{0}", x)));
+            playerZones = players.Select(x => x.Select(x => new PlayerZone(x)))
+                .Also(x => x.Subscribe(x => Logger.Temp("playerZones:{0}", x)));
 
             /**
              * Recursively collects groups of players that are close together.
@@ -67,7 +71,8 @@ namespace VolatileHordes.Players
                     playerZones,
                     timeManager.Interval(TimeSpan.FromSeconds(30)),
                     (playerZones, _) => GroupPlayersTogether(playerZones)
-                );
+                )
+                .Also(x => x.Subscribe(x => Logger.Temp("playerGroups:{0}", x)));
         }
     }
 }

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace VolatileHordes
 {
     public enum LogLevel
@@ -160,6 +162,14 @@ namespace VolatileHordes
             Log.Out($"[{Constants.ModName}] {message}", new object?[] { o1, o2, o3, o4, o5 });
         }
 
+        private static object TransformForLog(object x)
+        {
+            if (x is IEnumerable<object>)
+                return (x as IEnumerable<object>).ToLogString();
+            else
+                return x;
+        }
+
         public static void Temp(string message)
         {
             Log.Out($"[{Constants.ModName}] {message}");
@@ -167,27 +177,27 @@ namespace VolatileHordes
 
         public static void Temp<T1>(string message, T1 o1)
         {
-            Log.Out($"[{Constants.ModName}] {message}", new object?[] { o1 });
+            Log.Out($"[{Constants.ModName}] {message}", new object?[] { TransformForLog(o1) });
         }
 
         public static void Temp<T1, T2>(string message, T1 o1, T2 o2)
         {
-            Log.Out($"[{Constants.ModName}] {message}", new object?[] { o1, o2 });
+            Log.Out($"[{Constants.ModName}] {message}", new object?[] { TransformForLog(o1), TransformForLog(o2) });
         }
 
         public static void Temp<T1, T2, T3>(string message, T1 o1, T2 o2, T3 o3)
         {
-            Log.Out($"[{Constants.ModName}] {message}", new object?[] { o1, o2, o3 });
+            Log.Out($"[{Constants.ModName}] {message}", new object?[] { TransformForLog(o1), TransformForLog(o2), TransformForLog(o3) });
         }
 
         public static void Temp<T1, T2, T3, T4>(string message, T1 o1, T2 o2, T3 o3, T4 o4)
         {
-            Log.Out($"[{Constants.ModName}] {message}", new object?[] { o1, o2, o3, o4 });
+            Log.Out($"[{Constants.ModName}] {message}", new object?[] { TransformForLog(o1), TransformForLog(o2), TransformForLog(o3), TransformForLog(o4) });
         }
 
         public static void Temp<T1, T2, T3, T4, T5>(string message, T1 o1, T2 o2, T3 o3, T4 o4, T5 o5)
         {
-            Log.Out($"[{Constants.ModName}] {message}", new object?[] { o1, o2, o3, o4, o5 });
+            Log.Out($"[{Constants.ModName}] {message}", new object?[] { TransformForLog(o1), TransformForLog(o2), TransformForLog(o3), TransformForLog(o4), TransformForLog(o5) });
         }
     }
 }

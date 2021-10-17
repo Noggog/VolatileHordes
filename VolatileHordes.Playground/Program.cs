@@ -15,35 +15,38 @@ namespace VolatileHordes.Playground
 
         static void Main(string[] args)
         {
-            var randomSource = new RandomSource();
-            var pointService = new PointService(randomSource);
+            var x = new List<int>();
+            x.Log("aaa");
 
-            var point1 = new PointF(-2910.056f, -1633.051f);
-            var point2 = new PointF(-2907.456f, -1632.18f);
+            //var randomSource = new RandomSource();
+            //var pointService = new PointService(randomSource);
 
-            point1.PrintLn("point1");
-            pointService.RandomlyAdjustPoint(
-                point1,
-                5
-            )
-                .PrintLn("aaa");
-            pointService.RandomlyAdjustPoint(
-                point1,
-                5
-            )
-                .PrintLn("bbb");
-            pointService.RandomlyAdjustPoint(
-                point1,
-                5
-            )
-                .PrintLn("ccc");
+            //var point1 = new PointF(-2910.056f, -1633.051f);
+            //var point2 = new PointF(-2907.456f, -1632.18f);
 
-            (360 * randomSource.NextDouble()).PrintLn("ddd");
-            (360 * randomSource.NextDouble()).PrintLn("eee");
-            (360 * randomSource.NextDouble()).PrintLn("fff");
-            (360 * randomSource.NextDouble()).PrintLn("ggg");
-            (360 * randomSource.NextDouble()).PrintLn("hhh");
-            (360 * randomSource.NextDouble()).PrintLn("iii");
+            //point1.PrintLn("point1");
+            //pointService.RandomlyAdjustPoint(
+            //    point1,
+            //    5
+            //)
+            //    .PrintLn("aaa");
+            //pointService.RandomlyAdjustPoint(
+            //    point1,
+            //    5
+            //)
+            //    .PrintLn("bbb");
+            //pointService.RandomlyAdjustPoint(
+            //    point1,
+            //    5
+            //)
+            //    .PrintLn("ccc");
+
+            //(360 * randomSource.NextDouble()).PrintLn("ddd");
+            //(360 * randomSource.NextDouble()).PrintLn("eee");
+            //(360 * randomSource.NextDouble()).PrintLn("fff");
+            //(360 * randomSource.NextDouble()).PrintLn("ggg");
+            //(360 * randomSource.NextDouble()).PrintLn("hhh");
+            //(360 * randomSource.NextDouble()).PrintLn("iii");
 
             //pointService.AngleBetween(
             //    start: point1,
