@@ -20,7 +20,7 @@ namespace VolatileHordes.Players
                 // case RespawnType.LoadedGame:
                 case RespawnType.EnterMultiplayer:
                 case RespawnType.JoinMultiplayer:
-                    PlayerAdded.OnNext(
+                    _PlayerAdded.OnNext(
                         GetPlayerEntityId(_cInfo)
                     );
                     break;
@@ -30,7 +30,7 @@ namespace VolatileHordes.Players
         public void PlayerDisconnected(ClientInfo? _cInfo, bool _bShutdown)
         {
             Logger.Debug("PlayerDisconnected \"{0}\", \"{1}\"", _cInfo?.ToString() ?? "null", _bShutdown);
-            PlayerRemoved.OnNext(
+            _PlayerRemoved.OnNext(
                 GetPlayerEntityId(_cInfo)
             );
         }
@@ -48,7 +48,9 @@ namespace VolatileHordes.Players
         }
 
         // # Output
-        public Subject<int> PlayerAdded { get; } = new();
-        public Subject<int> PlayerRemoved { get; } = new();
+        private Subject<int> _PlayerAdded { get; } = new();
+        public IObservable<int> PlayerAdded { get { return _PlayerAdded; } }
+        private Subject<int> _PlayerRemoved { get; } = new();
+        public IObservable<int> PlayerRemoved { get { return _PlayerRemoved; } }
     }
 }
