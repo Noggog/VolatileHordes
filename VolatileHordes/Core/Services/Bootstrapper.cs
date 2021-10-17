@@ -13,9 +13,7 @@ namespace VolatileHordes
             ModEvents.GameUpdate.RegisterHandler(GameUpdate);
             ModEvents.GameShutdown.RegisterHandler(GameShutdown);
             ModEvents.PlayerSpawnedInWorld.RegisterHandler(Container.PlayerZoneManager.PlayerSpawnedInWorld);
-            ModEvents.PlayerSpawnedInWorld.RegisterHandler(Container.PlayerGameEventsWrapper.PlayerSpawnedInWorld);
             ModEvents.PlayerDisconnected.RegisterHandler(Container.PlayerZoneManager.PlayerDisconnected);
-            ModEvents.PlayerDisconnected.RegisterHandler(Container.PlayerGameEventsWrapper.PlayerDisconnected);
         }
 
         private static ReplaySubject<Unit> _gameStarted = new();

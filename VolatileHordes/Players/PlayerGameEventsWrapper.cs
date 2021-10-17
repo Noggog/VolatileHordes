@@ -5,34 +5,38 @@ namespace VolatileHordes.Players
 {
     public class PlayerGameEventsWrapper
     {
-        public PlayerGameEventsWrapper()
+        public static PlayerGameEventsWrapper Create()
         {
-
+            return new PlayerGameEventsWrapper(ModEvents.PlayerSpawnedInWorld, ModEvents.PlayerDisconnected);
         }
 
-        // # Input
-        public void PlayerSpawnedInWorld(ClientInfo? _cInfo, RespawnType _respawnReason, Vector3i _pos)
+        public PlayerGameEventsWrapper(
+            ModEvent<ClientInfo, RespawnType, Vector3i> playerSpawnedInWorldEvent,
+            ModEvent<ClientInfo, bool> playerDisconnectedEvent
+        )
         {
-            Logger.Debug("PlayerSpawnedInWorld \"{0}\", \"{1}\", \"{2}\"", _cInfo?.ToString() ?? "null", _respawnReason, _pos);
-            switch (_respawnReason)
+            playerSpawnedInWorldEvent.RegisterHandler((clientInfo, respawnType, vector) =>
             {
-                case RespawnType.NewGame:
-                // case RespawnType.LoadedGame:
-                case RespawnType.EnterMultiplayer:
-                case RespawnType.JoinMultiplayer:
-                    _PlayerAdded.OnNext(
-                        GetPlayerEntityId(_cInfo)
-                    );
-                    break;
-            }
-        }
-
-        public void PlayerDisconnected(ClientInfo? _cInfo, bool _bShutdown)
-        {
-            Logger.Debug("PlayerDisconnected \"{0}\", \"{1}\"", _cInfo?.ToString() ?? "null", _bShutdown);
-            _PlayerRemoved.OnNext(
-                GetPlayerEntityId(_cInfo)
-            );
+                Logger.Debug("PlayerSpawnedInWorld \"{0}\", \"{1}\", \"{2}\"", clientInfo?.ToString() ?? "null", respawnType, vector);
+                switch (respawnType)
+                {
+                    case RespawnType.NewGame:
+                    // case RespawnType.LoadedGame:
+                    case RespawnType.EnterMultiplayer:
+                    case RespawnType.JoinMultiplayer:
+                        PlayerAddedSubject.OnNext(
+                            GetPlayerEntityId(clientInfo)
+                        );
+                        break;
+                }
+            });
+            playerDisconnectedEvent.RegisterHandler((clientInfo, isShutdown) =>
+            {
+                Logger.Debug("PlayerDisconnected \"{0}\", \"{1}\"", clientInfo?.ToString() ?? "null", isShutdown);
+                PlayerRemovedSubject.OnNext(
+                    GetPlayerEntityId(clientInfo)
+                );
+            });
         }
 
         // # Internal
@@ -48,9 +52,9 @@ namespace VolatileHordes.Players
         }
 
         // # Output
-        private Subject<int> _PlayerAdded { get; } = new();
-        public IObservable<int> PlayerAdded { get { return _PlayerAdded; } }
-        private Subject<int> _PlayerRemoved { get; } = new();
-        public IObservable<int> PlayerRemoved { get { return _PlayerRemoved; } }
+        private Subject<int> PlayerAddedSubject { get; } = new();
+        public IObservable<int> PlayerAdded { get { return PlayerAddedSubject; } }
+        private Subject<int> PlayerRemovedSubject { get; } = new();
+        public IObservable<int> PlayerRemoved { get { return PlayerRemovedSubject; } }
     }
 }

@@ -20,7 +20,7 @@ namespace VolatileHordes
     {
         public static readonly RandomSource Random = new();
         public static readonly PointService PointService = new(Random);
-        public static readonly PlayerGameEventsWrapper PlayerGameEventsWrapper = new();
+        public static readonly PlayerGameEventsWrapper PlayerGameEventsWrapper = PlayerGameEventsWrapper.Create();
         public static readonly BiomeData Biome = new(Random);
         public static readonly IWorld World = new WorldWrapper();
         public static readonly UserSettings UserSettings = UserSettings.Load();
