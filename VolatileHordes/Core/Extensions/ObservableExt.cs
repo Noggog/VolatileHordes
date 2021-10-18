@@ -8,6 +8,13 @@ namespace VolatileHordes
 {
     public static class ObservableExt
     {
+        public static T Value<T>(this IObservable<T> source)
+        {
+            T result = default;
+            source.Subscribe(x => result = x).Dispose();
+            return result;
+        }
+
         public static IObservable<TResult> SwitchMap<TSource, TResult>(this IObservable<TSource> source, Func<TSource, IObservable<TResult>> selector)
         {
             return source.Select(selector).Switch();
