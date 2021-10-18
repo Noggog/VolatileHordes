@@ -14,7 +14,6 @@ namespace VolatileHordes.Director
         private readonly WanderingHordeSpawner _wanderingHordeSpawner;
         private readonly RandomSource _randomSource;
         private readonly FidgetForwardSpawner _fidgetForwardSpawner;
-        private readonly GameStageCalculator _gameStageCalculator;
 
         public BasicSpawnDirector(
             DirectorSwitch directorSwitch,
@@ -22,14 +21,12 @@ namespace VolatileHordes.Director
             RandomSource randomSource,
             WanderingHordeSpawner wanderingHordeSpawner,
             FidgetForwardSpawner fidgetForwardSpawner,
-            GameStageCalculator gameStageCalculator,
             PlayerPartiesProvider playerPartiesProvider)
         {
             _timeManager = timeManager;
             _randomSource = randomSource;
             _wanderingHordeSpawner = wanderingHordeSpawner;
             _fidgetForwardSpawner = fidgetForwardSpawner;
-            _gameStageCalculator = gameStageCalculator;
 
 
             _timeManager.IntervalWithVariance(new TimeRange(TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(20)))
