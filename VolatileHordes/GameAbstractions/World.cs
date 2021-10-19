@@ -8,7 +8,6 @@ namespace VolatileHordes.GameAbstractions
 {
     public interface IWorld
     {
-        IEnumerable<IPlayer> Players { get; }
         bool TryGetPlayerEntity(int id, out EntityPlayer player);
         bool CanSpawnAt(Vector3 pos);
         int GetTerrainHeight(PointF pt);
@@ -42,8 +41,6 @@ namespace VolatileHordes.GameAbstractions
         {
             World.RemoveEntity(zombie.Id, EnumRemoveEntityReason.Despawned);
         }
-
-        public IEnumerable<IPlayer> Players => World.Players.list.Select<EntityPlayer, IPlayer>(p => new Player(this, p.entityId));
         
         public Chunk? GetChunkAt(PointF pt)
         {

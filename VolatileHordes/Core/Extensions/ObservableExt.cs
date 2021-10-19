@@ -10,9 +10,9 @@ namespace VolatileHordes
     {
         public static T Value<T>(this IObservable<T> source)
         {
-            T result = default;
+            object? result = null;
             source.Subscribe(x => result = x).Dispose();
-            return result;
+            return (T)result!;
         }
 
         public static IObservable<TResult> SwitchMap<TSource, TResult>(this IObservable<TSource> source, Func<TSource, IObservable<TResult>> selector)

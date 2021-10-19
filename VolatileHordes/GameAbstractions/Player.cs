@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
+using VolatileHordes.Players;
 
 namespace VolatileHordes.GameAbstractions
 {
@@ -19,13 +20,17 @@ namespace VolatileHordes.GameAbstractions
         public int EntityId { get; }
 
         public IEnumerable<Vector3> Bedrolls => GetBedrolls();
+        private PlayerZoneProvider playerZoneProvider;
+        public PlayerZone playerZone { get => playerZoneProvider.playerZone.Value(); }
 
         public Player(
             IWorld world,
+            PlayerZoneProviderFactory playerZoneProviderFactory,
             int id)
         {
             _world = world;
             EntityId = id;
+            playerZoneProvider = playerZoneProviderFactory.create(this);
         }
 
         private IEnumerable<Vector3> GetBedrolls()

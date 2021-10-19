@@ -94,7 +94,7 @@ namespace VolatileHordes.Players
                     return;
             }
             
-            Zones.Add(UpdatePlayer(new PlayerZone(new Player(_world, entityId))));
+            //Zones.Add(UpdatePlayer(new PlayerZone(new Player(_world, entityId))));
 
             Logger.Info("Added player {0}", entityId);
             _playerCount.OnNext(_playerCount.Value + 1);

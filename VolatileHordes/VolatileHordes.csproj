@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -88,9 +88,13 @@
     <Compile Include="Hooks\ZombieSpawnTracking.cs" />
     <Compile Include="Noise\NoiseEvent.cs" />
     <Compile Include="Noise\NoiseManager.cs" />
+    <Compile Include="Players\PlayerFactory.cs" />
     <Compile Include="Players\PlayerGameEventsWrapper.cs" />
+    <Compile Include="Players\PlayersProvider.cs" />
     <Compile Include="Players\PlayerParty.cs" />
     <Compile Include="Players\PlayerPartiesProvider.cs" />
+    <Compile Include="Players\PlayerZoneProviderFactory.cs" />
+    <Compile Include="Players\PlayerZoneProvider.cs" />
     <Compile Include="Probability\ProbabilityList.cs" />
     <Compile Include="Settings\User\Control\ControlSettings.cs" />
     <Compile Include="Settings\User\Control\LuckyPlayerRetargetSettings.cs" />

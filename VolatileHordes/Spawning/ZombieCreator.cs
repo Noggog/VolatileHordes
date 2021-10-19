@@ -2,6 +2,7 @@ using System.Drawing;
 using System.Threading.Tasks;
 using UnityEngine;
 using VolatileHordes.GameAbstractions;
+using VolatileHordes.Players;
 using VolatileHordes.Tracking;
 
 namespace VolatileHordes.Spawning
@@ -12,22 +13,25 @@ namespace VolatileHordes.Spawning
         private readonly AmbientZombieManager _ambientZombieManager;
         private readonly BiomeData _biomeData;
         private readonly LimitManager _limitManager;
+        private readonly PlayersProvider playersProvider;
 
         public ZombieCreator(
             IWorld world,
             AmbientZombieManager ambientZombieManager,
             BiomeData biomeData,
-            LimitManager limitManager)
+            LimitManager limitManager,
+            PlayersProvider playersProvider)
         {
             _world = world;
             _ambientZombieManager = ambientZombieManager;
             _biomeData = biomeData;
             _limitManager = limitManager;
+            this.playersProvider = playersProvider;
         }
         
         public bool IsSpawnProtected(Vector3 pos)
         {
-            var players = _world.Players;
+            var players = playersProvider.players.Value();
 
             foreach (var ply in players)
             {
