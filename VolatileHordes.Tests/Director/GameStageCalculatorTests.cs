@@ -20,7 +20,7 @@ namespace VolatileHordes.Tests.Director
         public void Empty()
         {
             var calc = new GameStageCalculator(new DirectorSettings());
-            var group = new PlayerGroup(calc);
+            var group = new PlayerParty(calc);
             Assert.True(calc.GetGamestage(group).EqualsWithin(0));
         }
         
@@ -28,8 +28,10 @@ namespace VolatileHordes.Tests.Director
         public void Single()
         {
             var calc = new GameStageCalculator(new DirectorSettings());
-            var group = new PlayerGroup(calc);
-            group.Players.Add(new PlayerZone(group, GetPlayer(3)));
+            var group = new PlayerParty(calc)
+            {
+                players = { { 0, GetPlayer(3) } }
+            };
             Assert.True(calc.GetGamestage(group).EqualsWithin(3));
         }
         
@@ -37,9 +39,10 @@ namespace VolatileHordes.Tests.Director
         public void Multiple()
         {
             var calc = new GameStageCalculator(new DirectorSettings());
-            var group = new PlayerGroup(calc);
-            group.Players.Add(new PlayerZone(group, GetPlayer(5)));
-            group.Players.Add(new PlayerZone(group, GetPlayer(1)));
+            var group = new PlayerParty(calc)
+            {
+                players = { { 0, GetPlayer(5) }, { 1, GetPlayer(1) } }
+            };
             Assert.True(calc.GetGamestage(group).EqualsWithin(5.2f));
         }
     }

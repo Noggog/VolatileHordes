@@ -1,16 +1,17 @@
 ﻿using System.Collections.Generic;
 using VolatileHordes.Director;
+using VolatileHordes.GameAbstractions;
 
 namespace VolatileHordes.Players
 {
-    public class PlayerGroup
+    public class PlayerParty
     {
         private readonly GameStageCalculator _gameStageCalculator;
-        public List<PlayerZone> Players = new();
+        public Dictionary<int, IPlayer> players = new();
 
         public float GameStage => _gameStageCalculator.GetGamestage(this);
 
-        public PlayerGroup(GameStageCalculator gameStageCalculator)
+        public PlayerParty(GameStageCalculator gameStageCalculator)
         {
             _gameStageCalculator = gameStageCalculator;
         }
