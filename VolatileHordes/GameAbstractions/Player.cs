@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
 using UniLinq;
 using UnityEngine;
+using VolatileHordes.Utility;
 
 namespace VolatileHordes.GameAbstractions
 {
@@ -28,6 +31,54 @@ namespace VolatileHordes.GameAbstractions
             EntityId = id;
         }
 
+        public RectangleF SpawnRectangle => GetSpawnRectangle();
+        public RectangleF VisibilityRectable => GetVisibilityRectangle();
+        public PointF Location => GetLocation();
+
+        // # Constants
+        private static int ChunkViewDim = GamePrefs.GetInt(EnumGamePrefs.ServerMaxAllowedViewDistance);
+        private static Vector3 ChunkSize = new(16, 256, 16);
+        private static Vector3 VisibleBox = ChunkSize * ChunkViewDim;
+        private static Vector3 SpawnBlockBox = new(VisibleBox.x - 32, VisibleBox.y - 32, VisibleBox.z - 32);
+
+        private RectangleF GetSpawnRectangle()
+        {
+            var entity = TryGetEntity()!;
+            if (entity == null) throw new Exception("entity was null");
+            var pos = entity.GetPosition();
+            var minsSpawnBlock = (pos - (SpawnBlockBox * 0.5f)).ToPoint();
+            var maxsSpawnBlock = (pos + (SpawnBlockBox * 0.5f)).ToPoint();
+            return new RectangleF(
+                x: minsSpawnBlock.X,
+                y: minsSpawnBlock.Y,
+                width: maxsSpawnBlock.X - minsSpawnBlock.X,
+                height: maxsSpawnBlock.Y - minsSpawnBlock.Y
+            );
+        }
+
+        private RectangleF GetVisibilityRectangle()
+        {
+            var entity = TryGetEntity()!;
+            if (entity == null) throw new Exception("entity was null");
+            var pos = entity.GetPosition();
+            var minsSpawnBlock = (pos - (VisibleBox * 0.5f)).ToPoint();
+            var maxsSpawnBlock = (pos + (VisibleBox * 0.5f)).ToPoint();
+            return new RectangleF(
+                x: minsSpawnBlock.X,
+                y: minsSpawnBlock.Y,
+                width: maxsSpawnBlock.X - minsSpawnBlock.X,
+                height: maxsSpawnBlock.Y - minsSpawnBlock.Y
+            );
+        }
+
+        private PointF GetLocation()
+        {
+            var entity = TryGetEntity()!;
+            if (entity == null) throw new Exception("entity was null");
+            var pos = entity.GetPosition();
+            return pos.ToPoint();
+        }
+
         private IEnumerable<Vector3> GetBedrolls()
         {
             var entity = TryGetEntity();
@@ -49,7 +100,7 @@ namespace VolatileHordes.GameAbstractions
             player = TryGetEntity()!;
             return player != null;
         }
-        
+
         public int? TryGameStage()
         {
             return TryGetEntity()?.gameStage;
