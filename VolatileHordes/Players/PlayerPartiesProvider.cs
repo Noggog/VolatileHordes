@@ -24,9 +24,9 @@ namespace VolatileHordes.Players
             .Subscribe(x =>
             {
                 if (x.Item1)
-                    playerParties[0].players.Add(x.Item2, new Player(world, x.Item2));
+                    playerParties[0].playersDictionary.Add(x.Item2, new Player(world, x.Item2));
                 else
-                    playerParties[0].players.Remove(x.Item2);
+                    playerParties[0].playersDictionary.Remove(x.Item2);
             });
         }
     }
