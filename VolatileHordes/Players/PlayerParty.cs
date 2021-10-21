@@ -1,22 +1,33 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using UnityEngine;
+using VolatileHordes.Core.Services;
 using VolatileHordes.Director;
 using VolatileHordes.GameAbstractions;
+using VolatileHordes.Probability;
 
 namespace VolatileHordes.Players
 {
     public class PlayerParty
     {
-        private readonly GameStageCalculator _gameStageCalculator;
         public Dictionary<int, Player> playersDictionary = new();
         public IEnumerable<Player> players { get => playersDictionary.Values; }
+        public float GameStage => gameStageCalculator.GetGamestage(this);
 
-        public float GameStage => _gameStageCalculator.GetGamestage(this);
+        private RandomSource randomSource;
+        private IWorld world;
+        private readonly GameStageCalculator gameStageCalculator;
 
-        public PlayerParty(GameStageCalculator gameStageCalculator)
+        public PlayerParty(
+            RandomSource randomSource,
+            GameStageCalculator gameStageCalculator,
+            IWorld world
+        )
         {
-            _gameStageCalculator = gameStageCalculator;
+            this.randomSource = randomSource;
+            this.gameStageCalculator = gameStageCalculator;
+            this.world = world;
         }
 
         public IEnumerable<RectangleF> GetConnectedSpawnRects()
@@ -39,6 +50,26 @@ namespace VolatileHordes.Players
                     yield return rhsRect;
                 }
             }
+        }
+
+        public Vector3? GetRandomSafeCorner(PlayerZone zone)
+        {
+            var corners = ZoneProcessing.EdgeCornersFromCluster(
+                    GetConnectedSpawnRects()
+                        .ToArray()
+                )
+                .ToArray();
+
+            foreach (var corner in corners.EnumerateFromRandomIndex(randomSource))
+            {
+                var worldPos = world.GetWorldVector(corner);
+                if (world.CanSpawnAt(worldPos))
+                {
+                    return worldPos;
+                }
+            }
+
+            return null;
         }
     }
 }
