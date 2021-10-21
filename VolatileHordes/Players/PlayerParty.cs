@@ -7,7 +7,8 @@ namespace VolatileHordes.Players
     public class PlayerParty
     {
         private readonly GameStageCalculator _gameStageCalculator;
-        public Dictionary<int, IPlayer> playersDictionary = new();
+        public Dictionary<int, Player> playersDictionary = new();
+        public IEnumerable<Player> players { get => playersDictionary.Values; }
 
         public float GameStage => _gameStageCalculator.GetGamestage(this);
 
