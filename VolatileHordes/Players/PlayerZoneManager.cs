@@ -138,22 +138,5 @@ namespace VolatileHordes.Players
         }
 
         public bool HasPlayers() => Zones.Count > 0;
-
-        public void Print()
-        {
-            foreach (var zone in Zones)
-            {
-                string playerPos;
-                if (zone.Player.TryGetEntity(out var entity))
-                {
-                    playerPos = entity.GetPosition().ToString();
-                }
-                else
-                {
-                    playerPos = "<MISSING>";
-                }
-                Logger.Info("Player zone center {0}.  Player currently at {1}", zone.Center, playerPos);
-            }
-        }
     }
 }
