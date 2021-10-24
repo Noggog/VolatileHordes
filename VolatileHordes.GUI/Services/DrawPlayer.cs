@@ -51,6 +51,7 @@ namespace VolatileHordes.GUI.Services
                 _gr.Clear(Color.Black);
                 DrawPlayer();
                 DrawZombies();
+                _bitmap.RotateFlip(RotateFlipType.Rotate180FlipX);
                 return _bitmap.ToBitmapImage();
             }
 
@@ -62,7 +63,7 @@ namespace VolatileHordes.GUI.Services
                     new Rectangle(
                         new Point(pos.X - PlayerConeSize / 2, pos.Y - PlayerConeSize / 2), 
                         new Size(PlayerConeSize, PlayerConeSize)), 
-                    _input.Player.Rotation - (PlayerConeRadius / 2f), 
+                    AdjustRotation(_input.Player.Rotation) - (PlayerConeRadius / 2f), 
                     PlayerConeRadius);
                 _gr.FillEllipse(
                     new SolidBrush(Color.Teal), 
@@ -73,6 +74,11 @@ namespace VolatileHordes.GUI.Services
             private Point Offset(PointF target)
             {
                 return new Point((int)((target.X - _offsetX) * _scaleX), (int)((target.Y - _offsetY) * _scaleY));
+            }
+
+            private float AdjustRotation(float f)
+            {
+                return 90 - f;
             }
 
             private void DrawZombies()
