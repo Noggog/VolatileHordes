@@ -109,6 +109,7 @@ namespace VolatileHordes.Players
             ply.MinsSpawnBlock = (pos - (SpawnBlockBox * 0.5f)).ToPoint();
             ply.MaxsSpawnBlock = (pos + (SpawnBlockBox * 0.5f)).ToPoint();
             ply.Center = pos.ToPoint();
+            ply.Rotation = ent.rotation;
             return ply;
         }
 

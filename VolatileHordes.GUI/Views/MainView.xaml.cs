@@ -17,6 +17,9 @@ namespace VolatileHordes.GUI.Views
                 this.WhenAnyValue(x => x.ViewModel!.Connection)
                     .BindTo(this, x => x.ConnectionView.DataContext)
                     .DisposeWith(dispose);
+                this.WhenAnyValue(x => x.ViewModel!.Player)
+                    .BindTo(this, x => x.PlayerView.DataContext)
+                    .DisposeWith(dispose);
             });
         }
     }

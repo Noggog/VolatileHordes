@@ -8,11 +8,13 @@ namespace VolatileHordes.Dto
     {
         public int EntityId { get; set; }
         public RectangleF SpawnRectangle { get; set; }
+        public float Rotation { get; set; }
 
         public void Serialize(BinaryWriter writer)
         {
             writer.Write(EntityId);
             writer.Write(SpawnRectangle);
+            writer.Write(Rotation);
         }
 
         public static PlayerDto Deserialize(BinaryReader reader)
@@ -20,6 +22,7 @@ namespace VolatileHordes.Dto
             var ret = new PlayerDto();
             ret.EntityId = reader.ReadInt32();
             ret.SpawnRectangle = reader.ReadRectangleF();
+            ret.Rotation = reader.ReadSingle();
             return ret;
         }
     }

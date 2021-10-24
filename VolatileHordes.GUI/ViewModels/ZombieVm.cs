@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using Noggog.WPF;
+using ReactiveUI.Fody.Helpers;
 using VolatileHordes.Dto;
 
 namespace VolatileHordes.GUI.ViewModels
@@ -7,8 +8,8 @@ namespace VolatileHordes.GUI.ViewModels
     public class ZombieVm : ViewModel
     {
         public int EntityId { get; }
-        public PointF Position { get; private set; }
-        public PointF Target { get; private set; }
+        [Reactive] public PointF Position { get; private set; }
+        [Reactive] public PointF Target { get; private set; }
 
         public ZombieVm(int entityId)
         {

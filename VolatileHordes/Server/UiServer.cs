@@ -152,6 +152,9 @@ namespace VolatileHordes.Server
                 var sock = client.sock;
                 sock.Send(data, 0, length, 0);
             }
+            catch (SocketException)
+            {
+            }
             catch (Exception ex)
             {
                 client.disconnected = true;
@@ -178,7 +181,8 @@ namespace VolatileHordes.Server
             {
                 Players = _players.Zones.Select(z => new PlayerDto()
                 {
-                    SpawnRectangle = z.SpawnRectangle
+                    SpawnRectangle = z.SpawnRectangle,
+                    Rotation = z.Rotation.y
                 }).ToList(),
                 ZombieGroups = _zombies.AllGroups.Select(g =>
                 {

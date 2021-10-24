@@ -17,7 +17,7 @@ namespace VolatileHordes.GUI.Services
             var settings = new Settings();
             if (File.Exists("settings.json"))
             {
-                settings = JsonConvert.DeserializeObject<Settings>("settings.json")!;
+                settings = JsonConvert.DeserializeObject<Settings>(File.ReadAllText("settings.json"))!;
             }
 
             foreach (var target in _targets)

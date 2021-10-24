@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using UnityEngine;
 using VolatileHordes.GameAbstractions;
 
 namespace VolatileHordes.Players
@@ -16,6 +17,7 @@ namespace VolatileHordes.Players
         public PointF Maxs { get; set; } = PointF.Empty;
         public PointF MinsSpawnBlock { get; set; } = PointF.Empty;
         public PointF MaxsSpawnBlock { get; set; } = PointF.Empty;
+        public Vector3 Rotation { get; set; }
 
         public PointF Center { get; set; }
 

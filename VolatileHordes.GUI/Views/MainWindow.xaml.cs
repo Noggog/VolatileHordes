@@ -2,7 +2,6 @@
 using System.Windows;
 using Autofac;
 using VolatileHordes.GUI.Services;
-using VolatileHordes.GUI.ViewModels;
 
 namespace VolatileHordes.GUI.Views
 {
