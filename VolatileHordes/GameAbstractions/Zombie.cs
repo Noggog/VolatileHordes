@@ -9,6 +9,7 @@ namespace VolatileHordes.GameAbstractions
         bool Destroyed { get; }
         bool SendTowards(PointF pt);
         EntityZombie? GetEntity();
+        PointF? GetTarget();
         public void Destroy();
         PointF? GetPosition();
         bool IsAlive { get; }
@@ -32,6 +33,7 @@ namespace VolatileHordes.GameAbstractions
         }
 
         public EntityZombie? GetEntity() => _world.GetEntity(Id) as EntityZombie;
+        public PointF? GetTarget() => GetEntity()?.InvestigatePosition.ToPoint();
 
         public PointF? GetPosition() => GetEntity()?.GetPosition().ToPoint();
 

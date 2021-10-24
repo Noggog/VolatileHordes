@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net5.0-windows</TargetFramework>
+        <UseWPF>true</UseWPF>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\VolatileHordes.Dto\VolatileHordes.Dto.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Autofac" Version="6.3.0" />
+      <PackageReference Include="Extended.Wpf.Toolkit" Version="4.1.0" />
+      <PackageReference Include="Noggog.Autofac" Version="2.31.0" />
+      <PackageReference Include="Noggog.WPF" Version="2.31.0" />
+    </ItemGroup>
+
+</Project>

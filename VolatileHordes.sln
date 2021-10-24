@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VolatileHordes.Tests", "Vol
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VolatileHordes.Playground", "VolatileHordes.Playground\VolatileHordes.Playground.csproj", "{44E44388-7B40-4C20-8C5A-59C2486E9876}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VolatileHordes.Dto", "VolatileHordes.Dto\VolatileHordes.Dto.csproj", "{2909C22E-B140-4B28-8D37-C41C1E1AE2AA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VolatileHordes.GUI", "VolatileHordes.GUI\VolatileHordes.GUI.csproj", "{C86C8BDD-8591-4D20-B83C-F6AA845DA8F0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{44E44388-7B40-4C20-8C5A-59C2486E9876}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{44E44388-7B40-4C20-8C5A-59C2486E9876}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{44E44388-7B40-4C20-8C5A-59C2486E9876}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2909C22E-B140-4B28-8D37-C41C1E1AE2AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2909C22E-B140-4B28-8D37-C41C1E1AE2AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2909C22E-B140-4B28-8D37-C41C1E1AE2AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2909C22E-B140-4B28-8D37-C41C1E1AE2AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C86C8BDD-8591-4D20-B83C-F6AA845DA8F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C86C8BDD-8591-4D20-B83C-F6AA845DA8F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C86C8BDD-8591-4D20-B83C-F6AA845DA8F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C86C8BDD-8591-4D20-B83C-F6AA845DA8F0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
