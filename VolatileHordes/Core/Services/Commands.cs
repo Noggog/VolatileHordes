@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace VolatileHordes
@@ -91,7 +92,7 @@ namespace VolatileHordes
                 }
                 case "players":
                 {
-                    Container.PlayerZoneManager.Print();
+                    Container.PlayerPartiesProvider.Log();
                     break;
                 }
                 case "destroy":

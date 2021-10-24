@@ -31,5 +31,25 @@ namespace VolatileHordes.Players
                     playerParties[0].playersDictionary.Remove(x.Item2);
             });
         }
+
+        /*
+         * Logs information about all player parties
+         */
+        public void Log()
+        {
+            foreach (var player in playerParties.SelectMany(x => x.players))
+            {
+                string playerPos;
+                if (player.TryGetEntity(out var entity))
+                {
+                    playerPos = entity.GetPosition().ToString();
+                }
+                else
+                {
+                    playerPos = "<MISSING>";
+                }
+                Logger.Info("Player zone center {0}.  Player currently at {1}", player.location, playerPos);
+            }
+        }
     }
 }

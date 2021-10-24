@@ -33,7 +33,7 @@ namespace VolatileHordes.GameAbstractions
 
         public RectangleF SpawnRectangle => GetSpawnRectangle();
         public RectangleF VisibilityRectable => GetVisibilityRectangle();
-        public PointF Location => GetLocation();
+        public PointF location => GetLocation();
 
         // # Constants
         private static int ChunkViewDim = GamePrefs.GetInt(EnumGamePrefs.ServerMaxAllowedViewDistance);
