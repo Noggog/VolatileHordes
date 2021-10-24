@@ -30,7 +30,7 @@ namespace VolatileHordes
         public static readonly PlayerPartiesProvider PlayerPartiesProvider = new(PlayerGameEventsWrapper, World, GamestageCalculator, Random);
         public static readonly PlayerLocationUpdater PlayerLocationUpdater = new(PlayerZoneManager, Time);
         public static readonly SpawningPositions Spawning = new(World, PlayerZoneManager, Random);
-        public static readonly ZombieGroupManager ZombieGroupManager = new(Time, PlayerZoneManager);
+        public static readonly ZombieGroupManager ZombieGroupManager = new(Time, PlayerPartiesProvider);
         public static readonly ZombieControl ZombieControl = new(Spawning, Time, Random);
         public static readonly NoiseManager NoiseManager = new(Time, UserSettings.Noise);
         public static readonly ILogger Logger = new LoggerWrapper();
