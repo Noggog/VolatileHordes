@@ -12,7 +12,7 @@ namespace VolatileHordes
     public class TimeManager
     {
         private readonly INowProvider _nowProvider;
-        private readonly PlayerZoneManager _playerZoneManager;
+        private readonly PlayerCountProvider playerCountProvider;
         private readonly RandomSource _randomSource;
 
         private readonly BehaviorSubject<DateTime> _updateTime;
@@ -20,12 +20,12 @@ namespace VolatileHordes
         public IObservable<TimeSpan> UpdateDeltas { get; }
 
         public TimeManager(
-            INowProvider nowProvider, 
-            PlayerZoneManager playerZoneManager,
+            INowProvider nowProvider,
+            PlayerCountProvider playerCountProvider,
             RandomSource randomSource)
         {
+            this.playerCountProvider = playerCountProvider;
             _nowProvider = nowProvider;
-            _playerZoneManager = playerZoneManager;
             _randomSource = randomSource;
             _updateTime = new BehaviorSubject<DateTime>(_nowProvider.Now);
             UpdateDeltas = _updateTime
@@ -49,13 +49,15 @@ namespace VolatileHordes
             var source = UpdateDeltas;
             if (pauseIfNoPlayers)
             {
-                source = source
-                    .WithLatestFrom(
-                        _playerZoneManager.PlayerCountObservable,
-                        (delta, numPlayers) => numPlayers > 0 ? delta : new TimeSpan())
-                    .Where(x => x.Ticks > 0);
+                source =
+                    Observable.CombineLatest(
+                        UpdateDeltas,
+                        playerCountProvider.playerCount,
+                        (delta, numPlayers) => numPlayers > 0 ? delta : new TimeSpan()
+                    )
+                        .Where(x => x.Ticks > 0);
             }
-            
+
             return source
                 .Scan(
                     new ValueTuple<TimeSpan, bool>(new TimeSpan(), false),
@@ -77,7 +79,7 @@ namespace VolatileHordes
             return Interval(timeSpan, pauseIfNoPlayers)
                 .Take(1);
         }
-        
+
         public IObservable<Unit> IntervalWithVariance(TimeRange timeRange, bool pauseIfNoPlayers = true)
         {
             return Observable.Defer(() => Observable.Return(_randomSource.GetRandomTime(timeRange)))
@@ -86,7 +88,7 @@ namespace VolatileHordes
                 .Take(1)
                 .Repeat();
         }
-        
+
         public IObservable<Unit> IntervalWithVariance(TimeRange timeRange, Action<TimeSpan> onNewInterval, bool pauseIfNoPlayers = true)
         {
             return Observable.Defer(() => Observable.Return(_randomSource.GetRandomTime(timeRange)))
