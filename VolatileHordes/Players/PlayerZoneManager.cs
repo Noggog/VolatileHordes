@@ -136,7 +136,5 @@ namespace VolatileHordes.Players
                 }
             }
         }
-
-        public bool HasPlayers() => Zones.Count > 0;
     }
 }
