@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reactive.Linq;
 using VolatileHordes.Director;
 using VolatileHordes.GameAbstractions;
+using VolatileHordes.Probability;
 
 namespace VolatileHordes.Players
 {
@@ -13,10 +14,11 @@ namespace VolatileHordes.Players
         public PlayerPartiesProvider(
             PlayerGameEventsWrapper playerGameEventsWrapper,
             IWorld world,
-            GameStageCalculator gameStageCalculator
+            GameStageCalculator gameStageCalculator,
+            RandomSource randomSource
         )
         {
-            playerParties.Add(new(gameStageCalculator));
+            playerParties.Add(new(randomSource, gameStageCalculator, world));
             Observable.Merge(
                 playerGameEventsWrapper.PlayerAdded.Select(x => new ValueTuple<bool, int>(true, x)),
                 playerGameEventsWrapper.PlayerRemoved.Select(x => new ValueTuple<bool, int>(false, x))
