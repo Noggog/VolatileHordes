@@ -42,7 +42,13 @@ namespace VolatileHordes.GUI.ViewModels
                     .CombineLatest(
                         this.WhenAnyValue(x => x.Size),
                         pvm.WhenAnyValue(x => x.Rotation),
-                        (zombiesInRange, _, _) => new DrawInput(pvm, Size, zombiesInRange.ToArray()))
+                        (zombiesInRange, _, _) =>
+                        {
+                            return new DrawInput(
+                                new PlayerDrawInput(pvm.SpawnRectangle, pvm.Rotation),
+                                Size,
+                                zombiesInRange.Select(z => new ZombieDrawInput(z.Position, z.Target)).ToArray());
+                        })
                     .Debounce(TimeSpan.FromMilliseconds(150), RxApp.MainThreadScheduler)
                     .ObserveOn(RxApp.TaskpoolScheduler)
                     .Select(drawPlayer.Draw)
