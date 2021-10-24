@@ -16,13 +16,14 @@ namespace VolatileHordes.GUI.ViewModels
 
         public MainVm(
             ConnectionVm connectionVm,
+            PlayerDisplayVm.Factory pvmFactory,
             WorldstateVm worldstateVm)
         {
             Connection = connectionVm;
 
             _Player = worldstateVm.Players.Connect()
                 .QueryWhenChanged(x => x.Items.FirstOrDefault())
-                .Select(x => x == null ? null : new PlayerDisplayVm(x))
+                .Select(x => x == null ? null : pvmFactory(x))
                 .DisposePrevious()
                 .ToGuiProperty(this, nameof(Player), default);
         }

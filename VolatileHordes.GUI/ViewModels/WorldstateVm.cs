@@ -16,8 +16,7 @@ namespace VolatileHordes.GUI.ViewModels
         public IObservableCache<ZombieGroupVm, int> ZombieGroups => _zombieGroups;
         
         public WorldstateVm(
-            ConnectionVm connectionVm,
-            PlayerVm.Factory playerFactory)
+            ConnectionVm connectionVm)
         {
             connectionVm.WhenAnyValue(x => x.Client)
                 .ObserveOn(RxApp.TaskpoolScheduler)
@@ -28,7 +27,7 @@ namespace VolatileHordes.GUI.ViewModels
                     _players.AbsorbIn(
                         state.Players, 
                         o => o.EntityId, 
-                        (k) => playerFactory(k),
+                        (k) => new PlayerVm(k),
                         (vm, dto) => vm.Absorb(dto));
                     _zombieGroups.AbsorbIn(
                         state.ZombieGroups, 
