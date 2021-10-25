@@ -21,13 +21,13 @@ namespace VolatileHordes.Spawning
 
         public async Task Spawn()
         {
-            var zone = _spawningPositions.GetRandomZone();
-            if (zone == null) return;
+            var player = _spawningPositions.GetRandomPlayer();
+            if (player == null) return;
             
             var size = _limitManager.GetAllowedLimit(10);
             for (int i = 0; i < size; i++)
             {
-                var pos = _spawningPositions.GetRandomPosition(zone.SpawnRectangle);
+                var pos = _spawningPositions.GetRandomPosition(player.SpawnRectangle);
                 if (pos == null) continue;
                 await _creator.CreateZombie(pos.Value.ToPoint(), null);
             }

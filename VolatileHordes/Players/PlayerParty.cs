@@ -52,7 +52,7 @@ namespace VolatileHordes.Players
             }
         }
 
-        public Vector3? GetRandomSafeCorner(PlayerZone zone)
+        public Vector3? GetRandomSafeCorner()
         {
             var corners = ZoneProcessing.EdgeCornersFromCluster(
                     GetConnectedSpawnRects()

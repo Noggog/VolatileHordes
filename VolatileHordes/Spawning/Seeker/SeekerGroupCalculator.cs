@@ -1,4 +1,4 @@
-﻿using VolatileHordes.Players;
+﻿using VolatileHordes.GameAbstractions;
 using VolatileHordes.Probability;
 
 namespace VolatileHordes.Spawning.Seeker
@@ -13,7 +13,7 @@ namespace VolatileHordes.Spawning.Seeker
             _randomSource = randomSource;
         }
         
-        public int GetSeekerGroupSize(PlayerZone player)
+        public int GetSeekerGroupSize(Player player)
         {
             // ToDo
             // Improve logic

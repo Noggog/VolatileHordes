@@ -41,7 +41,7 @@ namespace VolatileHordes.Control
                         return;
                     }
                     
-                    _zombieControl.SendGroupTowards(group, player.PlayerLocation);
+                    _zombieControl.SendGroupTowards(group, player.location);
                 })
                 .Unit();
         }

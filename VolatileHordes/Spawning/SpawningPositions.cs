@@ -13,16 +13,16 @@ namespace VolatileHordes.Spawning
     public class SpawningPositions
     {
         private readonly IWorld _world;
-        private readonly PlayerZoneManager _playerZoneManager;
+        private readonly PlayersProvider playersProvider;
         private readonly RandomSource _randomSource;
 
         public SpawningPositions(
             IWorld world,
-            PlayerZoneManager playerZoneManager,
+            PlayersProvider playersProvider,
             RandomSource randomSource)
         {
             _world = world;
-            _playerZoneManager = playerZoneManager;
+            this.playersProvider = playersProvider;
             _randomSource = randomSource;
         }
 
@@ -40,11 +40,11 @@ namespace VolatileHordes.Spawning
 
         public SpawnTarget? GetRandomTarget()
         {
-            var zone = GetRandomZone();
-            if (zone == null) return null;
-            var pos = GetRandomSafeCorner(zone);
+            var player = GetRandomPlayer();
+            if (player == null) return null;
+            var pos = playersProvider.playerParties.Find(x => x.players.Contains(player)).GetRandomSafeCorner();
             if (pos == null) return null;
-            return new SpawnTarget(pos.Value, zone);
+            return new SpawnTarget(pos.Value, player);
         }
 
         public SpawnTarget? GetRandomNearPlayer()
@@ -58,19 +58,16 @@ namespace VolatileHordes.Spawning
                 spawnTarget.Player);
         }
 
-        public PlayerZone? GetRandomZone()
+        public Player? GetRandomPlayer()
         {
-            if (_playerZoneManager.Zones.Count == 0)
+            var players = playersProvider.players.ToArray();
+            if (players.Length == 0)
                 return default;
 
             for (int i = 0; i < 4; i++)
             {
-                var idx = _randomSource.Get(0, _playerZoneManager.Zones.Count);
-                var zone = _playerZoneManager.Zones[idx];
-                if (zone.Valid)
-                {
-                    return zone;
-                }
+                var idx = _randomSource.Get(0, players.Length);
+                return players[idx];
             }
 
             return default;
@@ -122,25 +119,6 @@ namespace VolatileHordes.Spawning
 
             return null;
         }
-
-        public Vector3? GetRandomSafeCorner(PlayerZone zone)
-        {
-            var corners = ZoneProcessing.EdgeCornersFromCluster(
-                ZoneProcessing.GetConnectedSpawnRects(zone, _playerZoneManager.Zones)
-                    .ToArray())
-                .ToArray();
-
-            foreach (var corner in corners.EnumerateFromRandomIndex(_randomSource))
-            {
-                var worldPos = _world.GetWorldVector(corner);
-                if (_world.CanSpawnAt(worldPos))
-                {
-                    return worldPos;
-                }
-            }
-
-            return null;
-        }
         
         public PointF TryGetSingleRandomZonePos(RectangleF zone)
         {
@@ -149,10 +127,10 @@ namespace VolatileHordes.Spawning
                 _randomSource.Get(zone.Bottom, zone.Top));
         }
 
-        public PlayerZone? GetNearestPlayer(PointF pt)
+        public Player? GetNearestPlayer(PointF pt)
         {
-            return _playerZoneManager.Zones
-                .OrderBy(x => pt.AbsDistance(x.PlayerLocation))
+            return playersProvider.players
+                .OrderBy(x => pt.AbsDistance(x.location))
                 .FirstOrDefault();
         }
     }

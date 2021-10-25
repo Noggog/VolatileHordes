@@ -57,7 +57,7 @@ namespace VolatileHordes.Control
                     
                     occurredSubj.OnNext(Unit.Default);
                     
-                    await _zombieControl.SendGroupTowardsDelayed(group, player.PlayerLocation);
+                    await _zombieControl.SendGroupTowardsDelayed(group, player.location);
                 })
                 .Unit();
         }
