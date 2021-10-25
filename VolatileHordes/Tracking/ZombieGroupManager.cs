@@ -11,7 +11,7 @@ namespace VolatileHordes.Tracking
 {
     public class ZombieGroupManager
     {
-        private readonly PlayerPartiesProvider playerPartiesProvider;
+        private readonly PlayersProvider playersProvider;
         private readonly List<ZombieGroup> _normalGroups = new();
         private static readonly TimeSpan StaleGroupTime = TimeSpan.FromMinutes(15);
 
@@ -23,13 +23,13 @@ namespace VolatileHordes.Tracking
 
         public IEnumerable<ZombieGroup> AllGroups => NormalGroups.Concat(AmbientGroups.Values);
 
-        public bool Paused => playerPartiesProvider.playerParties.SelectMany(x => x.players).Count() == 0;
+        public bool Paused => playersProvider.playerParties.SelectMany(x => x.players).Count() == 0;
 
         public ZombieGroupManager(
             TimeManager timeManager,
-            PlayerPartiesProvider playerPartiesProvider)
+            PlayersProvider playersProvider)
         {
-            this.playerPartiesProvider = playerPartiesProvider;
+            this.playersProvider = playersProvider;
             timeManager.Interval(TimeSpan.FromSeconds(30))
                 .Subscribe(CleanGroups,
                     onError: e => Logger.Error("{0} had update error {1}", nameof(ZombieGroupManager), e));

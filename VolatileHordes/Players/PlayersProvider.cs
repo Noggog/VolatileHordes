@@ -9,7 +9,7 @@ using VolatileHordes.Probability;
 
 namespace VolatileHordes.Players
 {
-    public class PlayerPartiesProvider
+    public class PlayersProvider
     {
         /*
          * All players, grouped into parties
@@ -24,7 +24,7 @@ namespace VolatileHordes.Players
          */
         private BehaviorSubject<int> _playerCount = new(0);
         public IObservable<int> playerCount;
-        public PlayerPartiesProvider(
+        public PlayersProvider(
             PlayerGameEventsWrapper playerGameEventsWrapper,
             IWorld world,
             GameStageCalculator gameStageCalculator,

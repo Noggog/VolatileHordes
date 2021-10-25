@@ -21,7 +21,7 @@ namespace VolatileHordes.Director
             RandomSource randomSource,
             WanderingHordeSpawner wanderingHordeSpawner,
             FidgetForwardSpawner fidgetForwardSpawner,
-            PlayerPartiesProvider playerPartiesProvider)
+            PlayersProvider playersProvider)
         {
             _timeManager = timeManager;
             _randomSource = randomSource;
@@ -34,7 +34,7 @@ namespace VolatileHordes.Director
                 .SubscribeAsync(async _ =>
                     {
                         var spawnCount =
-                            playerPartiesProvider.playerParties
+                            playersProvider.playerParties
                                 .First()
                                 .GameStage
                                 .Let(x => 6 + 0.1 * x)

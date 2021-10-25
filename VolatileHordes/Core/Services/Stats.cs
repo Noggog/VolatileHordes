@@ -7,18 +7,18 @@ namespace VolatileHordes.Core.Services
 {
     public class Stats
     {
-        private readonly PlayerPartiesProvider playerPartiesProvider;
+        private readonly PlayersProvider playersProvider;
         private readonly ZombieGroupManager _groupManager;
         private readonly AmbientZombieManager _ambientZombieManager;
         private readonly LimitManager _limits;
 
         public Stats(
-            PlayerPartiesProvider playerPartiesProvider,
+            PlayersProvider playersProvider,
             ZombieGroupManager groupManager,
             AmbientZombieManager ambientZombieManager,
             LimitManager limits)
         {
-            this.playerPartiesProvider = playerPartiesProvider;
+            this.playersProvider = playersProvider;
             _groupManager = groupManager;
             _ambientZombieManager = ambientZombieManager;
             _limits = limits;
@@ -29,11 +29,11 @@ namespace VolatileHordes.Core.Services
             Player player;
             if (sender.RemoteClientInfo == null)
             {
-                player = playerPartiesProvider.players.FirstOrDefault();
+                player = playersProvider.players.FirstOrDefault();
             }
             else
             {
-                player = playerPartiesProvider.players
+                player = playersProvider.players
                     .FirstOrDefault(x => x.EntityId == sender.RemoteClientInfo.entityId);
             }
             if (player == null || !player.TryGetEntity(out var entity))

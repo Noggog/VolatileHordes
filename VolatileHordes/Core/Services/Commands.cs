@@ -92,7 +92,7 @@ namespace VolatileHordes
                 }
                 case "players":
                 {
-                    Container.PlayerPartiesProvider.Log();
+                    Container.playersProvider.Log();
                     break;
                 }
                 case "destroy":
