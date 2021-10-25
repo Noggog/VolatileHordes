@@ -60,17 +60,7 @@ namespace VolatileHordes.Spawning
 
         public Player? GetRandomPlayer()
         {
-            var players = playersProvider.players.ToArray();
-            if (players.Length == 0)
-                return default;
-
-            for (int i = 0; i < 4; i++)
-            {
-                var idx = _randomSource.Get(0, players.Length);
-                return players[idx];
-            }
-
-            return default;
+            return playersProvider.players.ToArray().Random(_randomSource);
         }
 
         public Vector3? GetRandomPointNear(PointF pt, byte range, int attemptCount = 10)
