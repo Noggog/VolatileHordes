@@ -16,7 +16,7 @@ namespace VolatileHordes.GUI.Extensions
             Action<TList, TObject> update)
             where TKey : notnull
         {
-            var notSeen = new HashSet<TKey>(objs.Select(keySelector));
+            var notSeen = new HashSet<TKey>(cache.Items.Select(x => cache.KeySelector(x)));
             foreach (var o in objs)
             {
                 var k = keySelector(o);
