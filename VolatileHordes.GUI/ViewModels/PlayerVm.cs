@@ -1,21 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Reactive.Linq;
-using System.Windows.Media.Imaging;
-using DynamicData;
-using Noggog;
+﻿using System.Drawing;
 using Noggog.WPF;
-using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using VolatileHordes.Dto;
-using VolatileHordes.GUI.Extensions;
 
 namespace VolatileHordes.GUI.ViewModels
 {
     public class PlayerVm : ViewModel
     {
         public int EntityId { get; }
+        [Reactive] public RectangleF Rectangle { get; private set; }
         [Reactive] public RectangleF SpawnRectangle { get; private set; }
         [Reactive] public float Rotation { get; private set; }
 
@@ -27,6 +20,7 @@ namespace VolatileHordes.GUI.ViewModels
         public void Absorb(PlayerDto dto)
         {
             SpawnRectangle = dto.SpawnRectangle;
+            Rectangle = dto.Rectangle;
             Rotation = dto.Rotation % 360;
         }
     }

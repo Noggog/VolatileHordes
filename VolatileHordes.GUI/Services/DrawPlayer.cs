@@ -6,8 +6,8 @@ using VolatileHordes.GUI.Extensions;
 
 namespace VolatileHordes.GUI.Services
 {
-    public record PlayerDrawInput(RectangleF Rectangle, float Rotation);
-    public record ZombieDrawInput(PointF Position, PointF Target);
+    public record PlayerDrawInput(RectangleF SpawnRectangle, RectangleF Rectangle, float Rotation);
+    public record ZombieDrawInput(PointF Position, PointF Target, float Rotation);
     public record DrawInput(PlayerDrawInput Player, ushort Size, ZombieDrawInput[] Zombies);
     
     public class DrawPlayerZone
@@ -16,6 +16,8 @@ namespace VolatileHordes.GUI.Services
         private const byte PlayerConeRadius = 70;
         private const byte PlayerCircleRadius = 4;
         private const byte ZombieCircleRadius = 4;
+        private const byte ZombieConeSize = 20;
+        private const byte ZombieConeRadius = 70;
 
         class DrawPass : IDisposable
         {
@@ -57,7 +59,7 @@ namespace VolatileHordes.GUI.Services
 
             private void DrawPlayer()
             {
-                var pos = Offset(_input.Player.Rectangle.Center());
+                var pos = Offset(_input.Player.SpawnRectangle.Center());
                 _gr.FillPie(
                     new SolidBrush(Color.FromArgb(50, 255, 255, 255)),
                     new Rectangle(
@@ -65,6 +67,11 @@ namespace VolatileHordes.GUI.Services
                         new Size(PlayerConeSize, PlayerConeSize)), 
                     AdjustRotation(_input.Player.Rotation) - (PlayerConeRadius / 2f), 
                     PlayerConeRadius);
+                _gr.DrawRectangle(
+                    new Pen(Color.FromArgb(15, 15, 15)),
+                    new Rectangle(
+                        Offset(new PointF(_input.Player.SpawnRectangle.X, _input.Player.SpawnRectangle.Y)),
+                        new Size((int)(_input.Player.SpawnRectangle.Width * _scaleX), (int)(_input.Player.SpawnRectangle.Height * _scaleX))));
                 _gr.FillEllipse(
                     new SolidBrush(Color.Teal), 
                     pos.X - PlayerCircleRadius / 2, 
@@ -92,6 +99,13 @@ namespace VolatileHordes.GUI.Services
             private void DrawZombie(ZombieDrawInput zombie)
             {
                 var pos = Offset(zombie.Position);
+                _gr.FillPie(
+                    new SolidBrush(Color.FromArgb(50, 255, 255, 255)),
+                    new Rectangle(
+                        new Point(pos.X - ZombieConeSize / 2, pos.Y - ZombieConeSize / 2), 
+                        new Size(ZombieConeSize, ZombieConeSize)), 
+                    AdjustRotation(zombie.Rotation) - (ZombieConeRadius / 2f), 
+                    ZombieConeRadius);
                 _gr.FillEllipse(
                     new SolidBrush(Color.Firebrick),
                     pos.X - ZombieCircleRadius / 2,

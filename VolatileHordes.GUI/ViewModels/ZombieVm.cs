@@ -10,6 +10,7 @@ namespace VolatileHordes.GUI.ViewModels
         public int EntityId { get; }
         [Reactive] public PointF Position { get; private set; }
         [Reactive] public PointF Target { get; private set; }
+        [Reactive] public float Rotation { get; private set; }
 
         public ZombieVm(int entityId)
         {
@@ -20,6 +21,7 @@ namespace VolatileHordes.GUI.ViewModels
         {
             Position = dto.Position;
             Target = dto.Target;
+            Rotation = dto.Rotation;
         }
     }
 }

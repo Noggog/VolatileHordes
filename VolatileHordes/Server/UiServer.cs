@@ -182,22 +182,27 @@ namespace VolatileHordes.Server
                 Players = _players.Zones.Select(z => new PlayerDto()
                 {
                     SpawnRectangle = z.SpawnRectangle,
+                    Rectangle = z.Rectangle,
                     Rotation = z.Rotation.y
                 }).ToList(),
                 ZombieGroups = _zombies.AllGroups.Select(g =>
                 {
                     return new ZombieGroupDto()
                     {
+                        Id = g.Id,
                         Target = g.Target ?? new PointF(),
-                        Zombies = g.Zombies.Select(z =>
-                        {
-                            return new ZombieDto()
+                        Zombies = g.Zombies
+                            .Where(z => z.IsAlive && !z.IsDespawned)
+                            .Select(z =>
                             {
-                                EntityId = z.Id,
-                                Position = z.GetPosition() ?? new PointF(),
-                                Target = z.GetTarget() ?? new PointF()
-                            };
-                        }).ToList()
+                                return new ZombieDto()
+                                {
+                                    EntityId = z.Id,
+                                    Position = z.GetPosition() ?? new PointF(),
+                                    Target = z.GetTarget() ?? new PointF(),
+                                    Rotation = z.GetRotation()?.y ?? 0f,
+                                };
+                            }).ToList()
                     };
                 }).ToList()
             };

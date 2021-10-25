@@ -31,6 +31,12 @@ namespace VolatileHordes.Players
             width: MaxsSpawnBlock.X - MinsSpawnBlock.X,
             height: MaxsSpawnBlock.Y - MinsSpawnBlock.Y);
 
+        public RectangleF Rectangle => new(
+            x: Mins.X,
+            y: Mins.Y,
+            width: Maxs.X - Mins.X,
+            height: Maxs.Y - Mins.Y);
+
         public PlayerZone(IPlayer player)
         {
             Player = player;

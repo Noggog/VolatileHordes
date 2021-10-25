@@ -35,8 +35,8 @@ namespace VolatileHordes.GUI.ViewModels
                     .TransformMany(x => x.Zombies.Connect().RemoveKey().AsObservableList())
                     .FilterOnObservable(zombie => Observable.CombineLatest(
                         zombie.WhenAnyValue(x => x.Position),
-                        pvm.WhenAnyValue(x => x.SpawnRectangle),
-                        (zombiePos, spawnRectangle) => spawnRectangle.Contains(zombiePos)))
+                        pvm.WhenAnyValue(x => x.Rectangle),
+                        (zombiePos, rect) => rect.Contains(zombiePos)))
                     .AutoRefresh()
                     .QueryWhenChanged(x => x)
                     .CombineLatest(
@@ -45,9 +45,12 @@ namespace VolatileHordes.GUI.ViewModels
                         (zombiesInRange, _, _) =>
                         {
                             return new DrawInput(
-                                new PlayerDrawInput(pvm.SpawnRectangle, pvm.Rotation),
+                                new PlayerDrawInput(
+                                    pvm.SpawnRectangle, 
+                                    pvm.Rectangle,
+                                    pvm.Rotation),
                                 Size,
-                                zombiesInRange.Select(z => new ZombieDrawInput(z.Position, z.Target)).ToArray());
+                                zombiesInRange.Select(z => new ZombieDrawInput(z.Position, z.Target, z.Rotation)).ToArray());
                         })
                     .Debounce(TimeSpan.FromMilliseconds(150), RxApp.MainThreadScheduler)
                     .ObserveOn(RxApp.TaskpoolScheduler)
