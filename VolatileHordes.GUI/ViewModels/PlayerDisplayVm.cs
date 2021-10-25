@@ -27,6 +27,7 @@ namespace VolatileHordes.GUI.ViewModels
         public PlayerDisplayVm(
             WorldstateVm worldstateVm,
             DrawPlayerZone drawPlayer,
+            MainSettingsVm mainSettingsVm,
             PlayerVm pvm)
         {
             Player = pvm;
@@ -51,7 +52,9 @@ namespace VolatileHordes.GUI.ViewModels
                                     pvm.Rectangle,
                                     pvm.Rotation),
                                 Size,
-                                zombiesInRange.Select(z => new ZombieDrawInput(z.Position, z.Target, z.Rotation)).ToArray());
+                                zombiesInRange.Select(z => new ZombieDrawInput(z.Position, z.Target, z.GroupVm.Target, z.Rotation)).ToArray(),
+                                DrawTargetLines: mainSettingsVm.DrawTargets,
+                                DrawGroupTargetLines: mainSettingsVm.DrawGroupTargets);
                         })
                     .Debounce(TimeSpan.FromMilliseconds(150), RxApp.MainThreadScheduler)
                     .ObserveOn(RxApp.TaskpoolScheduler)

@@ -26,7 +26,7 @@ namespace VolatileHordes.GUI.ViewModels
             _zombies.AbsorbIn(
                 dto.Zombies, 
                 o => o.EntityId, 
-                (k) => new ZombieVm(k),
+                (k) => new ZombieVm(k, this),
                 (vm, dto) => vm.Absorb(dto));
         }
     }

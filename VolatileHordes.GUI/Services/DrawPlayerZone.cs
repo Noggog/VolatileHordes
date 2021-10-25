@@ -7,8 +7,13 @@ using VolatileHordes.GUI.Extensions;
 namespace VolatileHordes.GUI.Services
 {
     public record PlayerDrawInput(RectangleF SpawnRectangle, RectangleF Rectangle, float Rotation);
-    public record ZombieDrawInput(PointF Position, PointF Target, float Rotation);
-    public record DrawInput(PlayerDrawInput Player, ushort Size, ZombieDrawInput[] Zombies);
+    public record ZombieDrawInput(PointF Position, PointF Target, PointF GroupTarget, float Rotation);
+    public record DrawInput(
+        PlayerDrawInput Player,
+        ushort Size, 
+        ZombieDrawInput[] Zombies,
+        bool DrawTargetLines,
+        bool DrawGroupTargetLines);
     
     public class DrawPlayerZone
     {
@@ -85,10 +90,16 @@ namespace VolatileHordes.GUI.Services
                 DrawCone(zombie.Position, zombie.Rotation, ZombieConeSize, ZombieConeRadius,
                     Color.FromArgb(50, 255, 255, 255));
                 DrawCircle(zombie.Position, ZombieCircleRadius, Color.Firebrick);
-                if (!zombie.Target.IsEmpty)
+                if (_input.DrawTargetLines && !zombie.Target.IsEmpty)
                 {
                     DrawCircle(zombie.Target, ZombieTargetRadius, Color.FromArgb(30, 255, 255, 255));
                     _gr.DrawLine(new Pen(Color.FromArgb(30, 255, 255, 255)), Offset(zombie.Position), Offset(zombie.Target));
+                }
+
+                if (_input.DrawGroupTargetLines && !zombie.GroupTarget.IsEmpty)
+                {
+                    DrawCircle(zombie.GroupTarget, ZombieTargetRadius, Color.FromArgb(30, 255, 255, 150));
+                    _gr.DrawLine(new Pen(Color.FromArgb(30, 255, 255, 150)), Offset(zombie.Position), Offset(zombie.GroupTarget));
                 }
             }
 

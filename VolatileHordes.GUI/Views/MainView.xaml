@@ -9,9 +9,14 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <local:ConnectionView Grid.Row="0" x:Name="ConnectionView" Margin="4" />
-        <local:PlayerView Grid.Row="1" x:Name="PlayerView" />
+        <StackPanel Orientation="Horizontal" Grid.Row="1">
+            <CheckBox Content="Group Targets" x:Name="GroupTargetsBox" VerticalAlignment="Center" Margin="4" />
+            <CheckBox Content="Targets" x:Name="TargetsBox" VerticalAlignment="Center" Margin="4" />
+        </StackPanel>
+        <local:PlayerView Grid.Row="2" x:Name="PlayerView" />
     </Grid>
 </local:MainViewBase>

@@ -13,13 +13,17 @@ namespace VolatileHordes.GUI.ViewModels
 
         private readonly ObservableAsPropertyHelper<PlayerDisplayVm?> _Player;
         public PlayerDisplayVm? Player => _Player.Value;
+        
+        public MainSettingsVm Settings { get; }
 
         public MainVm(
             ConnectionVm connectionVm,
             PlayerDisplayVm.Factory pvmFactory,
+            MainSettingsVm settingsVm,
             WorldstateVm worldstateVm)
         {
             Connection = connectionVm;
+            Settings = settingsVm;
 
             _Player = worldstateVm.Players.Connect()
                 .QueryWhenChanged(x => x.Items.FirstOrDefault())
