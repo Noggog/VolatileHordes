@@ -12,7 +12,7 @@ namespace VolatileHordes
     public class TimeManager
     {
         private readonly INowProvider _nowProvider;
-        private readonly PlayerCountProvider playerCountProvider;
+        private readonly PlayersProvider playersProvider;
         private readonly RandomSource _randomSource;
 
         private readonly BehaviorSubject<DateTime> _updateTime;
@@ -21,10 +21,10 @@ namespace VolatileHordes
 
         public TimeManager(
             INowProvider nowProvider,
-            PlayerCountProvider playerCountProvider,
+            PlayersProvider playersProvider,
             RandomSource randomSource)
         {
-            this.playerCountProvider = playerCountProvider;
+            this.playersProvider = playersProvider;
             _nowProvider = nowProvider;
             _randomSource = randomSource;
             _updateTime = new BehaviorSubject<DateTime>(_nowProvider.Now);
@@ -52,7 +52,7 @@ namespace VolatileHordes
                 source =
                     Observable.CombineLatest(
                         UpdateDeltas,
-                        playerCountProvider.playerCount,
+                        playersProvider.playerCount,
                         (delta, numPlayers) => numPlayers > 0 ? delta : new TimeSpan()
                     )
                         .Where(x => x.Ticks > 0);
