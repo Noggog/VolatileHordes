@@ -39,6 +39,7 @@ namespace VolatileHordes.GUI.ViewModels
                         (zombiePos, rect) => rect.Contains(zombiePos)))
                     .AutoRefresh()
                     .QueryWhenChanged(x => x)
+                    .StartWithEmpty()
                     .CombineLatest(
                         this.WhenAnyValue(x => x.Size),
                         pvm.WhenAnyValue(x => x.Rotation),

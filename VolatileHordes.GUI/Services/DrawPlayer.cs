@@ -60,6 +60,7 @@ namespace VolatileHordes.GUI.Services
 
             private void DrawPlayer()
             {
+                if (_input.Player.SpawnRectangle.IsEmpty) return;
                 var center = _input.Player.SpawnRectangle.Center();
                 DrawCone(center, _input.Player.Rotation, PlayerConeSize, PlayerConeRadius,
                     Color.FromArgb(50, 255, 255, 255));
