@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using VolatileHordes.Director;
 using VolatileHordes.GameAbstractions;
 using VolatileHordes.Probability;
@@ -11,13 +12,18 @@ namespace VolatileHordes.Players
     public class PlayerPartiesProvider
     {
         /*
-         * A List of players, grouped into parties
+         * All players, grouped into parties
          */
         public List<PlayerParty> playerParties = new();
         /*
-         * An IEnumerable of all players
+         * All players
          */
         public IEnumerable<Player> players => playerParties.SelectMany(x => x.players);
+        /*
+         * The number of players, as an observable
+         */
+        private BehaviorSubject<int> _playerCount = new(0);
+        public IObservable<int> playerCount;
         public PlayerPartiesProvider(
             PlayerGameEventsWrapper playerGameEventsWrapper,
             IWorld world,
@@ -33,9 +39,15 @@ namespace VolatileHordes.Players
             .Subscribe(x =>
             {
                 if (x.Item1)
+                {
                     playerParties[0].playersDictionary.Add(x.Item2, new Player(world, x.Item2));
+                    _playerCount.OnNext(playerParties[0].playersDictionary.Count);
+                }
                 else
+                {
                     playerParties[0].playersDictionary.Remove(x.Item2);
+                    _playerCount.OnNext(playerParties[0].playersDictionary.Count);
+                }
             });
         }
 
