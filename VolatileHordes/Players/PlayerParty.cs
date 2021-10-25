@@ -11,9 +11,13 @@ namespace VolatileHordes.Players
 {
     public class PlayerParty
     {
-        public Dictionary<int, Player> playersDictionary = new();
         public IEnumerable<Player> players { get => playersDictionary.Values; }
         public float GameStage => gameStageCalculator.GetGamestage(this);
+
+        /*
+         * Maintained externally by [PlayersProvider]
+         */
+        public Dictionary<int, Player> playersDictionary = new();
 
         private RandomSource randomSource;
         private IWorld world;
