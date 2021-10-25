@@ -1,24 +1,24 @@
 ﻿using UniLinq;
+using VolatileHordes.GameAbstractions;
 using VolatileHordes.Players;
-using VolatileHordes.Spawning;
 using VolatileHordes.Tracking;
 
 namespace VolatileHordes.Core.Services
 {
     public class Stats
     {
-        private readonly PlayerZoneManager _playerZoneManager;
+        private readonly PlayerPartiesProvider playerPartiesProvider;
         private readonly ZombieGroupManager _groupManager;
         private readonly AmbientZombieManager _ambientZombieManager;
         private readonly LimitManager _limits;
 
         public Stats(
-            PlayerZoneManager playerZoneManager,
+            PlayerPartiesProvider playerPartiesProvider,
             ZombieGroupManager groupManager,
             AmbientZombieManager ambientZombieManager,
             LimitManager limits)
         {
-            _playerZoneManager = playerZoneManager;
+            this.playerPartiesProvider = playerPartiesProvider;
             _groupManager = groupManager;
             _ambientZombieManager = ambientZombieManager;
             _limits = limits;
@@ -26,17 +26,17 @@ namespace VolatileHordes.Core.Services
 
         public void Print(CommandSenderInfo sender)
         {
-            PlayerZone playerZone;
+            Player player;
             if (sender.RemoteClientInfo == null)
             {
-                playerZone = _playerZoneManager.Zones.FirstOrDefault();
+                player = playerPartiesProvider.players.FirstOrDefault();
             }
             else
             {
-                playerZone = _playerZoneManager.Zones
-                    .FirstOrDefault(x => x.Player.EntityId == sender.RemoteClientInfo.entityId);
+                player = playerPartiesProvider.players
+                    .FirstOrDefault(x => x.EntityId == sender.RemoteClientInfo.entityId);
             }
-            if (playerZone == null || !playerZone.Player.TryGetEntity(out var entity))
+            if (player == null || !player.TryGetEntity(out var entity))
             {
                 Logger.Warning("No player found to print stats relative to.");
                 return;
