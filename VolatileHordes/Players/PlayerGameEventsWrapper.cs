@@ -5,17 +5,9 @@ namespace VolatileHordes.Players
 {
     public class PlayerGameEventsWrapper
     {
-        public static PlayerGameEventsWrapper Create()
+        public PlayerGameEventsWrapper()
         {
-            return new PlayerGameEventsWrapper(ModEvents.PlayerSpawnedInWorld, ModEvents.PlayerDisconnected);
-        }
-
-        public PlayerGameEventsWrapper(
-            ModEvent<ClientInfo, RespawnType, Vector3i> playerSpawnedInWorldEvent,
-            ModEvent<ClientInfo, bool> playerDisconnectedEvent
-        )
-        {
-            playerSpawnedInWorldEvent.RegisterHandler((clientInfo, respawnType, vector) =>
+            ModEvents.PlayerSpawnedInWorld.RegisterHandler((clientInfo, respawnType, vector) =>
             {
                 Logger.Debug("PlayerSpawnedInWorld \"{0}\", \"{1}\", \"{2}\"", clientInfo?.ToString() ?? "null", respawnType, vector);
                 switch (respawnType)
@@ -30,7 +22,7 @@ namespace VolatileHordes.Players
                         break;
                 }
             });
-            playerDisconnectedEvent.RegisterHandler((clientInfo, isShutdown) =>
+            ModEvents.PlayerDisconnected.RegisterHandler((clientInfo, isShutdown) =>
             {
                 Logger.Debug("PlayerDisconnected \"{0}\", \"{1}\"", clientInfo?.ToString() ?? "null", isShutdown);
                 PlayerRemovedSubject.OnNext(
