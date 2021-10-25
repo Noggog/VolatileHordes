@@ -10,7 +10,14 @@ namespace VolatileHordes.Players
 {
     public class PlayerPartiesProvider
     {
+        /*
+         * A List of players, grouped into parties
+         */
         public List<PlayerParty> playerParties = new();
+        /*
+         * An IEnumerable of all players
+         */
+        public IEnumerable<Player> players => playerParties.SelectMany(x => x.players);
         public PlayerPartiesProvider(
             PlayerGameEventsWrapper playerGameEventsWrapper,
             IWorld world,
@@ -37,7 +44,7 @@ namespace VolatileHordes.Players
          */
         public void Log()
         {
-            foreach (var player in playerParties.SelectMany(x => x.players))
+            foreach (var player in players)
             {
                 string playerPos;
                 if (player.TryGetEntity(out var entity))
