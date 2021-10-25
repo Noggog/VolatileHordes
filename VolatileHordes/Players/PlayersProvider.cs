@@ -23,7 +23,7 @@ namespace VolatileHordes.Players
          * The number of players, as an observable
          */
         private BehaviorSubject<int> _playerCount = new(0);
-        public IObservable<int> playerCount;
+        public IObservable<int> playerCount { get { return _playerCount; } }
         public PlayersProvider(
             PlayerGameEventsWrapper playerGameEventsWrapper,
             IWorld world,
@@ -31,7 +31,6 @@ namespace VolatileHordes.Players
             RandomSource randomSource
         )
         {
-            playerCount = _playerCount;
             playerParties.Add(new(randomSource, gameStageCalculator, world));
             Observable.Merge(
                 playerGameEventsWrapper.PlayerAdded.Select(x => new ValueTuple<bool, int>(true, x)),
