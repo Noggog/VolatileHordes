@@ -26,8 +26,8 @@ namespace VolatileHordes
         public static readonly UserSettings UserSettings = UserSettings.Load();
         public static readonly GameStageCalculator GamestageCalculator = new(UserSettings.Director);
         public static readonly PlayerZoneManager PlayerZoneManager = new(World);
-        public static readonly TimeManager Time = new(new NowProvider(), PlayerZoneManager, Random);
         public static readonly PlayersProvider playersProvider = new(PlayerGameEventsWrapper, World, GamestageCalculator, Random);
+        public static readonly TimeManager Time = new(new NowProvider(), playersProvider, Random);
         public static readonly PlayerLocationUpdater PlayerLocationUpdater = new(PlayerZoneManager, Time);
         public static readonly SpawningPositions Spawning = new(World, PlayerZoneManager, Random);
         public static readonly ZombieGroupManager ZombieGroupManager = new(Time, playersProvider);
@@ -64,7 +64,7 @@ namespace VolatileHordes
         public static readonly CrazyControl CrazyControl = new(ZombieControl, Time, Spawning);
         public static readonly CrazyAiPackage CrazyAiPackage = new(NoiseResponderControlFactory, CrazyControl);
         public static readonly CrazySpawner CrazySpawner = new(ZombieGroupManager, CrazyAiPackage, Spawning, ZombieControl, ZombieCreator);
-        public static readonly Stats Stats = new(PlayerZoneManager, ZombieGroupManager, Ambient, LimitManager);
+        public static readonly Stats Stats = new(playersProvider, ZombieGroupManager, Ambient, LimitManager);
         public static readonly DirectorSwitch DirectorSwitch = new(UserSettings.Director);
         public static readonly FidgetForwardSpawner FidgetForwardSpawner = new(ZombieGroupManager, FidgetForwardAIPackage, Spawning, WanderingHordePlacer, ZombieControl, LimitManager);
         public static readonly WanderingHordeSpawner WanderingHordeSpawner = new(ZombieGroupManager, RoamAiPackage, Spawning, WanderingHordePlacer, ZombieControl, LimitManager);

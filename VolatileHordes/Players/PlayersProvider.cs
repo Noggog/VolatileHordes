@@ -31,6 +31,7 @@ namespace VolatileHordes.Players
             RandomSource randomSource
         )
         {
+            playerCount = _playerCount;
             playerParties.Add(new(randomSource, gameStageCalculator, world));
             Observable.Merge(
                 playerGameEventsWrapper.PlayerAdded.Select(x => new ValueTuple<bool, int>(true, x)),
