@@ -149,9 +149,6 @@
     <Compile Include="Core\Extensions\RectangleExt.cs" />
     <Compile Include="Core\Models\ValueTuple.cs" />
     <Compile Include="Core\Extensions\VectorExt.cs" />
-    <Compile Include="Players\PlayerLocationUpdater.cs" />
-    <Compile Include="Players\PlayerZoneManager.cs" />
-    <Compile Include="Players\PlayerZone.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="mod.xml" />

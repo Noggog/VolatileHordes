@@ -25,10 +25,8 @@ namespace VolatileHordes
         public static readonly IWorld World = new WorldWrapper();
         public static readonly UserSettings UserSettings = UserSettings.Load();
         public static readonly GameStageCalculator GamestageCalculator = new(UserSettings.Director);
-        public static readonly PlayerZoneManager PlayerZoneManager = new(World);
         public static readonly PlayersProvider playersProvider = new(PlayerGameEventsWrapper, World, GamestageCalculator, Random);
         public static readonly TimeManager Time = new(new NowProvider(), playersProvider, Random);
-        public static readonly PlayerLocationUpdater PlayerLocationUpdater = new(PlayerZoneManager, Time);
         public static readonly SpawningPositions Spawning = new(World, playersProvider, Random);
         public static readonly ZombieGroupManager ZombieGroupManager = new(Time, playersProvider);
         public static readonly ZombieControl ZombieControl = new(Spawning, Time, Random);
