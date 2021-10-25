@@ -18,6 +18,7 @@ namespace VolatileHordes.GUI.Services
         private const byte ZombieCircleRadius = 4;
         private const byte ZombieConeSize = 20;
         private const byte ZombieConeRadius = 70;
+        private const byte ZombieTargetRadius = 2;
 
         class DrawPass : IDisposable
         {
@@ -59,33 +60,15 @@ namespace VolatileHordes.GUI.Services
 
             private void DrawPlayer()
             {
-                var pos = Offset(_input.Player.SpawnRectangle.Center());
-                _gr.FillPie(
-                    new SolidBrush(Color.FromArgb(50, 255, 255, 255)),
-                    new Rectangle(
-                        new Point(pos.X - PlayerConeSize / 2, pos.Y - PlayerConeSize / 2), 
-                        new Size(PlayerConeSize, PlayerConeSize)), 
-                    AdjustRotation(_input.Player.Rotation) - (PlayerConeRadius / 2f), 
-                    PlayerConeRadius);
+                var center = _input.Player.SpawnRectangle.Center();
+                DrawCone(center, _input.Player.Rotation, PlayerConeSize, PlayerConeRadius,
+                    Color.FromArgb(50, 255, 255, 255));
                 _gr.DrawRectangle(
                     new Pen(Color.FromArgb(15, 15, 15)),
                     new Rectangle(
                         Offset(new PointF(_input.Player.SpawnRectangle.X, _input.Player.SpawnRectangle.Y)),
                         new Size((int)(_input.Player.SpawnRectangle.Width * _scaleX), (int)(_input.Player.SpawnRectangle.Height * _scaleX))));
-                _gr.FillEllipse(
-                    new SolidBrush(Color.Teal), 
-                    pos.X - PlayerCircleRadius / 2, 
-                    pos.Y - PlayerCircleRadius / 2, PlayerCircleRadius, PlayerCircleRadius);
-            }
-
-            private Point Offset(PointF target)
-            {
-                return new Point((int)((target.X - _offsetX) * _scaleX), (int)((target.Y - _offsetY) * _scaleY));
-            }
-
-            private float AdjustRotation(float f)
-            {
-                return 90 - f;
+                DrawCircle(center, PlayerCircleRadius, Color.Teal);
             }
 
             private void DrawZombies()
@@ -98,20 +81,47 @@ namespace VolatileHordes.GUI.Services
 
             private void DrawZombie(ZombieDrawInput zombie)
             {
-                var pos = Offset(zombie.Position);
-                _gr.FillPie(
-                    new SolidBrush(Color.FromArgb(50, 255, 255, 255)),
-                    new Rectangle(
-                        new Point(pos.X - ZombieConeSize / 2, pos.Y - ZombieConeSize / 2), 
-                        new Size(ZombieConeSize, ZombieConeSize)), 
-                    AdjustRotation(zombie.Rotation) - (ZombieConeRadius / 2f), 
-                    ZombieConeRadius);
+                DrawCone(zombie.Position, zombie.Rotation, ZombieConeSize, ZombieConeRadius,
+                    Color.FromArgb(50, 255, 255, 255));
+                DrawCircle(zombie.Position, ZombieCircleRadius, Color.Firebrick);
+                if (!zombie.Target.IsEmpty)
+                {
+                    DrawCircle(zombie.Target, ZombieTargetRadius, Color.FromArgb(30, 255, 255, 255));
+                    _gr.DrawLine(new Pen(Color.FromArgb(30, 255, 255, 255)), Offset(zombie.Position), Offset(zombie.Target));
+                }
+            }
+
+            private Point Offset(PointF target)
+            {
+                return new Point((int)((target.X - _offsetX) * _scaleX), (int)((target.Y - _offsetY) * _scaleY));
+            }
+
+            private float AdjustRotation(float f)
+            {
+                return 90 - f;
+            }
+
+            private void DrawCircle(PointF pt, int size, Color color)
+            {
+                var target = Offset(pt);
                 _gr.FillEllipse(
-                    new SolidBrush(Color.Firebrick),
-                    pos.X - ZombieCircleRadius / 2,
-                    pos.Y - ZombieCircleRadius / 2,
-                    ZombieCircleRadius,
-                    ZombieCircleRadius);
+                    new SolidBrush(color),
+                    target.X - size / 2,
+                    target.Y - size / 2,
+                    size,
+                    size);
+            }
+
+            private void DrawCone(PointF pt, float rotation, int size, byte radius, Color color)
+            {
+                var pos = Offset(pt);
+                _gr.FillPie(
+                    new SolidBrush(color),
+                    new Rectangle(
+                        new Point(pos.X - size / 2, pos.Y - size / 2), 
+                        new Size(size, size)), 
+                    AdjustRotation(rotation) - (radius / 2f), 
+                    radius);
             }
         }
         

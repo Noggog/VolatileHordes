@@ -35,7 +35,14 @@ namespace VolatileHordes.GameAbstractions
         }
 
         public EntityZombie? GetEntity() => _world.GetEntity(Id) as EntityZombie;
-        public PointF? GetTarget() => GetEntity()?.InvestigatePosition.ToPoint();
+
+        public PointF? GetTarget()
+        {
+            var ent = GetEntity();
+            if (ent == null) return null;
+            if (!ent.HasInvestigatePosition) return null;
+            return ent.InvestigatePosition.ToPoint();
+        }
 
         public PointF? GetPosition() => GetEntity()?.GetPosition().ToPoint();
 
