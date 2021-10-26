@@ -47,7 +47,7 @@ namespace VolatileHordes.Tests.Allocation
                 for (int y = 0; y < tracker.Height; y++)
                 {
                     Assert.AreEqual(
-                        tracker[new Point(x, y)],
+                        tracker[x, y],
                         Percent.One);
                 }
             }
@@ -72,7 +72,7 @@ namespace VolatileHordes.Tests.Allocation
                 {
                     Assert.True(
                         buckets[x, y].EqualsWithin(
-                            tracker[new Point(x, y)]));
+                            tracker[x, y]));
                 }
             }
         }

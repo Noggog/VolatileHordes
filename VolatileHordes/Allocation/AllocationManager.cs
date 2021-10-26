@@ -29,8 +29,8 @@ namespace VolatileHordes.Allocation
             {
                 for (int y = 0; y < _buckets.Height; y++)
                 {
-                    var val = _buckets[new Point(x, y)];
-                    _buckets[new Point(x, y)] = Percent.FactoryPutInRange(val.Value + _fillPerMinute);
+                    var val = _buckets[x, y];
+                    _buckets[x, y] = Percent.FactoryPutInRange(val.Value + _fillPerMinute);
                 }
             }
         }

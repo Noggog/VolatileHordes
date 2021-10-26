@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using VolatileHordes.Utility;
 
 namespace VolatileHordes
 {
@@ -121,6 +122,28 @@ namespace VolatileHordes
                     }
                     Logger.Info("Spawning some ambient zombies");
                     await Container.AmbientSpawner.Spawn();
+                    break;
+                }
+                case "allocation":
+                {
+                    if (paramList.Count <= 2
+                        || !paramList[1].EqualsCaseInsensitive("set"))
+                    {
+                        return;
+                    }
+
+                    if (float.TryParse(paramList[2], out var amount))
+                    {
+                        var perc = Percent.FactoryPutInRange(amount);
+                        Logger.Info("Setting allocation buckets to {0}", perc);
+                        for (int x = 0; x < Container.AllocationBuckets.Width; x++)
+                        {
+                            for (int y = 0; y < Container.AllocationBuckets.Height; y++)
+                            {
+                                Container.AllocationBuckets[x, y] = perc;
+                            }
+                        }
+                    }
                     break;
                 }
                 default:

@@ -23,10 +23,22 @@ namespace VolatileHordes.Allocation
             set => _buckets[pt.X, pt.Y] = value;
         }
 
+        public Percent this[int x, int y]
+        {
+            get => _buckets[x, y];
+            set => _buckets[x, y] = value;
+        }
+
         public Percent this[PointF pt]
         {
             get => this[ConvertFromWorld(pt)];
             set => this[ConvertFromWorld(pt)] = value;
+        }
+
+        public Percent this[float x, float y]
+        {
+            get => this[ConvertFromWorld(new PointF(x, y))];
+            set => this[ConvertFromWorld(new PointF(x, y))] = value;
         }
 
         public AllocationBuckets(
