@@ -43,6 +43,8 @@
     <Compile Include="AiPackages\FidgetForwardAIPackage.cs" />
     <Compile Include="AiPackages\RunnerAiPackage.cs" />
     <Compile Include="AiPackages\SeekerAiPackage.cs" />
+    <Compile Include="Allocation\AllocationBuckets.cs" />
+    <Compile Include="Allocation\GameStageCalculator.cs" />
     <Compile Include="Core\Containers\ISortedList.cs" />
     <Compile Include="Core\Containers\ISortingListDictionary.cs" />
     <Compile Include="Core\Containers\SortingList.cs" />
@@ -78,7 +80,6 @@
     <Compile Include="Director\BasicSpawnDirector.cs" />
     <Compile Include="Director\AmbientDirector.cs" />
     <Compile Include="Director\DirectorSwitch.cs" />
-    <Compile Include="Director\GameStageCalculator.cs" />
     <Compile Include="GameAbstractions\ILogger.cs" />
     <Compile Include="GameAbstractions\Zombie.cs" />
     <Compile Include="GameAbstractions\Player.cs" />
@@ -93,6 +94,7 @@
     <Compile Include="Players\PlayerPartiesProvider.cs" />
     <Compile Include="Probability\ProbabilityList.cs" />
     <Compile Include="Server\UiServer.cs" />
+    <Compile Include="Settings\User\Allocation\AllocationSettings.cs" />
     <Compile Include="Settings\User\Control\ControlSettings.cs" />
     <Compile Include="Settings\User\Control\LuckyPlayerRetargetSettings.cs" />
     <Compile Include="Settings\User\Control\NoiseResponderSettings.cs" />
@@ -102,7 +104,8 @@
     <Compile Include="Settings\User\Noise\NoiseItem.cs" />
     <Compile Include="Settings\User\Noise\NoiseSettings.cs" />
     <Compile Include="Settings\User\UserSettings.cs" />
-    <Compile Include="Settings\World\WorldState.cs" />
+    <Compile Include="Settings\World\AllocationWorldSettings.cs" />
+    <Compile Include="Settings\World\WorldStateSettings.cs" />
     <Compile Include="Settings\World\Zombies\ZombieGroupState.cs" />
     <Compile Include="Settings\World\Zombies\ZombieState.cs" />
     <Compile Include="Spawning\AmbientSpawner.cs" />

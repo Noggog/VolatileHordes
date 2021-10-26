@@ -1,4 +1,5 @@
 using VolatileHordes.AiPackages;
+using VolatileHordes.Allocation;
 using VolatileHordes.Control;
 using VolatileHordes.Core.ObservableTransforms;
 using VolatileHordes.Core.Services;
@@ -25,7 +26,7 @@ namespace VolatileHordes
         public static readonly BiomeData Biome = new(Random);
         public static readonly IWorld World = new WorldWrapper();
         public static readonly UserSettings UserSettings = UserSettings.Load();
-        public static readonly GameStageCalculator GamestageCalculator = new(UserSettings.Director);
+        public static readonly GameStageCalculator GamestageCalculator = new(UserSettings.Allocation);
         public static readonly PlayerZoneManager PlayerZoneManager = new(World);
         public static readonly TimeManager Time = new(new NowProvider(), PlayerZoneManager, Random);
         public static readonly PlayerPartiesProvider PlayerPartiesProvider = new(PlayerGameEventsWrapper, World, GamestageCalculator);
@@ -35,6 +36,7 @@ namespace VolatileHordes
         public static readonly ZombieControl ZombieControl = new(Spawning, Time, Random);
         public static readonly NoiseManager NoiseManager = new(Time, UserSettings.Noise);
         public static readonly ILogger Logger = new LoggerWrapper();
+        public static readonly AllocationBuckets AllocationBuckets = new(Logger, World);
         public static readonly TimedSignalFlowShutoff TimedSignalFlowShutoff = new(Time);
         public static readonly TemporaryAiShutoff TemporaryAiShutoff = new(TimedSignalFlowShutoff);
         public static readonly NoiseResponderControlFactory NoiseResponderControlFactory = new(Random, ZombieControl, NoiseManager, TemporaryAiShutoff, UserSettings.Control.NoiseResponder, Logger);

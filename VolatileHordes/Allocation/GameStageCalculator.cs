@@ -1,14 +1,15 @@
 ﻿using System.Linq;
 using VolatileHordes.Players;
+using VolatileHordes.Settings.User.Allocation;
 using VolatileHordes.Settings.User.Director;
 
-namespace VolatileHordes.Director
+namespace VolatileHordes.Allocation
 {
     public class GameStageCalculator
     {
-        private readonly DirectorSettings _settings;
+        private readonly AllocationSettings _settings;
 
-        public GameStageCalculator(DirectorSettings settings)
+        public GameStageCalculator(AllocationSettings settings)
         {
             _settings = settings;
         }

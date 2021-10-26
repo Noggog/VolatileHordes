@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using VolatileHordes.Dto;
+using VolatileHordes.Settings.User.Allocation;
 using VolatileHordes.Settings.User.Control;
 using VolatileHordes.Settings.User.Director;
 using VolatileHordes.Settings.User.Noise;
@@ -28,6 +29,8 @@ namespace VolatileHordes.Settings.User
         public DirectorSettings Director { get; set; } = new();
 
         public LimitSettings Limits { get; set; } = new();
+
+        public AllocationSettings Allocation { get; set; } = new();
 
         public UiSettings UiSettings { get; set; } = new();
 

@@ -2,7 +2,6 @@
 using System.Drawing;
 using UniLinq;
 using UnityEngine;
-using VolatileHordes.Utility;
 
 namespace VolatileHordes.GameAbstractions
 {
@@ -18,6 +17,7 @@ namespace VolatileHordes.GameAbstractions
         Entity? GetEntity(int id);
         Vector3 GetWorldVector(PointF pt);
         EntityPlayer? GetClosestPlayer(PointF pt);
+        Rectangle Bounds { get; }
     }
 
     public class WorldWrapper : IWorld
@@ -61,6 +61,21 @@ namespace VolatileHordes.GameAbstractions
         public EntityPlayer? GetClosestPlayer(PointF pt)
         {
             return World.GetClosestPlayer(GetWorldVector(pt), float.MaxValue, _isDead: false);
+        }
+        
+        public Rectangle Bounds
+        {
+            get
+            {
+                var vec = World.ChunkCache.ChunkProvider.GetWorldSize();
+                var halfX = vec.x / 2;
+                var halfY = vec.y / 2;
+                return new Rectangle(
+                    x: -halfX,
+                    y: -halfY,
+                    width: vec.x,
+                    height: vec.y);
+            }
         }
     }
 }

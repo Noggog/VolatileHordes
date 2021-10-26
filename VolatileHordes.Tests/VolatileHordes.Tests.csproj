@@ -106,7 +106,8 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="AiPackages\EnumCompleteness.cs" />
-        <Compile Include="Director\GameStageCalculatorTests.cs" />
+        <Compile Include="Allocation\AllocationBucketsTests.cs" />
+        <Compile Include="Allocation\GameStageCalculatorTests.cs" />
         <Compile Include="IsExternalInit.cs" />
         <Compile Include="Probability\ProbabilityList.cs" />
         <Compile Include="RxTests.cs" />

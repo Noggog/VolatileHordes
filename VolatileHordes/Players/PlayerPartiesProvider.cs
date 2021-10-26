@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reactive.Linq;
-using VolatileHordes.Director;
+using VolatileHordes.Allocation;
 using VolatileHordes.GameAbstractions;
 
 namespace VolatileHordes.Players
