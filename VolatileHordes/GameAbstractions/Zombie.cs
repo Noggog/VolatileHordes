@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using UnityEngine;
 using VolatileHordes.Utility;
 
 namespace VolatileHordes.GameAbstractions
@@ -9,8 +10,10 @@ namespace VolatileHordes.GameAbstractions
         bool Destroyed { get; }
         bool SendTowards(PointF pt);
         EntityZombie? GetEntity();
+        PointF? GetTarget();
         public void Destroy();
         PointF? GetPosition();
+        Vector3? GetRotation();
         bool IsAlive { get; }
         bool IsDespawned { get; }
         bool IsSleeper { get; }
@@ -33,7 +36,17 @@ namespace VolatileHordes.GameAbstractions
 
         public EntityZombie? GetEntity() => _world.GetEntity(Id) as EntityZombie;
 
+        public PointF? GetTarget()
+        {
+            var ent = GetEntity();
+            if (ent == null) return null;
+            if (!ent.HasInvestigatePosition) return null;
+            return ent.InvestigatePosition.ToPoint();
+        }
+
         public PointF? GetPosition() => GetEntity()?.GetPosition().ToPoint();
+
+        public Vector3? GetRotation() => GetEntity()?.rotation;
 
         public bool IsAlive => !GetEntity()?.bDead ?? false;
         public bool IsDespawned => GetEntity()?.IsDespawned ?? true;

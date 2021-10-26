@@ -92,6 +92,7 @@
     <Compile Include="Players\PlayerParty.cs" />
     <Compile Include="Players\PlayerPartiesProvider.cs" />
     <Compile Include="Probability\ProbabilityList.cs" />
+    <Compile Include="Server\UiServer.cs" />
     <Compile Include="Settings\User\Control\ControlSettings.cs" />
     <Compile Include="Settings\User\Control\LuckyPlayerRetargetSettings.cs" />
     <Compile Include="Settings\User\Control\NoiseResponderSettings.cs" />
@@ -208,6 +209,12 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VolatileHordes.Dto\VolatileHordes.Dto.csproj">
+      <Project>{2909c22e-b140-4b28-8d37-c41c1e1ae2aa}</Project>
+      <Name>VolatileHordes.Dto</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

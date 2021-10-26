@@ -7,6 +7,7 @@ using VolatileHordes.GameAbstractions;
 using VolatileHordes.Noise;
 using VolatileHordes.Players;
 using VolatileHordes.Probability;
+using VolatileHordes.Server;
 using VolatileHordes.Settings.User;
 using VolatileHordes.Spawning;
 using VolatileHordes.Spawning.Seeker;
@@ -70,5 +71,6 @@ namespace VolatileHordes
         public static readonly WanderingHordeSpawner WanderingHordeSpawner = new(ZombieGroupManager, RoamAiPackage, Spawning, WanderingHordePlacer, ZombieControl, LimitManager);
         public static readonly BasicSpawnDirector BasicSpawnDirector = new(DirectorSwitch, Time, Random, WanderingHordeSpawner, FidgetForwardSpawner, PlayerZoneManager, GamestageCalculator);
         public static readonly AmbientDirector AmbientDirector = new(DirectorSwitch, Random, CrazyAiPackage, RunnerAiPackage, ZombieGroupManager);
+        public static readonly UiServer Server = new(Time, UserSettings.UiSettings, LimitManager, PlayerZoneManager, ZombieGroupManager);
     }
 }

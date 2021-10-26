@@ -21,7 +21,7 @@ namespace VolatileHordes
         public static IDisposable Subscribe<T>(this IObservable<T> obs, Action sub, Action<Exception>? onError = null)
         {
             return obs.Subscribe(_ => sub(),
-                onError: onError);
+                onError: onError ?? (_ => { }));
         }
 
         public static IObservable<ValueTuple<T?, T>> Pairwise<T>(this IObservable<T> source)
