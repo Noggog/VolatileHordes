@@ -11,6 +11,8 @@ namespace VolatileHordes.GUI.ViewModels
         [Reactive] public RectangleF Rectangle { get; private set; }
         [Reactive] public RectangleF SpawnRectangle { get; private set; }
         [Reactive] public float Rotation { get; private set; }
+        [Reactive] public bool Display { get; set; }
+        [Reactive] public string Name { get; set; } = string.Empty;
 
         public PlayerVm(int entityId)
         {
@@ -22,6 +24,7 @@ namespace VolatileHordes.GUI.ViewModels
             SpawnRectangle = dto.SpawnRectangle;
             Rectangle = dto.Rectangle;
             Rotation = dto.Rotation % 360;
+            Name = dto.Name;
         }
     }
 }

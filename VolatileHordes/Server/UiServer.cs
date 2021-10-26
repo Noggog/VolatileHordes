@@ -179,11 +179,12 @@ namespace VolatileHordes.Server
         {
             return new State()
             {
-                Players = _players.Zones.Select(z => new PlayerDto()
+                Players = _players.Zones.Select(p => new PlayerDto()
                 {
-                    SpawnRectangle = z.SpawnRectangle,
-                    Rectangle = z.Rectangle,
-                    Rotation = z.Rotation.y
+                    SpawnRectangle = p.SpawnRectangle,
+                    Rectangle = p.Rectangle,
+                    Rotation = p.Rotation.y,
+                    Name = p.Player.TryGetEntity()?.GetDebugName() ?? string.Empty,
                 }).ToList(),
                 ZombieGroups = _zombies.AllGroups.Select(g =>
                 {
