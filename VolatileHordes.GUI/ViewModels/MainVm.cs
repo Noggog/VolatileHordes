@@ -1,8 +1,6 @@
-﻿using System.Linq;
-using System.Reactive.Linq;
+﻿using System.Reactive.Linq;
 using DynamicData;
 using DynamicData.Binding;
-using Noggog;
 using Noggog.WPF;
 using ReactiveUI;
 
@@ -17,6 +15,8 @@ namespace VolatileHordes.GUI.ViewModels
         public IObservableCollection<PlayerVm> Players { get; }
 
         public IObservableCollection<PlayerVm> DisplayPlayers { get; }
+        
+        public LimitsVm Limits { get; }
 
         public MainVm(
             ConnectionVm connectionVm,
@@ -25,6 +25,8 @@ namespace VolatileHordes.GUI.ViewModels
         {
             Connection = connectionVm;
             Settings = settingsVm;
+
+            Limits = worldstateVm.Limits;
 
             Players = worldstateVm.Players.Connect()
                 .ToObservableCollection(this);

@@ -21,6 +21,8 @@ namespace VolatileHordes.GUI.Views
                     .DisposeWith(dispose);
                 this.Bind(ViewModel, x => x.Settings.DrawGroupTargets, x => x.GroupTargetsBox.IsChecked)
                     .DisposeWith(dispose);
+                this.OneWayBind(ViewModel, x => x.Limits, x => x.LimitsView.DataContext)
+                    .DisposeWith(dispose);
                 this.OneWayBind(ViewModel, x => x.Players, x => x.PlayersChecklist.ItemsSource)
                     .DisposeWith(dispose);
                 this.OneWayBind(ViewModel, x => x.DisplayPlayers, x => x.PlayerViews.ItemsSource)

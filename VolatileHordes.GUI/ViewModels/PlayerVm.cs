@@ -19,7 +19,7 @@ namespace VolatileHordes.GUI.ViewModels
         [Reactive] public RectangleF Rectangle { get; private set; }
         [Reactive] public RectangleF SpawnRectangle { get; private set; }
         [Reactive] public float Rotation { get; private set; }
-        [Reactive] public bool Display { get; set; }
+        [Reactive] public bool Display { get; set; } = true;
         [Reactive] public string Name { get; set; } = string.Empty;
 
         [Reactive] public ushort Size { get; set; } = 400;

@@ -17,7 +17,7 @@ namespace VolatileHordes.GUI.Views
             this.WhenActivated(dispose =>
             {
                 this.WhenAnyValue(x => x.ViewModel!.Connected)
-                    .Select(x => x ? Visibility.Collapsed : Visibility.Visible)
+                    .Select(x => x ? Visibility.Hidden : Visibility.Visible)
                     .BindTo(this, x => x.ConnectButton.Visibility)
                     .DisposeWith(dispose);
                 this.OneWayBind(ViewModel, x => x.ConnectCommand, x => x.ConnectButton.Command)
@@ -25,7 +25,7 @@ namespace VolatileHordes.GUI.Views
                 this.OneWayBind(ViewModel, x => x.DisconnectCommand, x => x.DisconnectButton.Command)
                     .DisposeWith(dispose);
                 this.WhenAnyValue(x => x.ViewModel!.Connected)
-                    .Select(x => x ? Visibility.Visible : Visibility.Collapsed)
+                    .Select(x => x ? Visibility.Visible : Visibility.Hidden)
                     .BindTo(this, x => x.DisconnectButton.Visibility)
                     .DisposeWith(dispose);
                 this.Bind(ViewModel, x => x.First, x => x.FirstInput.Value)

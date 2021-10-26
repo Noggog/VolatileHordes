@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Reactive.Linq;
 using DynamicData;
 using ReactiveUI;
@@ -9,6 +10,8 @@ namespace VolatileHordes.GUI.ViewModels
 {
     public class WorldstateVm
     {
+        public LimitsVm Limits { get; } = new();
+        
         private SourceCache<PlayerVm, int> _players = new(x => x.EntityId);
         public IObservableCache<PlayerVm, int> Players => _players;
 
@@ -21,18 +24,19 @@ namespace VolatileHordes.GUI.ViewModels
         {
             connectionVm.WhenAnyValue(x => x.Client)
                 .ObserveOn(RxApp.TaskpoolScheduler)
-                .Select(x => x?.States ?? Observable.Empty<State>())
+                .Select(x => x?.States ?? Observable.Return<State?>(null))
                 .Switch()
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Subscribe(state =>
                 {
                     _players.AbsorbIn(
-                        state.Players, 
+                        state?.Players ?? Enumerable.Empty<PlayerDto>(), 
                         o => o.EntityId, 
                         (k) => pvmFactory(k),
                         (vm, dto) => vm.Absorb(dto));
+                    Limits.AbsorbIn(state?.Limits);
                     _zombieGroups.AbsorbIn(
-                        state.ZombieGroups, 
+                        state?.ZombieGroups ?? Enumerable.Empty<ZombieGroupDto>(), 
                         o => o.Id, 
                         (k) => new ZombieGroupVm(k),
                         (vm, dto) => vm.Absorb(dto));

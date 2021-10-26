@@ -11,8 +11,8 @@ namespace VolatileHordes.Tracking
         private readonly IWorld _world;
         private readonly TimeManager _timeManager;
         private readonly ZombieGroupManager _groupManager;
-        private readonly int _gameMaximumZombies = GamePrefs.GetInt(EnumGamePrefs.MaxSpawnedZombies);
-        private readonly int _desiredMaximumZombies;
+        public readonly int GameMaximumZombies = GamePrefs.GetInt(EnumGamePrefs.MaxSpawnedZombies);
+        public readonly int DesiredMaximumZombies;
 
         public int CurrentlyActiveZombies => GameStats.GetInt(EnumGameStats.EnemyCount);
 
@@ -25,31 +25,31 @@ namespace VolatileHordes.Tracking
             _world = world;
             _timeManager = timeManager;
             _groupManager = groupManager;
-            _desiredMaximumZombies = Math.Max(15, _gameMaximumZombies - limitSettings.BufferZombies);
+            DesiredMaximumZombies = Math.Max(15, GameMaximumZombies - limitSettings.BufferZombies);
         }
 
         public void PrintZombieStats()
         {
-            Logger.Info("Currently {0} zombies. {1}% of total. {2}% of allowed", CurrentlyActiveZombies, (100.0f * CurrentlyActiveZombies / _gameMaximumZombies), (100.0f * CurrentlyActiveZombies / _desiredMaximumZombies));
+            Logger.Info("Currently {0} zombies. {1}% of total. {2}% of allowed", CurrentlyActiveZombies, (100.0f * CurrentlyActiveZombies / GameMaximumZombies), (100.0f * CurrentlyActiveZombies / DesiredMaximumZombies));
         }
 
         public async Task CheckLimit()
         {
-            var above = CurrentlyActiveZombies - _desiredMaximumZombies;
+            var above = CurrentlyActiveZombies - DesiredMaximumZombies;
             if (above > 0)
             {
-                Logger.Debug("Was {0} active zombies with a desired max of {1}.  Deleting {2} to get below limit", CurrentlyActiveZombies, _desiredMaximumZombies, above);
+                Logger.Debug("Was {0} active zombies with a desired max of {1}.  Deleting {2} to get below limit", CurrentlyActiveZombies, DesiredMaximumZombies, above);
                 await Destroy(checked((ushort)above));
             }
         }
 
         public ushort GetAllowedLimit(ushort desired)
         {
-            var amount = Math.Max(0, Math.Min(desired, _desiredMaximumZombies - CurrentlyActiveZombies));
+            var amount = Math.Max(0, Math.Min(desired, DesiredMaximumZombies - CurrentlyActiveZombies));
             var ret = checked((ushort)amount);
             if (ret != desired)
             {
-                Logger.Debug("Was {0} active zombies with a desired max of {1}.  Reduced the number of zombies to be spawned from {2} to {3}", CurrentlyActiveZombies, _desiredMaximumZombies, desired, ret);
+                Logger.Debug("Was {0} active zombies with a desired max of {1}.  Reduced the number of zombies to be spawned from {2} to {3}", CurrentlyActiveZombies, DesiredMaximumZombies, desired, ret);
             }
 
             return ret;
@@ -57,10 +57,10 @@ namespace VolatileHordes.Tracking
 
         public async Task CreateRoomFor(ushort count)
         {
-            var above = CurrentlyActiveZombies + count - _desiredMaximumZombies;
+            var above = CurrentlyActiveZombies + count - DesiredMaximumZombies;
             if (above > 0)
             {
-                Logger.Debug("Was {0} active zombies and want to add {1} with a desired max of {2}.  Deleting {3} to make room", CurrentlyActiveZombies, count, _desiredMaximumZombies, above);
+                Logger.Debug("Was {0} active zombies and want to add {1} with a desired max of {2}.  Deleting {3} to make room", CurrentlyActiveZombies, count, DesiredMaximumZombies, above);
                 await Destroy(checked((ushort)above));
             }
         }

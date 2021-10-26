@@ -6,12 +6,14 @@ namespace VolatileHordes.Dto
 {
     public class State
     {
+        public ZombieLimitsDto Limits { get; set; } = new();
         public List<ZombieGroupDto> ZombieGroups { get; set; } = new();
         public List<PlayerDto> Players { get; set; } = new();
 
         public void Serialize(BinaryWriter stream)
         {
             stream.Write(1753);
+            Limits.Serialize(stream);
             stream.Write(ZombieGroups.Count);
             foreach (var groupDto in ZombieGroups)
             {
@@ -32,6 +34,7 @@ namespace VolatileHordes.Dto
             {
                 throw new ArgumentException("Malformed state");
             }
+            ret.Limits = ZombieLimitsDto.Deserialize(reader);
             var zombieGroupCount = reader.ReadInt32();
             for (int i = 0; i < zombieGroupCount; i++)
             {

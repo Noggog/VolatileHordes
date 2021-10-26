@@ -16,6 +16,7 @@ namespace VolatileHordes.Server
 {
     public class UiServer
     {
+        private readonly LimitManager _limitManager;
         private readonly PlayerZoneManager _players;
         private readonly ZombieGroupManager _zombies;
 
@@ -33,9 +34,11 @@ namespace VolatileHordes.Server
         public UiServer(
             TimeManager timeManager,
             UiSettings settings,
+            LimitManager limitManager,
             PlayerZoneManager players,
             ZombieGroupManager zombies)
         {
+            _limitManager = limitManager;
             _players = players;
             _zombies = zombies;
             IPEndPoint localEndPoint = new(IPAddress.Any, settings.ViewServerPort);
@@ -179,6 +182,12 @@ namespace VolatileHordes.Server
         {
             return new State()
             {
+                Limits = new ZombieLimitsDto()
+                {
+                    CurrentNumber = _limitManager.CurrentlyActiveZombies,
+                    GameMaximum = _limitManager.GameMaximumZombies,
+                    DesiredMaximum = _limitManager.DesiredMaximumZombies 
+                },
                 Players = _players.Zones.Select(p => new PlayerDto()
                 {
                     SpawnRectangle = p.SpawnRectangle,
