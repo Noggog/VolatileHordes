@@ -17,12 +17,13 @@ namespace VolatileHordes.GUI.Views
                 this.WhenAnyValue(x => x.ViewModel!.Connection)
                     .BindTo(this, x => x.ConnectionView.DataContext)
                     .DisposeWith(dispose);
-                this.WhenAnyValue(x => x.ViewModel!.Player)
-                    .BindTo(this, x => x.PlayerView.DataContext)
-                    .DisposeWith(dispose);
                 this.Bind(ViewModel, x => x.Settings.DrawTargets, x => x.TargetsBox.IsChecked)
                     .DisposeWith(dispose);
                 this.Bind(ViewModel, x => x.Settings.DrawGroupTargets, x => x.GroupTargetsBox.IsChecked)
+                    .DisposeWith(dispose);
+                this.OneWayBind(ViewModel, x => x.Players, x => x.PlayersChecklist.ItemsSource)
+                    .DisposeWith(dispose);
+                this.OneWayBind(ViewModel, x => x.DisplayPlayers, x => x.PlayerViews.ItemsSource)
                     .DisposeWith(dispose);
             });
         }

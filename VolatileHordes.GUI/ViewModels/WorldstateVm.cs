@@ -16,18 +16,20 @@ namespace VolatileHordes.GUI.ViewModels
         public IObservableCache<ZombieGroupVm, int> ZombieGroups => _zombieGroups;
         
         public WorldstateVm(
+            PlayerVm.Factory pvmFactory,
             ConnectionVm connectionVm)
         {
             connectionVm.WhenAnyValue(x => x.Client)
                 .ObserveOn(RxApp.TaskpoolScheduler)
                 .Select(x => x?.States ?? Observable.Empty<State>())
                 .Switch()
+                .ObserveOn(RxApp.MainThreadScheduler)
                 .Subscribe(state =>
                 {
                     _players.AbsorbIn(
                         state.Players, 
                         o => o.EntityId, 
-                        (k) => new PlayerVm(k),
+                        (k) => pvmFactory(k),
                         (vm, dto) => vm.Absorb(dto));
                     _zombieGroups.AbsorbIn(
                         state.ZombieGroups, 

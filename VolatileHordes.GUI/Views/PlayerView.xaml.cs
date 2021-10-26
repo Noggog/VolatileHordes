@@ -7,7 +7,7 @@ using VolatileHordes.GUI.ViewModels;
 
 namespace VolatileHordes.GUI.Views
 {
-    public class PlayerViewBase : NoggogUserControl<PlayerDisplayVm> { }
+    public class PlayerViewBase : NoggogUserControl<PlayerVm> { }
     
     public partial class PlayerView
     {
