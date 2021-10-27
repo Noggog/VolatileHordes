@@ -6,6 +6,7 @@
     xmlns:local="clr-namespace:VolatileHordes.GUI.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+    xmlns:viewModels="clr-namespace:VolatileHordes.GUI.ViewModels"
     d:DesignHeight="500"
     d:DesignWidth="500"
     mc:Ignorable="d">
@@ -17,29 +18,31 @@
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="4" >
             <local:ConnectionView x:Name="ConnectionView"
+                                  VerticalAlignment="Center"
                                   Margin="0,0,25,0" />
             <xctk:CheckComboBox
                 x:Name="PlayersChecklist"
                 Width="200"
+                VerticalAlignment="Center"
                 DisplayMemberPath="Name"
                 SelectedMemberPath="Display"
                 Background="DimGray" />
             <CheckBox
                 x:Name="GroupTargetsBox"
-                Margin="4"
+                Margin="10,4"
                 VerticalAlignment="Center"
                 Content="Group Targets" />
             <CheckBox
                 x:Name="TargetsBox"
-                Margin="4"
+                Margin="10,4"
                 VerticalAlignment="Center"
                 Content="Targets" />
         </StackPanel>
 
-        <ItemsControl x:Name="PlayerViews" Grid.Row="1">
+        <ItemsControl x:Name="DisplayViews" Grid.Row="1">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <local:PlayerView Width="400" Height="400" />
+                    <local:ImageView Margin="5" />
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
             <ItemsControl.ItemsPanel>

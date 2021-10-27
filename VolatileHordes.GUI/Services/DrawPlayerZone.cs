@@ -8,7 +8,7 @@ namespace VolatileHordes.GUI.Services
 {
     public record PlayerDrawInput(RectangleF SpawnRectangle, RectangleF Rectangle, float Rotation);
     public record ZombieDrawInput(PointF Position, PointF Target, PointF GroupTarget, float Rotation);
-    public record DrawInput(
+    public record PlayerZoneDrawInput(
         PlayerDrawInput Player,
         ushort Size, 
         ZombieDrawInput[] Zombies,
@@ -27,7 +27,7 @@ namespace VolatileHordes.GUI.Services
 
         class DrawPass : IDisposable
         {
-            private readonly DrawInput _input;
+            private readonly PlayerZoneDrawInput _input;
             private readonly int _half;
             private readonly Bitmap _bitmap;
             private readonly Graphics _gr;
@@ -36,7 +36,7 @@ namespace VolatileHordes.GUI.Services
             private readonly float _scaleX;
             private readonly float _scaleY;
             
-            public DrawPass(DrawInput input)
+            public DrawPass(PlayerZoneDrawInput input)
             {
                 _input = input;
                 _half = input.Size / 2;
@@ -137,7 +137,7 @@ namespace VolatileHordes.GUI.Services
             }
         }
         
-        public BitmapImage Draw(DrawInput input)
+        public BitmapImage Draw(PlayerZoneDrawInput input)
         {
             using var drawer = new DrawPass(input);
             return drawer.Draw();

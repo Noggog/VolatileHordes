@@ -13,7 +13,7 @@ using VolatileHordes.GUI.Services;
 
 namespace VolatileHordes.GUI.ViewModels
 {
-    public class PlayerVm : ViewModel
+    public class PlayerVm : ViewModel, IImageVm
     {
         public int EntityId { get; }
         [Reactive] public RectangleF Rectangle { get; private set; }
@@ -26,6 +26,7 @@ namespace VolatileHordes.GUI.ViewModels
         
         private readonly ObservableAsPropertyHelper<BitmapImage?> _bitmap;
         public BitmapImage? Bitmap => _bitmap.Value;
+        public string Title => Name;
 
         public delegate PlayerVm Factory(int entityId);
 
@@ -52,7 +53,7 @@ namespace VolatileHordes.GUI.ViewModels
                     this.WhenAnyValue(x => x.Rotation),
                     (zombiesInRange, _, _) =>
                     {
-                        return new DrawInput(
+                        return new PlayerZoneDrawInput(
                             new PlayerDrawInput(
                                 this.SpawnRectangle, 
                                 this.Rectangle,

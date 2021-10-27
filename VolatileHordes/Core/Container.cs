@@ -73,7 +73,7 @@ namespace VolatileHordes
         public static readonly WanderingHordeSpawner WanderingHordeSpawner = new(ZombieGroupManager, RoamAiPackage, Spawning, WanderingHordePlacer, ZombieControl, LimitManager);
         public static readonly BasicSpawnDirector BasicSpawnDirector = new(DirectorSwitch, Time, Random, WanderingHordeSpawner, FidgetForwardSpawner, PlayerZoneManager, GamestageCalculator);
         public static readonly AmbientDirector AmbientDirector = new(DirectorSwitch, Random, CrazyAiPackage, RunnerAiPackage, ZombieGroupManager);
-        public static readonly UiServer Server = new(Time, UserSettings.UiSettings, LimitManager, PlayerZoneManager, ZombieGroupManager);
+        public static readonly UiServer Server = new(Time, UserSettings.UiSettings, LimitManager, PlayerZoneManager, AllocationBuckets, ZombieGroupManager);
         public static readonly AllocationManager AllocationManager = new(AllocationBuckets, Time, UserSettings.Allocation);
     }
 }

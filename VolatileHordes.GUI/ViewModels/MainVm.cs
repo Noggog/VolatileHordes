@@ -1,6 +1,7 @@
 ﻿using System.Reactive.Linq;
 using DynamicData;
 using DynamicData.Binding;
+using Noggog;
 using Noggog.WPF;
 using ReactiveUI;
 
@@ -14,7 +15,7 @@ namespace VolatileHordes.GUI.ViewModels
 
         public IObservableCollection<PlayerVm> Players { get; }
 
-        public IObservableCollection<PlayerVm> DisplayPlayers { get; }
+        public IObservableCollection<IImageVm> ImageDisplays { get; }
         
         public LimitsVm Limits { get; }
 
@@ -31,9 +32,13 @@ namespace VolatileHordes.GUI.ViewModels
             Players = worldstateVm.Players.Connect()
                 .ToObservableCollection(this);
 
-            DisplayPlayers = worldstateVm.Players.Connect()
-                .AutoRefresh(x => x.Display, scheduler: RxApp.MainThreadScheduler)
-                .Filter(x => x.Display)
+            ImageDisplays = worldstateVm.AllocationVm.AsEnumerable<IImageVm>().AsObservableChangeSet()
+                .Or(
+                    worldstateVm.Players.Connect()
+                        .AutoRefresh(x => x.Display, scheduler: RxApp.MainThreadScheduler)
+                        .Filter(x => x.Display)
+                        .Transform(x => (IImageVm)x)
+                        .RemoveKey())
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .ToObservableCollection(this);
         }

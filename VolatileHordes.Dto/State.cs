@@ -7,6 +7,7 @@ namespace VolatileHordes.Dto
     public class State
     {
         public ZombieLimitsDto Limits { get; set; } = new();
+        public AllocationStateDto AllocationState { get; set; } = null!;
         public List<ZombieGroupDto> ZombieGroups { get; set; } = new();
         public List<PlayerDto> Players { get; set; } = new();
 
@@ -24,6 +25,7 @@ namespace VolatileHordes.Dto
             {
                 player.Serialize(stream);
             }
+            AllocationState.Serialize(stream);
         }
 
         public static State Deserialize(BinaryReader reader)
@@ -45,6 +47,8 @@ namespace VolatileHordes.Dto
             {
                 ret.Players.Add(PlayerDto.Deserialize(reader));
             }
+
+            ret.AllocationState = AllocationStateDto.Deserialize(reader);
 
             return ret;
         }

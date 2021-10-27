@@ -8,6 +8,7 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using UniLinq;
+using VolatileHordes.Allocation;
 using VolatileHordes.Dto;
 using VolatileHordes.Players;
 using VolatileHordes.Tracking;
@@ -18,6 +19,7 @@ namespace VolatileHordes.Server
     {
         private readonly LimitManager _limitManager;
         private readonly PlayerZoneManager _players;
+        private readonly AllocationBuckets _allocationBuckets;
         private readonly ZombieGroupManager _zombies;
 
         public class Client
@@ -31,15 +33,19 @@ namespace VolatileHordes.Server
 
         private Subject<Unit> _clientEventOccurred = new();
 
+        private AllocationStateDto _allocationState = null!;
+
         public UiServer(
             TimeManager timeManager,
             UiSettings settings,
             LimitManager limitManager,
             PlayerZoneManager players,
+            AllocationBuckets allocationBuckets,
             ZombieGroupManager zombies)
         {
             _limitManager = limitManager;
             _players = players;
+            _allocationBuckets = allocationBuckets;
             _zombies = zombies;
             IPEndPoint localEndPoint = new(IPAddress.Any, settings.ViewServerPort);
             Logger.Info("Server listening on port {0}", settings.ViewServerPort);
@@ -55,7 +61,16 @@ namespace VolatileHordes.Server
                 Logger.Error("Unable to start server: {0}", ex.Message);
             }
 
+            Bootstrapper.GameStarted
+                .Subscribe(_ =>
+                {
+                    _allocationState = new AllocationStateDto(allocationBuckets.Width, allocationBuckets.Height);
+                });
+            
             timeManager.Interval(TimeSpan.FromMilliseconds(250))
+                .FlowSwitch(Bootstrapper.GameStarted
+                    .Select(_ => true)
+                    .StartWith(false))
                 .FlowSwitch(
                     _clientEventOccurred
                         .Select(_ => _clients.Count > 0)
@@ -180,8 +195,17 @@ namespace VolatileHordes.Server
 
         private State CreateState()
         {
+            for (int x = 0; x < _allocationState.Buckets.GetLength(0); x++)
+            {
+                for (int y = 0; y < _allocationState.Buckets.GetLength(1); y++)
+                {
+                    _allocationState.Buckets[x, y] = _allocationBuckets[x, y];
+                }
+            }
+            
             return new State()
             {
+                AllocationState = _allocationState,
                 Limits = new ZombieLimitsDto()
                 {
                     CurrentNumber = _limitManager.CurrentlyActiveZombies,

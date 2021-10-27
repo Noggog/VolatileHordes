@@ -25,7 +25,7 @@ namespace VolatileHordes.GUI.Views
                     .DisposeWith(dispose);
                 this.OneWayBind(ViewModel, x => x.Players, x => x.PlayersChecklist.ItemsSource)
                     .DisposeWith(dispose);
-                this.OneWayBind(ViewModel, x => x.DisplayPlayers, x => x.PlayerViews.ItemsSource)
+                this.OneWayBind(ViewModel, x => x.ImageDisplays, x => x.DisplayViews.ItemsSource)
                     .DisposeWith(dispose);
             });
         }
