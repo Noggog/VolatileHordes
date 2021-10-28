@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using VolatileHordes.Utility;
 
@@ -51,6 +52,19 @@ namespace VolatileHordes
                 {
                     Logger.Info("Artificially redirecting");
                     Container.RoamControl.Redirect.Fire();
+                    break;
+                }
+                case "logging":
+                {
+                    if (paramList.Count > 1 && Enum.TryParse<LogLevel>(paramList[1], out var logLevel))
+                    {
+                        Logger.Info("Setting log level to {0}", logLevel);
+                        Logger.Level = logLevel;
+                    }
+                    else
+                    {
+                        Logger.Info("Need to supply desired log level");
+                    }
                     break;
                 }
                 case "director":
