@@ -19,7 +19,6 @@ namespace VolatileHordes.Noise
     public class NoiseManager : INoiseSource
     {
         private const int NoiseLostPulseSeconds = 2;
-        private readonly TimeManager _timeManager;
         private readonly Dictionary<string, float> _noisyNames = new(StringComparer.OrdinalIgnoreCase);
 
         private readonly Subject<NoiseEvent> _noiseEvents = new();
@@ -31,7 +30,6 @@ namespace VolatileHordes.Noise
             TimeManager timeManager,
             NoiseSettings settings)
         {
-            _timeManager = timeManager;
             foreach (var noise in settings.Noises)
             {
                 _noisyNames[noise.Name] = noise.Volume;

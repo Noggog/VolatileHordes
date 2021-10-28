@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reactive.Linq;
 using DynamicData;
 using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 using VolatileHordes.Dto;
 using VolatileHordes.GUI.Extensions;
 
@@ -20,6 +21,8 @@ namespace VolatileHordes.GUI.ViewModels
         public IObservableCache<ZombieGroupVm, int> ZombieGroups => _zombieGroups;
 
         public AllocationVm AllocationVm { get; }
+        
+        [Reactive] public ushort NoiseRadius { get; set; }
         
         public WorldstateVm(
             PlayerVm.Factory pvmFactory,
@@ -50,6 +53,7 @@ namespace VolatileHordes.GUI.ViewModels
                 (k) => new ZombieGroupVm(k),
                 (vm, dto) => vm.Absorb(dto));
             AllocationVm.Set(state?.AllocationState.Buckets);
+            NoiseRadius = state?.NoiseRadius ?? 0;
         }
     }
 }

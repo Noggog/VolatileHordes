@@ -11,6 +11,7 @@ using UniLinq;
 using VolatileHordes.Allocation;
 using VolatileHordes.Dto;
 using VolatileHordes.Players;
+using VolatileHordes.Settings.User.Control;
 using VolatileHordes.Tracking;
 
 namespace VolatileHordes.Server
@@ -20,6 +21,7 @@ namespace VolatileHordes.Server
         private readonly LimitManager _limitManager;
         private readonly PlayerZoneManager _players;
         private readonly AllocationBuckets _allocationBuckets;
+        private readonly NoiseResponderSettings _noiseResponderSettings;
         private readonly ZombieGroupManager _zombies;
 
         public class Client
@@ -41,11 +43,13 @@ namespace VolatileHordes.Server
             LimitManager limitManager,
             PlayerZoneManager players,
             AllocationBuckets allocationBuckets,
+            NoiseResponderSettings noiseResponderSettings,
             ZombieGroupManager zombies)
         {
             _limitManager = limitManager;
             _players = players;
             _allocationBuckets = allocationBuckets;
+            _noiseResponderSettings = noiseResponderSettings;
             _zombies = zombies;
             IPEndPoint localEndPoint = new(IPAddress.Any, settings.ViewServerPort);
             Logger.Info("Server listening on port {0}", settings.ViewServerPort);
@@ -206,6 +210,7 @@ namespace VolatileHordes.Server
             return new State()
             {
                 AllocationState = _allocationState,
+                NoiseRadius = _noiseResponderSettings.Radius,
                 Limits = new ZombieLimitsDto()
                 {
                     CurrentNumber = _limitManager.CurrentlyActiveZombies,

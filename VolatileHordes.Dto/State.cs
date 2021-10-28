@@ -10,6 +10,7 @@ namespace VolatileHordes.Dto
         public AllocationStateDto AllocationState { get; set; } = null!;
         public List<ZombieGroupDto> ZombieGroups { get; set; } = new();
         public List<PlayerDto> Players { get; set; } = new();
+        public ushort NoiseRadius { get; set; }
 
         public void Serialize(BinaryWriter stream)
         {
@@ -26,6 +27,7 @@ namespace VolatileHordes.Dto
                 player.Serialize(stream);
             }
             AllocationState.Serialize(stream);
+            stream.Write(NoiseRadius);
         }
 
         public static State Deserialize(BinaryReader reader)
@@ -49,6 +51,7 @@ namespace VolatileHordes.Dto
             }
 
             ret.AllocationState = AllocationStateDto.Deserialize(reader);
+            ret.NoiseRadius = reader.ReadUInt16();
 
             return ret;
         }

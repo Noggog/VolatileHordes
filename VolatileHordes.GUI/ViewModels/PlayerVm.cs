@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Linq;
 using System.Reactive.Linq;
@@ -60,6 +60,7 @@ namespace VolatileHordes.GUI.ViewModels
                                 this.Rotation),
                             Size,
                             zombiesInRange.Select(z => new ZombieDrawInput(z.Position, z.Target, z.GroupVm.Target, z.Rotation)).ToArray(),
+                            worldstateVm.NoiseRadius,
                             DrawTargetLines: mainSettingsVm.DrawTargets,
                             DrawGroupTargetLines: mainSettingsVm.DrawGroupTargets);
                     })
