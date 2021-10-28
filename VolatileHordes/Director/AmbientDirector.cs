@@ -15,13 +15,14 @@ namespace VolatileHordes.Director
             DirectorSwitch directorSwitch,
             RandomSource randomSource,
             CrazyAiPackage crazyAiPackage,
+            AmbientAiPackage ambientAi,
             RunnerAiPackage runnerAiPackage,
             ZombieGroupManager groupManager)
         {
             _randomSource = randomSource;
             _packages.Add(crazyAiPackage, new UDouble(0.25d));
             _packages.Add(runnerAiPackage, new UDouble(0.25d));
-            _packages.Add(null, new UDouble(1d));
+            _packages.Add(ambientAi, new UDouble(1d));
             groupManager.AmbientGroupTracked
                 .FlowSwitch(directorSwitch.Enabled)
                 .Subscribe(AmbientZombieSpawned);

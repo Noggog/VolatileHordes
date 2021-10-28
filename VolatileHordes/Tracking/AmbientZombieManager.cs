@@ -9,7 +9,6 @@ namespace VolatileHordes.Tracking
     {
         private readonly IWorld _world;
         private readonly ZombieGroupManager _groupManager;
-        private readonly AmbientAiPackage _aiPackage;
         private readonly LimitManager _limitManager;
 
         public bool AllowAmbient { get; set; } = true;
@@ -17,12 +16,10 @@ namespace VolatileHordes.Tracking
         public AmbientZombieManager(
             IWorld world,
             ZombieGroupManager groupManager,
-            AmbientAiPackage aiPackage,
             LimitManager limitManager)
         {
             _world = world;
             _groupManager = groupManager;
-            _aiPackage = aiPackage;
             _limitManager = limitManager;
         }
         
@@ -50,8 +47,7 @@ namespace VolatileHordes.Tracking
                 return;
             }
             
-            group = new ZombieGroup(_aiPackage);
-            _aiPackage.ApplyTo(group);
+            group = new ZombieGroup(null);
             group.Add(zombie);
             _groupManager.TrackAsAmbient(group);
             

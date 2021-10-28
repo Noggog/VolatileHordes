@@ -45,7 +45,7 @@ namespace VolatileHordes.Control
                 if (withTargetRandomness)
                 {
                     target = _spawningPositions.GetRandomPointNear(target, 5)?.ToPoint() ?? target;
-                    Logger.Verbose(".. With randomness, will send 1 zombie of the group towards {0}", target);
+                    Logger.Verbose("With target randomness, will send 1 zombie of the group towards {0}", target);
                 }
                 zombie.SendTowards(target);
             }
@@ -60,7 +60,7 @@ namespace VolatileHordes.Control
                 if (withTargetRandomness)
                 {
                     target = _spawningPositions.GetRandomPointNear(target, 5)?.ToPoint() ?? target;
-                    Logger.Verbose(".. With randomness, will send 1 zombie of the group towards {0}", target);
+                    Logger.Verbose("With target randomness, will send 1 zombie of the group towards {0}", target);
                 }
 
                 await _timeManager.Timer(TimeSpan.FromSeconds(_randomSource.NextDouble(5)))

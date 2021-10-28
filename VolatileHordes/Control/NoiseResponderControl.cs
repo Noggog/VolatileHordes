@@ -111,7 +111,11 @@ namespace VolatileHordes.Control
                         }
 
                         var curDistToOrigin = loc.Value.AbsDistance(noise.Origin);
-                        if (curDistToOrigin > _radius) return;
+                        if (curDistToOrigin > _radius)
+                        {
+                            _logger.Verbose("{0} could not respond to noise because it was too far away {1}.", group, curDistToOrigin);
+                            return;
+                        }
 
                         _rememberedVolume = Percent.FactoryPutInRange(_rememberedVolume.Value + noise.Volume);
 
