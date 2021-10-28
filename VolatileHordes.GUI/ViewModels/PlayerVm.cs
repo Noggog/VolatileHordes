@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Drawing;
 using System.Linq;
 using System.Reactive.Linq;
@@ -28,6 +28,8 @@ namespace VolatileHordes.GUI.ViewModels
         public BitmapImage? Bitmap => _bitmap.Value;
         public string Title => Name;
 
+        private const int Buffer = 70;
+        
         public delegate PlayerVm Factory(int entityId);
 
         public PlayerVm(
@@ -44,7 +46,11 @@ namespace VolatileHordes.GUI.ViewModels
                 .FilterOnObservable(zombie => Observable.CombineLatest(
                     zombie.WhenAnyValue(x => x.Position),
                     this.WhenAnyValue(x => x.Rectangle),
-                    (zombiePos, rect) => rect.Contains(zombiePos)))
+                    (zombiePos, rect) =>
+                    {
+                        rect.Inflate(Buffer, Buffer);
+                        return rect.Contains(zombiePos);
+                    }))
                 .AutoRefresh()
                 .QueryWhenChanged(x => x)
                 .StartWithEmpty()
@@ -53,7 +59,10 @@ namespace VolatileHordes.GUI.ViewModels
                     this.WhenAnyValue(x => x.Rotation),
                     (zombiesInRange, _, _) =>
                     {
+                        var drawRect = this.Rectangle;
+                        drawRect.Inflate(Buffer, Buffer);
                         return new PlayerZoneDrawInput(
+                            drawRect,
                             new PlayerDrawInput(
                                 this.SpawnRectangle, 
                                 this.Rectangle,

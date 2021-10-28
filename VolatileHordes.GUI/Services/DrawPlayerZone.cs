@@ -9,6 +9,7 @@ namespace VolatileHordes.GUI.Services
     public record PlayerDrawInput(RectangleF SpawnRectangle, RectangleF Rectangle, float Rotation);
     public record ZombieDrawInput(PointF Position, PointF Target, PointF GroupTarget, float Rotation);
     public record PlayerZoneDrawInput(
+        RectangleF DrawArea,
         PlayerDrawInput Player,
         ushort Size, 
         ZombieDrawInput[] Zombies,
@@ -29,7 +30,6 @@ namespace VolatileHordes.GUI.Services
         class DrawPass : IDisposable
         {
             private readonly PlayerZoneDrawInput _input;
-            private readonly int _half;
             private readonly Bitmap _bitmap;
             private readonly Graphics _gr;
             private readonly float _offsetX;
@@ -40,13 +40,12 @@ namespace VolatileHordes.GUI.Services
             public DrawPass(PlayerZoneDrawInput input)
             {
                 _input = input;
-                _half = input.Size / 2;
                 _bitmap = new Bitmap(input.Size, input.Size);
                 _gr = Graphics.FromImage(_bitmap);
-                _offsetX = input.Player.Rectangle.Left;
-                _offsetY = input.Player.Rectangle.Top;
-                _scaleX = input.Size / input.Player.Rectangle.Width;
-                _scaleY = input.Size / input.Player.Rectangle.Height;
+                _offsetX = input.DrawArea.Left;
+                _offsetY = input.DrawArea.Top;
+                _scaleX = input.Size / input.DrawArea.Width;
+                _scaleY = input.Size / input.DrawArea.Height;
             }
 
             public void Dispose()
@@ -70,13 +69,22 @@ namespace VolatileHordes.GUI.Services
                 var center = _input.Player.SpawnRectangle.Center();
                 DrawCone(center, _input.Player.Rotation, PlayerConeSize, PlayerConeRadius,
                     Color.FromArgb(50, 255, 255, 255));
-                _gr.DrawRectangle(
-                    new Pen(Color.FromArgb(15, 15, 15)),
-                    new Rectangle(
-                        Offset(new PointF(_input.Player.SpawnRectangle.X, _input.Player.SpawnRectangle.Y)),
-                        new Size((int)(_input.Player.SpawnRectangle.Width * _scaleX), (int)(_input.Player.SpawnRectangle.Height * _scaleX))));
+                DrawRectangle(_input.Player.SpawnRectangle, Color.FromArgb(15, 15, 15));
+                DrawRectangle(_input.Player.Rectangle, Color.FromArgb(15, 15, 15));
                 DrawCircle(center, _input.NoiseRadius, Color.FromArgb(15, 15, 15));
-                FillCircle(center, PlayerCircleRadius, Color.Teal);
+                FillCircleAbsoluteSize(center, PlayerCircleRadius, Color.Teal);
+            }
+
+            private void DrawRectangle(
+                RectangleF rect,
+                Color color)
+            {
+                _gr.DrawRectangle(
+                    new Pen(color),
+                    new Rectangle(
+                        Offset(new PointF(rect.X, rect.Y)),
+                        new Size((int)(rect.Width * _scaleX),
+                            (int)(rect.Height * _scaleX))));
             }
 
             private void DrawZombies()
@@ -91,16 +99,16 @@ namespace VolatileHordes.GUI.Services
             {
                 DrawCone(zombie.Position, zombie.Rotation, ZombieConeSize, ZombieConeRadius,
                     Color.FromArgb(50, 255, 255, 255));
-                FillCircle(zombie.Position, ZombieCircleRadius, Color.Firebrick);
+                FillCircleAbsoluteSize(zombie.Position, ZombieCircleRadius, Color.Firebrick);
                 if (_input.DrawTargetLines && !zombie.Target.IsEmpty)
                 {
-                    FillCircle(zombie.Target, ZombieTargetRadius, Color.FromArgb(30, 255, 255, 255));
+                    FillCircleAbsoluteSize(zombie.Target, ZombieTargetRadius, Color.FromArgb(30, 255, 255, 255));
                     _gr.DrawLine(new Pen(Color.FromArgb(30, 255, 255, 255)), Offset(zombie.Position), Offset(zombie.Target));
                 }
 
                 if (_input.DrawGroupTargetLines && !zombie.GroupTarget.IsEmpty)
                 {
-                    FillCircle(zombie.GroupTarget, ZombieTargetRadius, Color.FromArgb(30, 255, 255, 150));
+                    FillCircleAbsoluteSize(zombie.GroupTarget, ZombieTargetRadius, Color.FromArgb(30, 255, 255, 150));
                     _gr.DrawLine(new Pen(Color.FromArgb(30, 255, 255, 150)), Offset(zombie.Position), Offset(zombie.GroupTarget));
                 }
             }
@@ -115,7 +123,7 @@ namespace VolatileHordes.GUI.Services
                 return 90 - f;
             }
 
-            private void FillCircle(PointF pt, int size, Color color)
+            private void FillCircleAbsoluteSize(PointF pt, int size, Color color)
             {
                 var target = Offset(pt);
                 _gr.FillEllipse(
@@ -129,12 +137,14 @@ namespace VolatileHordes.GUI.Services
             private void DrawCircle(PointF pt, int size, Color color)
             {
                 var target = Offset(pt);
+                var sizeX = size * _scaleX;
+                var sizeY = size * _scaleY;
                 _gr.DrawEllipse(
                     new Pen(color),
-                    target.X - size / 2,
-                    target.Y - size / 2,
-                    size,
-                    size);
+                    target.X - sizeX / 2,
+                    target.Y - sizeY / 2,
+                    sizeX,
+                    sizeY);
             }
 
             private void DrawCone(PointF pt, float rotation, int size, byte radius, Color color)
