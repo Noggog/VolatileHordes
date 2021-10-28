@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using VolatileHordes.Utility;
@@ -89,6 +89,19 @@ namespace VolatileHordes
                 {
                     Logger.Info("Artificially spawning a crazy");
                     await Container.CrazySpawner.Spawn(nearPlayer: true);
+                    break;
+                }
+                case "sendtoplayer":
+                {
+                    Logger.Info("Sending all zombies to a player");
+                    foreach (var g in Container.ZombieGroupManager.AllGroups)
+                    {
+                        var loc = g.GetGeneralLocation();
+                        if (loc == null) continue;
+                        var player = Container.Spawning.GetNearestPlayer(loc.Value);
+                        if (player == null) continue;
+                        Container.ZombieControl.SendGroupTowards(g, player.Center);
+                    }
                     break;
                 }
                 case "wipe":
