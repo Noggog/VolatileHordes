@@ -63,17 +63,8 @@ namespace VolatileHordes.Spawning
             if (_playerZoneManager.Zones.Count == 0)
                 return default;
 
-            for (int i = 0; i < 4; i++)
-            {
-                var idx = _randomSource.Get(0, _playerZoneManager.Zones.Count);
-                var zone = _playerZoneManager.Zones[idx];
-                if (zone.Valid)
-                {
-                    return zone;
-                }
-            }
-
-            return default;
+            var idx = _randomSource.Get(0, _playerZoneManager.Zones.Count);
+            return _playerZoneManager.Zones[idx];
         }
 
         public Vector3? GetRandomPointNear(PointF pt, byte range, int attemptCount = 10)

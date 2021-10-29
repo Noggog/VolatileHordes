@@ -30,8 +30,6 @@ namespace VolatileHordes.Players
                 }
                 else
                 {
-                    // Remove player.
-                    ply.Valid = false;
                     _zoneManager.Zones.RemoveAt(i);
                     i--;
 

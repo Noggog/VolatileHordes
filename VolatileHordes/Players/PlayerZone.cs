@@ -12,7 +12,6 @@ namespace VolatileHordes.Players
     
     public class PlayerZone : IPlayerZone
     {
-        public bool Valid { get; set; } = true;
         public PointF Mins { get; set; } = PointF.Empty;
         public PointF Maxs { get; set; } = PointF.Empty;
         public PointF MinsSpawnBlock { get; set; } = PointF.Empty;
