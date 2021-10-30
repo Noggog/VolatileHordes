@@ -14,7 +14,7 @@ namespace VolatileHordes.Spawning.WanderingHordes
         private readonly SpawningPositions _spawningPositions;
         private readonly WanderingHordePlacer _placer;
         private readonly ZombieControl _control;
-        private readonly AllocationManager _allocationManager;
+        private readonly IChunkMeasurements _chunkMeasurements;
         private readonly LimitManager _limitManager;
 
         public WanderingHordeSpawner(
@@ -23,7 +23,7 @@ namespace VolatileHordes.Spawning.WanderingHordes
             SpawningPositions spawningPositions,
             WanderingHordePlacer placer,
             ZombieControl control,
-            AllocationManager allocationManager,
+            IChunkMeasurements chunkMeasurements,
             LimitManager limitManager)
         {
             _groupManager = groupManager;
@@ -31,7 +31,7 @@ namespace VolatileHordes.Spawning.WanderingHordes
             _spawningPositions = spawningPositions;
             _placer = placer;
             _control = control;
-            _allocationManager = allocationManager;
+            _chunkMeasurements = chunkMeasurements;
             _limitManager = limitManager;
         }
         
@@ -44,7 +44,7 @@ namespace VolatileHordes.Spawning.WanderingHordes
                 return;
             }
             
-            await Spawn(size, _allocationManager.GetAllocationBucket(zone.Center));
+            await Spawn(size, _chunkMeasurements.GetAllocationBucket(zone.Center));
         }
 
         public async Task Spawn(ushort size, Point chunkPoint)

@@ -5,10 +5,13 @@ using VolatileHordes.Utility;
 
 namespace VolatileHordes.Allocation
 {
-    public class AllocationManager
+    public class AllocationManager : IChunkMeasurements
     {
         private readonly AllocationBuckets _buckets;
         private readonly float _fillPerMinute;
+
+        public int Width => _buckets.Width;
+        public int Height => _buckets.Height;
         
         public AllocationManager(
             AllocationBuckets buckets,
@@ -37,12 +40,12 @@ namespace VolatileHordes.Allocation
 
         public Point GetAllocationBucket(PointF point)
         {
-            return _buckets.ConvertFromWorld(point);
+            return _buckets.GetAllocationBucket(point);
         }
 
         public Rectangle GetBucketBounds(Point point)
         {
-            return _buckets.GetBounds(point);
+            return _buckets.GetBucketBounds(point);
         }
 
         // public bool TryRequest(PointF pt, Percent percent, out int number)

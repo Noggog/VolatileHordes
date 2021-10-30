@@ -14,7 +14,7 @@ namespace VolatileHordes.Director
 
         public DirectorManager(
             TimeManager time,
-            AllocationManager allocationManager,
+            IChunkMeasurements chunkMeasurements,
             ChunkDirectorFactory chunkDirectorFactory,
             PlayerZoneManager playerZoneManager)
         {
@@ -25,7 +25,7 @@ namespace VolatileHordes.Director
                     
                     foreach (var player in playerZoneManager.Zones)
                     {
-                        var allocPoint = allocationManager.GetAllocationBucket(player.Center);
+                        var allocPoint = chunkMeasurements.GetAllocationBucket(player.Center);
                         var chunkDirectors = _chunkDirectors.TryCreate(allocPoint, chunkDirectorFactory.Create);
                         chunkDirectors.PlayerLastSeen = now;
                     }

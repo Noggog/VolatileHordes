@@ -15,18 +15,18 @@ namespace VolatileHordes.Spawning
     {
         private readonly IWorld _world;
         private readonly PlayerZoneManager _playerZoneManager;
-        private readonly AllocationManager _allocationManager;
+        private readonly IChunkMeasurements _chunkMeasurements;
         private readonly RandomSource _randomSource;
 
         public SpawningPositions(
             IWorld world,
             PlayerZoneManager playerZoneManager,
-            AllocationManager allocationManager,
+            IChunkMeasurements chunkMeasurements,
             RandomSource randomSource)
         {
             _world = world;
             _playerZoneManager = playerZoneManager;
-            _allocationManager = allocationManager;
+            _chunkMeasurements = chunkMeasurements;
             _randomSource = randomSource;
         }
 
@@ -53,7 +53,7 @@ namespace VolatileHordes.Spawning
 
         public Vector3? GetRandomLocationInChunk(Point chunkPoint)
         {
-            var bounds = _allocationManager.GetBucketBounds(chunkPoint);
+            var bounds = _chunkMeasurements.GetBucketBounds(chunkPoint);
             Logger.Info("Bounds were {0}", bounds);
             return GetRandomPosition(bounds);
         }
@@ -61,7 +61,7 @@ namespace VolatileHordes.Spawning
         public SpawnTarget? GetRandomSpawnInChunk(Point chunkPoint)
         {
             var zones = _playerZoneManager.Zones
-                .Where(z => _allocationManager.GetAllocationBucket(z.Center) == chunkPoint)
+                .Where(z => _chunkMeasurements.GetAllocationBucket(z.Center) == chunkPoint)
                 .ToArray();
             if (zones.Length == 0)
                 return default;

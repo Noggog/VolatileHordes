@@ -6,7 +6,15 @@ using VolatileHordes.Utility;
 
 namespace VolatileHordes.Allocation
 {
-    public class AllocationBuckets
+    public interface IChunkMeasurements
+    {
+        int Width { get; }
+        int Height { get; }
+        Point GetAllocationBucket(PointF pt);
+        Rectangle GetBucketBounds(Point pt);
+    }
+    
+    public class AllocationBuckets : IChunkMeasurements
     {
         private readonly ILogger _logger;
         private readonly IWorld _world;
@@ -31,14 +39,14 @@ namespace VolatileHordes.Allocation
 
         public Percent this[PointF pt]
         {
-            get => this[ConvertFromWorld(pt)];
-            set => this[ConvertFromWorld(pt)] = value;
+            get => this[GetAllocationBucket(pt)];
+            set => this[GetAllocationBucket(pt)] = value;
         }
 
         public Percent this[float x, float y]
         {
-            get => this[ConvertFromWorld(new PointF(x, y))];
-            set => this[ConvertFromWorld(new PointF(x, y))] = value;
+            get => this[GetAllocationBucket(new PointF(x, y))];
+            set => this[GetAllocationBucket(new PointF(x, y))] = value;
         }
 
         public AllocationBuckets(
@@ -104,14 +112,14 @@ namespace VolatileHordes.Allocation
             }
         }
 
-        public Point ConvertFromWorld(PointF pt)
+        public Point GetAllocationBucket(PointF pt)
         {
             var x = (int)pt.X + _offsetX;
             var y = (int)pt.Y + _offsetY;
             return new Point(x / ChunkSize, y / ChunkSize);
         }
 
-        public Rectangle GetBounds(Point pt)
+        public Rectangle GetBucketBounds(Point pt)
         {
             var x = pt.X * ChunkSize - _offsetX;
             var y = pt.Y * ChunkSize - _offsetY;
@@ -122,7 +130,7 @@ namespace VolatileHordes.Allocation
 
         public void Consume(PointF pt, Percent p)
         {
-            var pt2 = ConvertFromWorld(pt);
+            var pt2 = GetAllocationBucket(pt);
             var val = _buckets[pt2.X, pt2.Y];
             _buckets[pt2.X, pt2.Y] = Percent.FactoryPutInRange(val - p);
         }
