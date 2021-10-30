@@ -33,7 +33,11 @@ namespace VolatileHordes.GUI.ViewModels
             AllocationVm = allocationVmFactory();
             connectionVm.WhenAnyValue(x => x.Client)
                 .ObserveOn(RxApp.TaskpoolScheduler)
-                .Select(x => x?.States ?? Observable.Return<State?>(null))
+                .Select(x =>
+                {
+                    if (x == null) return Observable.Return<State?>(null);
+                    return x.States.Catch<State, Exception>((ex) => Observable.Empty<State>());
+                })
                 .Switch()
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Subscribe(Absorb);
