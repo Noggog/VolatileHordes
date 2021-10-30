@@ -60,10 +60,10 @@ namespace VolatileHordes
         public static readonly RoamControl RoamControl = new(Time, Spawning, ZombieControl);
         public static readonly FidgetRoam FidgetRoam = new(UserSettings.Control.FidgetRoam, RoamControl);
         public static readonly FidgetForwardControl FidgetForwardControl = new(UserSettings.Control.FidgetRoam, Time, ZombieControl, PointService, Random);
-        public static readonly RoamFarOccasionally RoamFarOccasionally = new(UserSettings.Control.FarRoam,RoamControl);
+        public static readonly RoamInChunkOccasionally RoamInChunkOccasionally = new(UserSettings.Control.FarRoam,RoamControl);
         public static readonly LuckyPlayerRetarget LuckyPlayerRetarget = new(Time, Random, UserSettings.Control.LuckyPlayerRetarget, Spawning, ZombieControl);
         public static readonly FidgetForwardAIPackage FidgetForwardAIPackage = new(LuckyPlayerRetarget, FidgetForwardControl);
-        public static readonly RoamAiPackage RoamAiPackage = new(NoiseResponderControlFactory, RoamFarOccasionally, LuckyPlayerRetarget);
+        public static readonly RoamAiPackage RoamAiPackage = new(NoiseResponderControlFactory, RoamInChunkOccasionally, LuckyPlayerRetarget);
         public static readonly AiPackageMapper AiPackageMapper = new();
         public static readonly CrazyControl CrazyControl = new(ZombieControl, Time, Spawning);
         public static readonly CrazyAiPackage CrazyAiPackage = new(NoiseResponderControlFactory, CrazyControl);

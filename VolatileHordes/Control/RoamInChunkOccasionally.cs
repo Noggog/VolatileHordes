@@ -5,12 +5,12 @@ using VolatileHordes.Tracking;
 
 namespace VolatileHordes.Control
 {
-    public class RoamFarOccasionally
+    public class RoamInChunkOccasionally
     {
         private readonly RoamControlSettings _settings;
         private readonly RoamControl _roamControl;
 
-        public RoamFarOccasionally(
+        public RoamInChunkOccasionally(
             RoamControlSettings settings,
             RoamControl roamControl)
         {

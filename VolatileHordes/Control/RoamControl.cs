@@ -60,7 +60,10 @@ namespace VolatileHordes.Control
                         return;
                     }
 
-                    var newTarget = _spawningPositions.GetRandomPointNear(group.Target.Value, range);
+                    var newTarget = _spawningPositions.GetRandomPointNearWithinChunk(
+                        group.Target.Value,
+                        range,
+                        group.OriginatingChunk);
                     if (newTarget == null)
                     {
                         Logger.Warning("Could not find target to instruct group {0} to roam to.", group);

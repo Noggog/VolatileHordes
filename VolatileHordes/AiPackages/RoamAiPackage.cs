@@ -8,16 +8,16 @@ namespace VolatileHordes.AiPackages
     public class RoamAiPackage : IAiPackage
     {
         private readonly NoiseResponderControlFactory _noiseResponderControlFactory;
-        private readonly RoamFarOccasionally _roamFarOccasionally;
+        private readonly RoamInChunkOccasionally _roamInChunkOccasionally;
         private readonly LuckyPlayerRetarget _luckyPlayerRetarget;
 
         public RoamAiPackage(
             NoiseResponderControlFactory noiseResponderControlFactory,
-            RoamFarOccasionally roamFarOccasionally,
+            RoamInChunkOccasionally roamInChunkOccasionally,
             LuckyPlayerRetarget luckyPlayerRetarget)
         {
             _noiseResponderControlFactory = noiseResponderControlFactory;
-            _roamFarOccasionally = roamFarOccasionally;
+            _roamInChunkOccasionally = roamInChunkOccasionally;
             _luckyPlayerRetarget = luckyPlayerRetarget;
         }
 
@@ -32,7 +32,7 @@ namespace VolatileHordes.AiPackages
             noiseControl.ApplyTo(group)
                 .Subscribe()
                 .DisposeWith(group);
-            _roamFarOccasionally.ApplyTo(group, interrupt: luckyOccurred)
+            _roamInChunkOccasionally.ApplyTo(group, interrupt: luckyOccurred)
                 .Compose(noiseControl.TemporaryShutoffOnNoise(), TimeSpan.FromSeconds(60), nameof(RoamAiPackage))
                 .Subscribe()
                 .DisposeWith(group);

@@ -105,6 +105,23 @@ namespace VolatileHordes.Spawning
             return GetRandomPosition(rect, attemptCount);
         }
 
+        public Vector3? GetRandomPointNearWithinChunk(PointF pt, byte range, Point chunk, int attemptCount = 10)
+        {
+            var rect = new RectangleF(
+                x: pt.X - range,
+                y: pt.Y - range,
+                width: range * 2,
+                height: range * 2);
+            var chunkRect = _chunkMeasurements.GetBucketBounds(chunk);
+            var intersection = RectangleF.Intersect(rect, chunkRect);
+            if (intersection.IsEmpty)
+            {
+                Logger.Warning("Could not get random point within chunk because target range intersection did not exist.");
+                return GetRandomLocationInChunk(chunk);
+            }
+            return GetRandomPosition(intersection, attemptCount);
+        }
+
         public Vector3? GetRandomEdgeRangeAwayFrom(PointF pt, byte range)
         {
             var rect = new RectangleF(
