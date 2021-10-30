@@ -7,7 +7,7 @@ using VolatileHordes.Tracking;
 
 namespace VolatileHordes.Spawning.WanderingHordes
 {
-    public class WanderingHordeSpawner
+    public class WanderingHordeSpawner : IHordeSpawner
     {
         private readonly ZombieGroupManager _groupManager;
         private readonly RoamAiPackage _roamAiPackage;

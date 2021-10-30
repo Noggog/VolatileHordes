@@ -72,7 +72,7 @@ namespace VolatileHordes
         public static readonly DirectorSwitch DirectorSwitch = new(UserSettings.Director);
         public static readonly FidgetForwardSpawner FidgetForwardSpawner = new(ZombieGroupManager, FidgetForwardAIPackage, Spawning, AllocationBuckets, WanderingHordePlacer, LimitManager);
         public static readonly WanderingHordeSpawner WanderingHordeSpawner = new(ZombieGroupManager, RoamAiPackage, Spawning, WanderingHordePlacer, ZombieControl, AllocationManager, LimitManager);
-        public static readonly WanderInHordeDirectorFactory WanderInHordeDirectorFactory = new(DirectorSwitch, Time, Random, WanderingHordeSpawner, FidgetForwardSpawner);
+        public static readonly WanderInHordeDirectorFactory WanderInHordeDirectorFactory = new(DirectorSwitch, Time, Random, WanderingHordeSpawner, FidgetForwardSpawner, UserSettings.Director.WanderInHorde);
         public static readonly AmbientDirector AmbientDirector = new(DirectorSwitch, Random, CrazyAiPackage, AmbientAiPackage, RunnerAiPackage, ZombieGroupManager);
         public static readonly UiServer Server = new(Time, UserSettings.UiSettings, LimitManager, PlayerZoneManager, AllocationBuckets, UserSettings.Control.NoiseResponder, ZombieGroupManager, World);
     }

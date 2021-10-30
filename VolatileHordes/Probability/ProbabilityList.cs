@@ -4,7 +4,12 @@ using VolatileHordes.Core.Models;
 
 namespace VolatileHordes.Probability
 {
-    public class ProbabilityList<T>
+    public interface IProbabilityListGetter<T>
+    {
+        T Get(RandomSource random);
+    }
+
+    public class ProbabilityList<T> : IProbabilityListGetter<T>
     {
         public UDouble TotalWeight { get; private set; }
         private readonly SortingListDictionary<double, T> _items = new();

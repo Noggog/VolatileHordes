@@ -105,6 +105,7 @@
     <Compile Include="Settings\User\Control\NoiseResponderSettings.cs" />
     <Compile Include="Settings\User\Control\RoamControlSettings.cs" />
     <Compile Include="Settings\User\Director\DirectorSettings.cs" />
+    <Compile Include="Settings\User\Director\WanderInHordeDirectorSettings.cs" />
     <Compile Include="Settings\User\LimitSettings.cs" />
     <Compile Include="Settings\User\Noise\NoiseItem.cs" />
     <Compile Include="Settings\User\Noise\NoiseSettings.cs" />
@@ -119,6 +120,7 @@
     <Compile Include="Spawning\Seeker\SeekerGroupSpawner.cs" />
     <Compile Include="Spawning\SingleRunnerSpawner.cs" />
     <Compile Include="Spawning\FidgetForwardSpawner.cs" />
+    <Compile Include="Spawning\WanderingHordes\IHordeSpawner.cs" />
     <Compile Include="Spawning\ZombieGroupSpawn.cs" />
     <Compile Include="Tracking\AmbientZombieManager.cs" />
     <Compile Include="Tracking\ZombieGroupManager.cs" />

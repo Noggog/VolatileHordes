@@ -7,7 +7,7 @@ using VolatileHordes.Tracking;
 
 namespace VolatileHordes.Spawning
 {
-    public class FidgetForwardSpawner
+    public class FidgetForwardSpawner : IHordeSpawner
     {
         private readonly ZombieGroupManager _groupManager;
         private readonly SpawningPositions _spawningPositions;

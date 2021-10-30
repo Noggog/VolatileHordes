@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Drawing;
-using System.Linq;
-using VolatileHordes.Allocation;
-using VolatileHordes.Players;
+using VolatileHordes.Core.Models;
 using VolatileHordes.Probability;
+using VolatileHordes.Settings.User.Director;
 using VolatileHordes.Spawning;
 using VolatileHordes.Spawning.WanderingHordes;
 
@@ -14,21 +13,22 @@ namespace VolatileHordes.Director
         private readonly DirectorSwitch _directorSwitch;
         private readonly TimeManager _timeManager;
         private readonly RandomSource _randomSource;
-        private readonly WanderingHordeSpawner _wanderingHordeSpawner;
-        private readonly FidgetForwardSpawner _fidgetForwardSpawner;
+        private readonly ProbabilityList<IHordeSpawner> _spawners;
 
         public WanderInHordeDirectorFactory(
             DirectorSwitch directorSwitch,
             TimeManager timeManager,
             RandomSource randomSource,
             WanderingHordeSpawner wanderingHordeSpawner,
-            FidgetForwardSpawner fidgetForwardSpawner)
+            FidgetForwardSpawner fidgetForwardSpawner,
+            WanderInHordeDirectorSettings settings)
         {
             _directorSwitch = directorSwitch;
             _timeManager = timeManager;
             _randomSource = randomSource;
-            _wanderingHordeSpawner = wanderingHordeSpawner;
-            _fidgetForwardSpawner = fidgetForwardSpawner;
+            _spawners = new();
+            _spawners.Add(wanderingHordeSpawner, new UDouble(settings.WanderProbabilityWeight));
+            _spawners.Add(fidgetForwardSpawner, new UDouble(settings.FidgetForwardProbabilityWeight));
         }
         
         public WanderInHordeDirector Get(Point allocPoint)
@@ -37,8 +37,7 @@ namespace VolatileHordes.Director
                 _directorSwitch,
                 _timeManager,
                 _randomSource,
-                _wanderingHordeSpawner,
-                _fidgetForwardSpawner,
+                _spawners,
                 allocPoint);
         }
     }
@@ -49,8 +48,7 @@ namespace VolatileHordes.Director
             DirectorSwitch directorSwitch,
             TimeManager timeManager,
             RandomSource randomSource,
-            WanderingHordeSpawner wanderingHordeSpawner,
-            FidgetForwardSpawner fidgetForwardSpawner,
+            IProbabilityListGetter<IHordeSpawner> hordes,
             Point allocPt)
         {
             timeManager.IntervalWithVariance(new TimeRange(TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(20)))
@@ -59,19 +57,8 @@ namespace VolatileHordes.Director
                     {
                         var spawnCount = (ushort)6; // TODO: Calculate based on GameStage
 
-                        var randomNumber = randomSource.Get(2);
-
-                        switch (randomNumber)
-                        {
-                            case 0:
-                                await wanderingHordeSpawner.Spawn(spawnCount, allocPt);
-                                break;
-                            case 1:
-                                await fidgetForwardSpawner.Spawn(spawnCount, allocPt);
-                                break;
-                            default:
-                                throw new Exception($"Unhandled case:{randomNumber}");
-                        }
+                        var spawner = hordes.Get(randomSource);
+                        await spawner.Spawn(spawnCount, allocPt);
                     },
                     e => Logger.Error("{0} had update error {1}", nameof(WanderInHordeDirector), e));
         }
