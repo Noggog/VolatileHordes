@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 using UniLinq;
-using VolatileHordes.AiPackages;
+using VolatileHordes.Allocation;
 using VolatileHordes.GameAbstractions;
 
 namespace VolatileHordes.Tracking
@@ -8,6 +8,7 @@ namespace VolatileHordes.Tracking
     public class AmbientZombieManager
     {
         private readonly IWorld _world;
+        private readonly IChunkMeasurements _chunkMeasurements;
         private readonly ZombieGroupManager _groupManager;
         private readonly LimitManager _limitManager;
 
@@ -15,10 +16,12 @@ namespace VolatileHordes.Tracking
 
         public AmbientZombieManager(
             IWorld world,
+            IChunkMeasurements chunkMeasurements,
             ZombieGroupManager groupManager,
             LimitManager limitManager)
         {
             _world = world;
+            _chunkMeasurements = chunkMeasurements;
             _groupManager = groupManager;
             _limitManager = limitManager;
         }
@@ -46,8 +49,15 @@ namespace VolatileHordes.Tracking
                 zombie.Destroy();
                 return;
             }
+
+            var pos = zombie.GetPosition();
+            if (pos == null)
+            {
+                Logger.Debug("Zombie {0} had no position, and can't be tracked", entityId);
+                return;
+            }
             
-            group = new ZombieGroup(null);
+            group = new ZombieGroup(_chunkMeasurements.GetAllocationBucket(pos.Value), null);
             group.Add(zombie);
             _groupManager.TrackAsAmbient(group);
             

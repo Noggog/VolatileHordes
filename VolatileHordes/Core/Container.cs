@@ -43,7 +43,7 @@ namespace VolatileHordes
         public static readonly NoiseResponderControlFactory NoiseResponderControlFactory = new(Random, ZombieControl, NoiseManager, TemporaryAiShutoff, UserSettings.Control.NoiseResponder, Logger);
         public static readonly AmbientAiPackage AmbientAiPackage = new(NoiseResponderControlFactory);
         public static readonly LimitManager LimitManager = new(World, Time, ZombieGroupManager, UserSettings.Limits);
-        public static readonly AmbientZombieManager Ambient = new(World, ZombieGroupManager, LimitManager);
+        public static readonly AmbientZombieManager Ambient = new(World, AllocationBuckets, ZombieGroupManager, LimitManager);
         public static readonly ZombieCreator ZombieCreator = new(World, Ambient, Biome, LimitManager);
         public static readonly AmbientSpawner AmbientSpawner = new(ZombieCreator, Spawning, LimitManager);
         public static readonly PlayerSeekerControl SeekerControl = new(Time, Spawning, ZombieControl);
@@ -51,9 +51,9 @@ namespace VolatileHordes
         public static readonly ZombieGroupReachedTarget GroupReachedTarget = new(Time);
         public static readonly RunnerControl RunnerControl = new(ZombieControl, Time, Spawning, GroupReachedTarget);
         public static readonly RunnerAiPackage RunnerAiPackage = new(NoiseResponderControlFactory, RunnerControl);
-        public static readonly SingleRunnerSpawner SingleRunnerSpawner = new(ZombieGroupManager, RunnerAiPackage, Spawning, ZombieControl, ZombieCreator);
+        public static readonly SingleRunnerSpawner SingleRunnerSpawner = new(ZombieGroupManager, RunnerAiPackage, Spawning, AllocationBuckets, ZombieControl, ZombieCreator);
         public static readonly SeekerGroupCalculator SeekerCalculator = new(Random);
-        public static readonly SeekerGroupSpawner SeekerGroupSpawner = new(ZombieGroupManager, SeekerCalculator, Spawning, SeekerAiPackage, ZombieCreator, ZombieControl);
+        public static readonly SeekerGroupSpawner SeekerGroupSpawner = new(ZombieGroupManager, SeekerCalculator, Spawning, AllocationBuckets, SeekerAiPackage, ZombieCreator, ZombieControl);
         public static readonly SpawnRowPerpendicular SpawnRowPerpendicular = new(ZombieCreator, ZombieControl);
         public static readonly WanderingHordePlacer WanderingHordePlacer = new(Time, SpawnRowPerpendicular);
         public static readonly WanderingHordeCalculator WanderingHordeCalculator = new(UserSettings.WanderingHordeSettings, Random);
@@ -67,10 +67,10 @@ namespace VolatileHordes
         public static readonly AiPackageMapper AiPackageMapper = new();
         public static readonly CrazyControl CrazyControl = new(ZombieControl, Time, Spawning);
         public static readonly CrazyAiPackage CrazyAiPackage = new(NoiseResponderControlFactory, CrazyControl);
-        public static readonly CrazySpawner CrazySpawner = new(ZombieGroupManager, CrazyAiPackage, Spawning, ZombieControl, ZombieCreator);
+        public static readonly CrazySpawner CrazySpawner = new(ZombieGroupManager, CrazyAiPackage, Spawning, AllocationBuckets, ZombieControl, ZombieCreator);
         public static readonly Stats Stats = new(PlayerZoneManager, ZombieGroupManager, Ambient, LimitManager);
         public static readonly DirectorSwitch DirectorSwitch = new(UserSettings.Director);
-        public static readonly FidgetForwardSpawner FidgetForwardSpawner = new(ZombieGroupManager, FidgetForwardAIPackage, Spawning, WanderingHordePlacer, ZombieControl, LimitManager);
+        public static readonly FidgetForwardSpawner FidgetForwardSpawner = new(ZombieGroupManager, FidgetForwardAIPackage, Spawning, AllocationBuckets, WanderingHordePlacer, LimitManager);
         public static readonly WanderingHordeSpawner WanderingHordeSpawner = new(ZombieGroupManager, RoamAiPackage, Spawning, WanderingHordePlacer, ZombieControl, AllocationManager, LimitManager);
         public static readonly WanderInHordeDirectorFactory WanderInHordeDirectorFactory = new(DirectorSwitch, Time, Random, WanderingHordeSpawner, FidgetForwardSpawner);
         public static readonly AmbientDirector AmbientDirector = new(DirectorSwitch, Random, CrazyAiPackage, AmbientAiPackage, RunnerAiPackage, ZombieGroupManager);

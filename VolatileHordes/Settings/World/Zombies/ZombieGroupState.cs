@@ -9,12 +9,15 @@ namespace VolatileHordes.Settings.World.Zombies
     public class ZombieGroupState
     {
         public ZombieState[] Zombies { get; set; } = new ZombieState[0];
+        public Point OriginatingChunk { get; set; }
         public PointF? Target { get; set; }
         public AiPackageEnum? AiPackage { get; set; }
 
         public void ApplyToWorld()
         {
-            using var groupSpawn = Container.ZombieGroupManager.NewGroup(Container.AiPackageMapper.Get(AiPackage));
+            using var groupSpawn = Container.ZombieGroupManager.NewGroup(
+                OriginatingChunk,
+                Container.AiPackageMapper.Get(AiPackage));
             groupSpawn.Group.Add(
                 Zombies
                     .Select<ZombieState, IZombie>(z => new Zombie(Container.World, z.EntityId))
@@ -34,7 +37,8 @@ namespace VolatileHordes.Settings.World.Zombies
                     })
                     .ToArray(),
                 Target = g.Target,
-                AiPackage = g.AiPackage?.TypeEnum
+                AiPackage = g.AiPackage?.TypeEnum,
+                OriginatingChunk = g.OriginatingChunk,
             };
         }
     }

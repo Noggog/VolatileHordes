@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Reactive.Subjects;
 using UniLinq;
 using VolatileHordes.AiPackages;
@@ -48,9 +49,9 @@ namespace VolatileHordes.Tracking
             return false;
         }
 
-        public ZombieGroupSpawn NewGroup(IAiPackage? package = null)
+        public ZombieGroupSpawn NewGroup(Point originatingChunk, IAiPackage? package = null)
         {
-            var zombieGroup = new ZombieGroup(package);
+            var zombieGroup = new ZombieGroup(originatingChunk, package);
 
             if (package != null)
             {

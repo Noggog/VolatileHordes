@@ -30,12 +30,14 @@ namespace VolatileHordes.Tracking
             get => _target.Value;
             set => _target.OnNext(value);
         }
-        
+
+        public Point OriginatingChunk { get; }
         public IAiPackage? AiPackage { get; private set; }
         
-        public ZombieGroup(IAiPackage? package)
+        public ZombieGroup(Point originatingChunk, IAiPackage? package)
         {
             Id = _nextId++;
+            OriginatingChunk = originatingChunk;
             AiPackage = package;
         }
 

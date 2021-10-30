@@ -52,7 +52,9 @@ namespace VolatileHordes.Spawning.WanderingHordes
             var spawnTarget = _spawningPositions.GetRandomSpawnInChunk(chunkPoint);
             if (spawnTarget == null) return;
 
-            using var groupSpawn = _groupManager.NewGroup(_roamAiPackage);
+            using var groupSpawn = _groupManager.NewGroup(
+                _chunkMeasurements.GetAllocationBucket(spawnTarget.SpawnPoint.ToPoint()),
+                _roamAiPackage);
             
             Logger.Info("Spawning horde {0} of size {1} at {2}", groupSpawn.Group.Id, size, spawnTarget);
             

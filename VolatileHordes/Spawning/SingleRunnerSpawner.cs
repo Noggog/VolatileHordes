@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using VolatileHordes.AiPackages;
+using VolatileHordes.Allocation;
 using VolatileHordes.Control;
 using VolatileHordes.Tracking;
 
@@ -10,6 +11,7 @@ namespace VolatileHordes.Spawning
         private readonly ZombieGroupManager _groupManager;
         private readonly RunnerAiPackage _runnerAiPackage;
         private readonly SpawningPositions _spawningPositions;
+        private readonly IChunkMeasurements _chunkMeasurements;
         private readonly ZombieControl _control;
         private readonly ZombieCreator _zombieCreator;
 
@@ -17,12 +19,14 @@ namespace VolatileHordes.Spawning
             ZombieGroupManager groupManager,
             RunnerAiPackage runnerAiPackage,
             SpawningPositions spawningPositions,
+            IChunkMeasurements chunkMeasurements,
             ZombieControl control,
             ZombieCreator zombieCreator)
         {
             _groupManager = groupManager;
             _runnerAiPackage = runnerAiPackage;
             _spawningPositions = spawningPositions;
+            _chunkMeasurements = chunkMeasurements;
             _control = control;
             _zombieCreator = zombieCreator;
         }
@@ -43,7 +47,9 @@ namespace VolatileHordes.Spawning
                 return;
             }
             
-            using var groupSpawn = _groupManager.NewGroup(_runnerAiPackage);
+            using var groupSpawn = _groupManager.NewGroup(
+                _chunkMeasurements.GetAllocationBucket(spawnTarget.SpawnPoint.ToPoint()),
+                _runnerAiPackage);
             await _zombieCreator.CreateZombie(spawnTarget.SpawnPoint.ToPoint(), groupSpawn.Group);
             
             _control.SendGroupTowards(groupSpawn.Group, targetPos.Value.ToPoint(), withTargetRandomness: false);

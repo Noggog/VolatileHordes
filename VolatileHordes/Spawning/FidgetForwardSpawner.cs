@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Threading.Tasks;
 using VolatileHordes.AiPackages;
-using VolatileHordes.Control;
+using VolatileHordes.Allocation;
 using VolatileHordes.Spawning.WanderingHordes;
 using VolatileHordes.Tracking;
 
@@ -11,8 +11,8 @@ namespace VolatileHordes.Spawning
     {
         private readonly ZombieGroupManager _groupManager;
         private readonly SpawningPositions _spawningPositions;
+        private readonly IChunkMeasurements _chunkMeasurements;
         private readonly WanderingHordePlacer _placer;
-        private readonly ZombieControl _control;
         private readonly LimitManager _limitManager;
         private readonly FidgetForwardAIPackage _fidgetForwardAIPackage;
 
@@ -20,14 +20,14 @@ namespace VolatileHordes.Spawning
             ZombieGroupManager groupManager,
             FidgetForwardAIPackage fidgetForwardAIPackage,
             SpawningPositions spawningPositions,
+            IChunkMeasurements chunkMeasurements,
             WanderingHordePlacer placer,
-            ZombieControl control,
             LimitManager limitManager)
         {
             _groupManager = groupManager;
             _spawningPositions = spawningPositions;
+            _chunkMeasurements = chunkMeasurements;
             _placer = placer;
-            _control = control;
             _limitManager = limitManager;
             _fidgetForwardAIPackage = fidgetForwardAIPackage;
         }
@@ -37,7 +37,9 @@ namespace VolatileHordes.Spawning
             var spawnTarget = _spawningPositions.GetRandomSpawnInChunk(chunkPoint);
             if (spawnTarget == null) return;
 
-            using var groupSpawn = _groupManager.NewGroup(_fidgetForwardAIPackage);
+            using var groupSpawn = _groupManager.NewGroup(
+                _chunkMeasurements.GetAllocationBucket(spawnTarget.SpawnPoint.ToPoint()),
+                _fidgetForwardAIPackage);
             
             size = _limitManager.GetAllowedLimit(size);
             
