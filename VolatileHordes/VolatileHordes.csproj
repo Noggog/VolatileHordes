@@ -50,6 +50,7 @@
     <Compile Include="Core\Containers\ISortingListDictionary.cs" />
     <Compile Include="Core\Containers\SortingList.cs" />
     <Compile Include="Core\Containers\SortingListDictionary.cs" />
+    <Compile Include="Core\Extensions\DictionaryExt.cs" />
     <Compile Include="Core\Extensions\PreSortedListExt.cs" />
     <Compile Include="Core\Models\Angle\AngleType.cs" />
     <Compile Include="Core\Models\Angle\Angle.cs" />
@@ -78,7 +79,9 @@
     <Compile Include="AiPackages\RoamAiPackage.cs" />
     <Compile Include="Core\Services\Stats.cs" />
     <Compile Include="Core\Services\ZoneProcessing.cs" />
-    <Compile Include="Director\BasicSpawnDirector.cs" />
+    <Compile Include="Director\ChunkDirectors.cs" />
+    <Compile Include="Director\DirectorManager.cs" />
+    <Compile Include="Director\WanderInHordeDirector.cs" />
     <Compile Include="Director\AmbientDirector.cs" />
     <Compile Include="Director\DirectorSwitch.cs" />
     <Compile Include="GameAbstractions\ILogger.cs" />
@@ -88,6 +91,7 @@
     <Compile Include="Hooks\NoiseTrigger.cs" />
     <Compile Include="Hooks\PreventVanillaHordes.cs" />
     <Compile Include="Hooks\ZombieSpawnTracking.cs" />
+    <Compile Include="IsExternalInit.cs" />
     <Compile Include="Noise\NoiseEvent.cs" />
     <Compile Include="Noise\NoiseManager.cs" />
     <Compile Include="Players\PlayerGameEventsWrapper.cs" />

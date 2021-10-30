@@ -10,7 +10,9 @@ using System.Reactive.Subjects;
 using UniLinq;
 using VolatileHordes.Allocation;
 using VolatileHordes.Dto;
+using VolatileHordes.GameAbstractions;
 using VolatileHordes.Players;
+using VolatileHordes.Settings.User.Allocation;
 using VolatileHordes.Settings.User.Control;
 using VolatileHordes.Tracking;
 
@@ -23,6 +25,7 @@ namespace VolatileHordes.Server
         private readonly AllocationBuckets _allocationBuckets;
         private readonly NoiseResponderSettings _noiseResponderSettings;
         private readonly ZombieGroupManager _zombies;
+        private readonly IWorld _world;
 
         public class Client
         {
@@ -44,13 +47,15 @@ namespace VolatileHordes.Server
             PlayerZoneManager players,
             AllocationBuckets allocationBuckets,
             NoiseResponderSettings noiseResponderSettings,
-            ZombieGroupManager zombies)
+            ZombieGroupManager zombies,
+            IWorld world)
         {
             _limitManager = limitManager;
             _players = players;
             _allocationBuckets = allocationBuckets;
             _noiseResponderSettings = noiseResponderSettings;
             _zombies = zombies;
+            _world = world;
             IPEndPoint localEndPoint = new(IPAddress.Any, settings.ViewServerPort);
             Logger.Info("Server listening on port {0}", settings.ViewServerPort);
 
@@ -68,7 +73,10 @@ namespace VolatileHordes.Server
             Bootstrapper.GameStarted
                 .Subscribe(_ =>
                 {
-                    _allocationState = new AllocationStateDto(allocationBuckets.Width, allocationBuckets.Height);
+                    _allocationState = new AllocationStateDto(
+                        AllocationBuckets.ChunkSize, 
+                        allocationBuckets.Width, 
+                        allocationBuckets.Height);
                 });
             
             timeManager.Interval(TimeSpan.FromMilliseconds(250))
@@ -211,6 +219,7 @@ namespace VolatileHordes.Server
             {
                 AllocationState = _allocationState,
                 NoiseRadius = _noiseResponderSettings.Radius,
+                WorldRect = _world.Bounds,
                 Limits = new ZombieLimitsDto()
                 {
                     CurrentNumber = _limitManager.CurrentlyActiveZombies,

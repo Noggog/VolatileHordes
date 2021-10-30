@@ -57,7 +57,8 @@ namespace VolatileHordes.GUI.ViewModels
                 .CombineLatest(
                     this.WhenAnyValue(x => x.Size),
                     this.WhenAnyValue(x => x.Rotation),
-                    (zombiesInRange, _, _) =>
+                    worldstateVm.AllocationVm.WhenAnyValue(x => x.ChunkSize),
+                    (zombiesInRange, _, _, chunkSize) =>
                     {
                         var drawRect = this.Rectangle;
                         drawRect.Inflate(Buffer, Buffer);
@@ -71,7 +72,9 @@ namespace VolatileHordes.GUI.ViewModels
                             zombiesInRange.Select(z => new ZombieDrawInput(z.Position, z.Target, z.GroupVm.Target, z.Rotation)).ToArray(),
                             worldstateVm.NoiseRadius,
                             DrawTargetLines: mainSettingsVm.DrawTargets,
-                            DrawGroupTargetLines: mainSettingsVm.DrawGroupTargets);
+                            DrawGroupTargetLines: mainSettingsVm.DrawGroupTargets,
+                            BucketSize: chunkSize,
+                            WorldRect: worldstateVm.WorldRect);
                     })
                 .Debounce(TimeSpan.FromMilliseconds(150), RxApp.MainThreadScheduler)
                 .ObserveOn(RxApp.TaskpoolScheduler)

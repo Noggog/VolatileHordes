@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Drawing;
+using System.Threading.Tasks;
 using VolatileHordes.AiPackages;
 using VolatileHordes.Control;
 using VolatileHordes.Spawning.WanderingHordes;
@@ -13,7 +14,7 @@ namespace VolatileHordes.Spawning
         private readonly WanderingHordePlacer _placer;
         private readonly ZombieControl _control;
         private readonly LimitManager _limitManager;
-        private readonly FidgetForwardAIPackage fidgetForwardAIPackage;
+        private readonly FidgetForwardAIPackage _fidgetForwardAIPackage;
 
         public FidgetForwardSpawner(
             ZombieGroupManager groupManager,
@@ -28,23 +29,21 @@ namespace VolatileHordes.Spawning
             _placer = placer;
             _control = control;
             _limitManager = limitManager;
-            this.fidgetForwardAIPackage = fidgetForwardAIPackage;
+            _fidgetForwardAIPackage = fidgetForwardAIPackage;
         }
 
-        public async Task Spawn(ushort size)
+        public async Task Spawn(ushort size, Point chunkPoint)
         {
-            var spawnTarget = _spawningPositions.GetRandomTarget();
+            var spawnTarget = _spawningPositions.GetRandomSpawnInChunk(chunkPoint);
             if (spawnTarget == null) return;
 
-            using var groupSpawn = _groupManager.NewGroup(fidgetForwardAIPackage);
+            using var groupSpawn = _groupManager.NewGroup(_fidgetForwardAIPackage);
             
             size = _limitManager.GetAllowedLimit(size);
             
             Logger.Info("Spawning horde {0} of size {1} at {2}", groupSpawn.Group.Id, size, spawnTarget);
             
-            await _placer.SpawnHorde(spawnTarget.SpawnPoint.ToPoint(), spawnTarget.TriggerOrigin, size, groupSpawn.Group);
-
-            _control.SendGroupTowards(groupSpawn.Group, spawnTarget.TriggerOrigin);
+            await _placer.SpawnHorde(spawnTarget.SpawnPoint.ToPoint(), spawnTarget.Target, size, groupSpawn.Group);
         }
     }
 }

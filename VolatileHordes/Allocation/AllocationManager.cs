@@ -9,7 +9,7 @@ namespace VolatileHordes.Allocation
     {
         private readonly AllocationBuckets _buckets;
         private readonly float _fillPerMinute;
-
+        
         public AllocationManager(
             AllocationBuckets buckets,
             TimeManager time,
@@ -23,7 +23,7 @@ namespace VolatileHordes.Allocation
                 .Subscribe(Dispense);
         }
 
-        public void Dispense()
+        private void Dispense()
         {
             for (int x = 0; x <_buckets.Width; x++)
             {
@@ -34,5 +34,20 @@ namespace VolatileHordes.Allocation
                 }
             }
         }
+
+        public Point GetAllocationBucket(PointF point)
+        {
+            return _buckets.ConvertFromWorld(point);
+        }
+
+        public Rectangle GetBucketBounds(Point point)
+        {
+            return _buckets.GetBounds(point);
+        }
+
+        // public bool TryRequest(PointF pt, Percent percent, out int number)
+        // {
+        //     
+        // }
     }
 }

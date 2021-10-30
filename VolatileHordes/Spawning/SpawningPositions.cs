@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using UniLinq;
 using UnityEngine;
+using VolatileHordes.Allocation;
 using VolatileHordes.Core.Services;
 using VolatileHordes.GameAbstractions;
 using VolatileHordes.Players;
@@ -14,19 +15,22 @@ namespace VolatileHordes.Spawning
     {
         private readonly IWorld _world;
         private readonly PlayerZoneManager _playerZoneManager;
+        private readonly AllocationManager _allocationManager;
         private readonly RandomSource _randomSource;
 
         public SpawningPositions(
             IWorld world,
             PlayerZoneManager playerZoneManager,
+            AllocationManager allocationManager,
             RandomSource randomSource)
         {
             _world = world;
             _playerZoneManager = playerZoneManager;
+            _allocationManager = allocationManager;
             _randomSource = randomSource;
         }
 
-        public SpawnTarget? GetRandomTarget(bool nearPlayer)
+        public PlayerSpawn? GetRandomTarget(bool nearPlayer)
         {
             if (nearPlayer)
             {
@@ -38,27 +42,51 @@ namespace VolatileHordes.Spawning
             }
         }
 
-        public SpawnTarget? GetRandomTarget()
+        public PlayerSpawn? GetRandomTarget()
         {
-            var zone = GetRandomZone();
+            var zone = GetRandomPlayerZone();
             if (zone == null) return null;
             var pos = GetRandomSafeCorner(zone);
             if (pos == null) return null;
-            return new SpawnTarget(pos.Value, zone);
+            return new PlayerSpawn(pos.Value, zone);
         }
 
-        public SpawnTarget? GetRandomNearPlayer()
+        public Vector3? GetRandomLocationInChunk(Point chunkPoint)
+        {
+            var bounds = _allocationManager.GetBucketBounds(chunkPoint);
+            Logger.Info("Bounds were {0}", bounds);
+            return GetRandomPosition(bounds);
+        }
+
+        public SpawnTarget? GetRandomSpawnInChunk(Point chunkPoint)
+        {
+            var zones = _playerZoneManager.Zones
+                .Where(z => _allocationManager.GetAllocationBucket(z.Center) == chunkPoint)
+                .ToArray();
+            if (zones.Length == 0)
+                return default;
+
+            var zone = zones.Random(_randomSource);
+            if (zone == null) return null;
+            var pos = GetRandomSafeCorner(zone);
+            if (pos == null) return null;
+            var target = GetRandomLocationInChunk(chunkPoint);
+            if (target == null) return null;
+            return new SpawnTarget(pos.Value, target.Value.ToPoint(), zone);
+        }
+
+        public PlayerSpawn? GetRandomNearPlayer()
         {
             var spawnTarget = GetRandomTarget();
             if (spawnTarget == null) return null;
-            var newTarget = GetRandomEdgeRangeAwayFrom(spawnTarget.TriggerOrigin, range: 30);
+            var newTarget = GetRandomEdgeRangeAwayFrom(spawnTarget.Player.Center, range: 30);
             if (newTarget == null) return null;
-            return new SpawnTarget(
+            return new PlayerSpawn(
                 newTarget.Value,
                 spawnTarget.Player);
         }
 
-        public PlayerZone? GetRandomZone()
+        public PlayerZone? GetRandomPlayerZone()
         {
             if (_playerZoneManager.Zones.Count == 0)
                 return default;

@@ -20,6 +20,8 @@ namespace VolatileHordes.GUI.ViewModels
 
         [Reactive] public ushort Size { get; set; } = 400;
 
+        [Reactive] public ushort ChunkSize { get; set; } = 100;
+
         public delegate AllocationVm Factory();
         
         public AllocationVm(DrawAllocationMap draw)

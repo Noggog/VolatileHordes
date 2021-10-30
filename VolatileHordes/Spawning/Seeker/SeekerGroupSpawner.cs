@@ -46,7 +46,7 @@ namespace VolatileHordes.Spawning.Seeker
             {
                 await _zombieCreator.CreateZombie(spawnTarget.SpawnPoint.ToPoint(), groupSpawn.Group);
             }
-            _control.SendGroupTowards(groupSpawn.Group, spawnTarget.TriggerOrigin);
+            _control.SendGroupTowards(groupSpawn.Group, spawnTarget.Player.Center);
         }
     }
 }

@@ -2,26 +2,11 @@
 using System.Drawing;
 using UnityEngine;
 using VolatileHordes.Director;
+using VolatileHordes.GameAbstractions;
 using VolatileHordes.Players;
 
 namespace VolatileHordes.Spawning
 {
-    public class SpawnTarget
-    {
-        public Vector3 SpawnPoint { get; }
-        public PointF TriggerOrigin { get; }
-        public PlayerZone Player { get; }
-
-        public SpawnTarget(Vector3 spawnPoint, PlayerZone triggerOrigin)
-        {
-            SpawnPoint = spawnPoint;
-            Player = triggerOrigin;
-            TriggerOrigin = triggerOrigin.PlayerLocation;
-        }
-
-        public override string ToString()
-        {
-            return $"{SpawnPoint.ToString()} => {TriggerOrigin}";
-        }
-    }
+    public record SpawnTarget(Vector3 SpawnPoint, PointF Target, PlayerZone Player);
+    public record PlayerSpawn(Vector3 SpawnPoint, PlayerZone Player);
 }

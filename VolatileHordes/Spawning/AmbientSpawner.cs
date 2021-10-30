@@ -21,7 +21,7 @@ namespace VolatileHordes.Spawning
 
         public async Task Spawn()
         {
-            var zone = _spawningPositions.GetRandomZone();
+            var zone = _spawningPositions.GetRandomPlayerZone();
             if (zone == null) return;
             
             var size = _limitManager.GetAllowedLimit(10);

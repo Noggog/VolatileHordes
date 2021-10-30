@@ -18,5 +18,14 @@ namespace VolatileHordes.Dto.Serialization
                 reader.ReadSingle(),
                 reader.ReadSingle());
         }
+        
+        public static Rectangle ReadRectangle(this BinaryReader reader)
+        {
+            return new Rectangle(
+                reader.ReadInt32(),
+                reader.ReadInt32(),
+                reader.ReadInt32(),
+                reader.ReadInt32());
+        }
     }
 }

@@ -15,7 +15,9 @@ namespace VolatileHordes.GUI.Services
         ZombieDrawInput[] Zombies,
         ushort NoiseRadius,
         bool DrawTargetLines,
-        bool DrawGroupTargetLines);
+        bool DrawGroupTargetLines,
+        Rectangle WorldRect,
+        ushort BucketSize);
     
     public class DrawPlayerZone
     {
@@ -36,6 +38,7 @@ namespace VolatileHordes.GUI.Services
             private readonly float _offsetY;
             private readonly float _scaleX;
             private readonly float _scaleY;
+            private readonly RectangleF _pictureBounds;
             
             public DrawPass(PlayerZoneDrawInput input)
             {
@@ -57,10 +60,33 @@ namespace VolatileHordes.GUI.Services
             public BitmapImage Draw()
             {
                 _gr.Clear(Color.Black);
+                DrawChunks();
                 DrawPlayer();
                 DrawZombies();
                 _bitmap.RotateFlip(RotateFlipType.Rotate180FlipX);
                 return _bitmap.ToBitmapImage();
+            }
+
+            private void DrawChunks()
+            {
+                var pos = _input.WorldRect.Left;
+                while (pos < _input.DrawArea.Right)
+                {
+                    _gr.DrawLine(
+                        new Pen(Color.FromArgb(15, 15, 15)),
+                        Offset(new PointF(pos, 0)),
+                        Offset(new PointF(pos, 100000)));
+                    pos += _input.BucketSize;
+                }
+                pos = _input.WorldRect.Top;
+                while (pos < _input.DrawArea.Bottom)
+                {
+                    _gr.DrawLine(
+                        new Pen(Color.FromArgb(15, 15, 15)),
+                        Offset(new PointF(0, pos)),
+                        Offset(new PointF(100000, pos)));
+                    pos += _input.BucketSize;
+                }
             }
 
             private void DrawPlayer()
@@ -69,8 +95,8 @@ namespace VolatileHordes.GUI.Services
                 var center = _input.Player.SpawnRectangle.Center();
                 DrawCone(center, _input.Player.Rotation, PlayerConeSize, PlayerConeRadius,
                     Color.FromArgb(50, 255, 255, 255));
-                DrawRectangle(_input.Player.SpawnRectangle, Color.FromArgb(15, 15, 15));
-                DrawRectangle(_input.Player.Rectangle, Color.FromArgb(15, 15, 15));
+                DrawRectangle(_input.Player.SpawnRectangle, Color.FromArgb(17, 33, 41));
+                DrawRectangle(_input.Player.Rectangle, Color.FromArgb(17, 33, 41));
                 DrawCircle(center, _input.NoiseRadius, Color.FromArgb(15, 15, 15));
                 FillCircleAbsoluteSize(center, PlayerCircleRadius, Color.Teal);
             }

@@ -18,5 +18,13 @@ namespace VolatileHordes.Dto.Serialization
             writer.Write(rect.Width);
             writer.Write(rect.Height);
         }
+        
+        public static void Write(this BinaryWriter writer, Rectangle rect)
+        {
+            writer.Write(rect.X);
+            writer.Write(rect.Y);
+            writer.Write(rect.Width);
+            writer.Write(rect.Height);
+        }
     }
 }

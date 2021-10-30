@@ -10,7 +10,7 @@ namespace VolatileHordes.Allocation
     {
         private readonly ILogger _logger;
         private readonly IWorld _world;
-        public const ushort ChunkSize = 100;
+        public const ushort ChunkSize = 150;
         private Percent[,] _buckets = null!;
         private int _offsetX;
         private int _offsetY;
@@ -104,11 +104,20 @@ namespace VolatileHordes.Allocation
             }
         }
 
-        private Point ConvertFromWorld(PointF pt)
+        public Point ConvertFromWorld(PointF pt)
         {
             var x = (int)pt.X + _offsetX;
             var y = (int)pt.Y + _offsetY;
             return new Point(x / ChunkSize, y / ChunkSize);
+        }
+
+        public Rectangle GetBounds(Point pt)
+        {
+            var x = pt.X * ChunkSize - _offsetX;
+            var y = pt.Y * ChunkSize - _offsetY;
+            return new Rectangle(
+                x, y,
+                ChunkSize, ChunkSize);
         }
 
         public void Consume(PointF pt, Percent p)

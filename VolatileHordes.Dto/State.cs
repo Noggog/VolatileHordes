@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
+using VolatileHordes.Dto.Serialization;
 
 namespace VolatileHordes.Dto
 {
@@ -11,6 +13,7 @@ namespace VolatileHordes.Dto
         public List<ZombieGroupDto> ZombieGroups { get; set; } = new();
         public List<PlayerDto> Players { get; set; } = new();
         public ushort NoiseRadius { get; set; }
+        public Rectangle WorldRect { get; set; }
 
         public void Serialize(BinaryWriter stream)
         {
@@ -28,6 +31,7 @@ namespace VolatileHordes.Dto
             }
             AllocationState.Serialize(stream);
             stream.Write(NoiseRadius);
+            stream.Write(WorldRect);
         }
 
         public static State Deserialize(BinaryReader reader)
@@ -52,6 +56,7 @@ namespace VolatileHordes.Dto
 
             ret.AllocationState = AllocationStateDto.Deserialize(reader);
             ret.NoiseRadius = reader.ReadUInt16();
+            ret.WorldRect = reader.ReadRectangle();
 
             return ret;
         }

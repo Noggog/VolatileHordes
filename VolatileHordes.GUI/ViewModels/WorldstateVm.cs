@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Linq;
 using System.Reactive.Linq;
 using DynamicData;
@@ -23,6 +24,8 @@ namespace VolatileHordes.GUI.ViewModels
         public AllocationVm AllocationVm { get; }
         
         [Reactive] public ushort NoiseRadius { get; set; }
+        
+        [Reactive] public Rectangle WorldRect { get; set; }
         
         public WorldstateVm(
             PlayerVm.Factory pvmFactory,
@@ -56,8 +59,10 @@ namespace VolatileHordes.GUI.ViewModels
                 o => o.Id, 
                 (k) => new ZombieGroupVm(k),
                 (vm, dto) => vm.Absorb(dto));
+            AllocationVm.ChunkSize = state?.AllocationState.ChunkSize ?? 100;
             AllocationVm.Set(state?.AllocationState.Buckets);
             NoiseRadius = state?.NoiseRadius ?? 0;
+            WorldRect = state?.WorldRect ?? new Rectangle(-4096, -4096, 8192, 8192);
         }
     }
 }
