@@ -9,7 +9,7 @@ namespace VolatileHordes.Settings.World
     public class WorldStateSettings
     {
         public static readonly string StateFilePath =
-            Path.Combine(GameUtils.GetSaveGameDir(), $"{Constants.ModName}State.json");
+            Path.Combine(GameIO.GetSaveGameDir(), $"{Constants.ModName}State.json");
 
         public ZombieGroupState[] ZombieGroups { get; set; } = new ZombieGroupState[0];
         

@@ -7,7 +7,7 @@ namespace VolatileHordes
 {
     public class Bootstrapper : IModApi
     {
-        public void InitMod()
+        public void InitMod(Mod _)
         {
             ModEvents.GameStartDone.RegisterHandler(StartGame);
             ModEvents.GameUpdate.RegisterHandler(GameUpdate);
